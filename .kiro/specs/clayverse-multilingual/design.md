@@ -6,6 +6,97 @@
 
 ---
 
+## 0. CLAY BOT ANIMATION & SPEECH SYSTEM
+
+### 0.1 Clay Character Architecture
+
+```
+┌─────────────────────────────────────────┐
+│      CLAY ANIMATED BOT CHARACTER        │
+├─────────────────────────────────────────┤
+│                                         │
+│  ┌─────────────────────────────────┐   │
+│  │   Clay SVG/Canvas Renderer      │   │
+│  ├─────────────────────────────────┤   │
+│  │ • Head with rotating angles     │   │
+│  │ • Eyes (blinking, looking)      │   │
+│  │ • Mouth (phoneme-based sync)    │   │
+│  │ • Body (idle animations)        │   │
+│  │ • Gestures (pointing, shaking)  │   │
+│  └─────────────────────────────────┘   │
+│                  ↓                      │
+│  ┌─────────────────────────────────┐   │
+│  │  Animation State Machine        │   │
+│  ├─────────────────────────────────┤   │
+│  │ • idle → listening → speaking   │   │
+│  │ • Happy, Confused, Excited      │   │
+│  │ • Eye blinking (natural timing) │   │
+│  │ • Breathing motion              │   │
+│  └─────────────────────────────────┘   │
+│                  ↓                      │
+│  ┌─────────────────────────────────┐   │
+│  │  Speech Synthesis Engine        │   │
+│  ├─────────────────────────────────┤   │
+│  │ • Web Speech API TTS            │   │
+│  │ • Mouth sync to phonemes        │   │
+│  │ • Language-specific voice       │   │
+│  │ • Pause/resume controls         │   │
+│  │ • Speech rate matching voice    │   │
+│  └─────────────────────────────────┘   │
+│                  ↓                      │
+│  ┌─────────────────────────────────┐   │
+│  │  Interactive Interaction Hub    │   │
+│  ├─────────────────────────────────┤   │
+│  │ • Click to speak prompts        │   │
+│  │ • Hover interactions            │   │
+│  │ • Contextual help tooltips      │   │
+│  │ • Chat-like interface           │   │
+│  └─────────────────────────────────┘   │
+│                                         │
+└─────────────────────────────────────────┘
+```
+
+### 0.2 Clay Animation States & Transitions
+
+```
+┌──────────┐
+│  IDLE    │ ← Default state, breathing + blinking
+└────┬─────┘
+     │ on-click/hover
+     ↓
+┌──────────┐
+│LISTENING │ ← Eyes focus, slight head tilt
+└────┬─────┘
+     │ TTS starts
+     ↓
+┌──────────┐
+│ SPEAKING │ ← Mouth animates, eyes engaged
+└────┬─────┘
+     │ TTS ends
+     ↓
+┌──────────┐
+│  DONE    │ ← Slight smile, then return to IDLE
+└──────────┘
+```
+
+### 0.3 Mouth Phoneme Mapping
+
+```typescript
+// Phoneme-based mouth animation
+const MOUTH_SHAPES = {
+  'A': { shape: 'wide-open', width: 0.8, height: 0.6 },
+  'E': { shape: 'wide', width: 0.7, height: 0.4 },
+  'I': { shape: 'narrow', width: 0.3, height: 0.3 },
+  'O': { shape: 'round', width: 0.6, height: 0.7 },
+  'U': { shape: 'rounded', width: 0.5, height: 0.6 },
+  'M': { shape: 'closed-lips', width: 0.4, height: 0.2 },
+  'P': { shape: 'puffed', width: 0.5, height: 0.5 },
+  'rest': { shape: 'neutral', width: 0.2, height: 0.1 }
+};
+```
+
+---
+
 ## 1. HIGH-LEVEL ARCHITECTURE
 
 ### 1.1 System Overview
