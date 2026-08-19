@@ -2,356 +2,412 @@
 
 ## Introduction
 
-This document formalizes the requirements for expanding Clayverse AI from an English + Hyderabadi focus to a comprehensive multilingual educational platform. The system will support 12+ major Indian languages (Telugu, Hindi, Marathi, Gujarati, Tamil, Kannada, Bengali, Punjabi, Malayalam, Odia, Assamese, and Urdu) with full localization support including language-specific TTS, RTL layout detection, extensive glossaries, and optimized performance through lazy-loading.
+Clayverse AI is expanding from an English + Hyderabadi-focused platform to a comprehensive multilingual educational system supporting 12+ major Indian languages. This requirements document formalizes the design decisions into testable, measurable requirements that enable learners across India to access zero-jargon AI education, interactive sandboxes, and outcome-driven learning in their native language.
+
+The feature enables users to:
+- Learn AI concepts in 12+ Indian languages with culturally relevant analogies
+- Search a 85+ term glossary with full-text search across definitions and examples
+- Experience language-specific Text-to-Speech with optimized voice profiles
+- Access personalized learning dashboards tracking progress per language
+- Participate in weekly challenges and earn achievement badges in their preferred language
+
+---
 
 ## Glossary
 
-- **System**: The Clayverse AI multilingual platform, including frontend UI, localization engine, and data layer
-- **Supported_Language**: Any of the 12 Indian languages (Telugu, Hindi, Marathi, Gujarati, Tamil, Kannada, Bengali, Punjabi, Malayalam, Odia, Assamese, Urdu) plus English
-- **Language_Context**: Runtime state containing the active language, metadata, translation dictionary, and glossary
-- **Translation_Dictionary**: Lookup table mapping string keys to translated text for a specific language
-- **Glossary**: Comprehensive collection of 85+ AI/ML terms defined in a specific language with examples, analogies, and prerequisites
-- **Glossary_Entry**: Individual term record containing term name, definition, analogies, prerequisites, and language-specific audio
-- **RTL_Language**: Urdu; languages where text flows right-to-left
-- **LTR_Language**: All Indian languages except Urdu; languages where text flows left-to-right
-- **Language_Metadata**: Configuration record defining native name, text direction, script type, TTS voice profile, date format, and number formatting rules for a language
-- **TTS_Engine**: Text-to-Speech system that converts written text to spoken audio using language-specific voice profiles
-- **Voice_Profile**: Language-specific audio configuration including voice selection, speech rate, pitch, and prosody style
-- **Lazy_Loading**: Deferred loading of language-specific dictionaries and glossaries only when the user selects that language
-- **Code_Splitting**: Bundling technique where each language's dictionary and glossary are packaged as separate JavaScript modules
-- **Language_Detection**: Automatic identification of user's preferred language based on browser locale settings
-- **Fallback_Language**: English; the default language to use when requested language is unavailable or fails to load
-- **Script_Type**: Character system used by a language (Latin, Devanagari, Dravidian, Bengali, Perso-Arabic)
-- **Localized_Component**: UI element that displays content from the current language's Translation_Dictionary and adapts layout based on RTL/LTR direction
+- **System**: The Clayverse AI application (frontend + backend services)
+- **User**: A learner accessing the educational platform
+- **Language Context**: Application state tracking selected language, dictionaries, and metadata
+- **Translation Dictionary**: Map of UI string keys to localized text (e.g., `nav.home` → `హోమ్`)
+- **Glossary Entry**: A single term with multilingual definition, analogies, and metadata
+- **TTS** (Text-to-Speech): Audio synthesis service converting text to speech with language-specific voice profiles
+- **RTL** (Right-to-Left): Text direction for Urdu and other script systems
+- **Lazy-Loading**: Asynchronous loading of dictionary/glossary on demand, cached for performance
+- **Round-Trip**: Parse-to-serialization cycle ensuring data integrity (load → use → save → reload)
+- **Supported Language**: One of 12+ Indian languages (Telugu, Hindi, Marathi, Gujarati, Tamil, Kannada, Bengali, Punjabi, Malayalam, Odia, Assamese, Urdu)
+- **Language Metadata**: Configuration including RTL direction, script type, TTS voice profiles, and pluralization rules
+- **Caching**: In-memory storage of loaded dictionaries to prevent redundant file loads
+- **Fallback Strategy**: Automatic downgrade to English when language is unsupported or loading fails
 
 ---
 
 ## Requirements
 
-### Requirement 1: Language Support and Detection
+### Requirement 1: Multi-Language Support Foundation
 
-**User Story:** As a user from any major Indian state, I want the system to automatically detect my language preference, so that I can engage with the platform in my native language without manual configuration.
-
-#### Acceptance Criteria
-
-1. WHEN the user's browser sends locale information THEN the System SHALL detect the language from the browser's navigator.language property and match it to a Supported_Language
-2. WHEN the detected language is not in the list of Supported_Languages THEN the System SHALL apply a two-letter language code fallback (e.g., 'hi' from 'hi-IN') to determine Supported_Language
-3. WHEN the detected language is still not supported THEN the System SHALL use the Fallback_Language (English) as the active language
-4. WHEN a user has previously selected a language THEN the System SHALL retrieve and restore that preference from localStorage with key 'preferred_language'
-5. IF a user has both a localStorage preference AND a browser locale THEN the System SHALL prioritize the localStorage preference as it represents explicit user choice
-6. THE System SHALL define Supported_Languages as: English (en), Telugu (te), Hindi (hi), Marathi (mr), Gujarati (gu), Tamil (ta), Kannada (kn), Bengali (bn), Punjabi (pa), Malayalam (ml), Odia (or), Assamese (as), Urdu (ur)
-7. WHEN the active language changes THEN the System SHALL update the document root's lang attribute to the ISO 639-1 code of the new language
-8. WHEN the System loads a new language WHERE that language has RTL text direction THEN the System SHALL also update the document root's dir attribute to 'rtl'
-
-
-### Requirement 2: Language Metadata and Configuration
-
-**User Story:** As a developer, I want centralized language metadata defining each language's properties, so that components can adapt rendering, formatting, and audio behavior consistently.
+**User Story:** As an Indian learner, I want to learn AI concepts in my native language, so that I can understand complex ideas without language barriers.
 
 #### Acceptance Criteria
 
-1. THE System SHALL define a Language_Metadata record for each Supported_Language containing: code, native name, English name, text direction (RTL or LTR), script type, TTS voice profile identifier, pluralization rules function, date format, and number format configuration
-2. WHEN the active language is Urdu (ur) THEN the Language_Metadata's dir property SHALL be 'rtl'
-3. WHEN the active language is any Supported_Language except Urdu THEN the Language_Metadata's dir property SHALL be 'ltr'
-4. THE System SHALL map Urdu (ur) to script type 'Perso-Arabic', Telugu (te) and Tamil (ta) to 'Dravidian', Hindi (hi) and Punjabi (pa) to 'Devanagari', and Bengali (bn) and Assamese (as) to 'Bengali'
-5. WHEN rendering numbers in the active language THEN the System SHALL use the language's number format configuration to apply locale-specific separators and grouping
-6. WHEN rendering dates in the active language THEN the System SHALL apply the language-specific date format (e.g., 'DD/MM/YYYY' for Indian languages, 'MM/DD/YYYY' for English)
-7. THE System SHALL provide a function `useLanguageMetadata()` that returns the complete Language_Metadata for the current active language
+1. WHEN the System initializes THEN the System SHALL detect the user's browser locale and default to a Supported Language if available, or default to English
+2. WHEN a user selects a language from the language switcher THEN the System SHALL immediately load the corresponding Translation Dictionary asynchronously without blocking the UI
+3. WHEN a user's browser locale is "te-IN" or "te" THEN the System SHALL default to Telugu as the Supported Language
+4. WHEN a user's browser locale matches multiple Supported Languages THEN the System SHALL select based on exact locale match first, then language code prefix, then English fallback
+5. THE System SHALL support these 12 Supported Languages: English (en), Telugu (te), Hindi (hi), Marathi (mr), Gujarati (gu), Tamil (ta), Kannada (kn), Bengali (bn), Punjabi (pa), Malayalam (ml), Odia (or), Assamese (as), Urdu (ur)
+6. THE System SHALL provide Language Metadata for each Supported Language including code, native name, English name, text direction (LTR/RTL), and script type
 
+---
 
-### Requirement 3: Translation Dictionary Loading and Access
+### Requirement 2: Language Context & State Management
 
-**User Story:** As an application, I want efficient loading of translation strings for the active language, so that UI text appears correctly without requiring the full dictionary for all 13 languages on initial load.
-
-#### Acceptance Criteria
-
-1. WHEN a user selects a language THEN the System SHALL load the Translation_Dictionary for that language using dynamic ES module imports (e.g., `import('../data/localization/languages/te.ts')`)
-2. WHEN the Translation_Dictionary is successfully loaded THEN the System SHALL cache it in memory to prevent re-importing on subsequent access
-3. IF the Translation_Dictionary fails to load due to network or file error THEN the System SHALL log the error and load the Fallback_Language dictionary (English)
-4. THE System SHALL provide a function `t(key: string, params?: Record<string, any>): string` that performs string lookup with optional parameter interpolation using double-brace syntax `{{paramName}}`
-5. WHEN a translation key is not found in the current language's Translation_Dictionary THEN the function SHALL return the key itself as a fallback to prevent blank text
-6. THE Translation_Dictionary file for each language SHALL be located at `src/data/localization/languages/{lang_code}.ts` where lang_code is the ISO 639-1 code
-7. THE System SHALL preload Translation_Dictionaries for the three critical languages (English, Telugu, Hindi) during application bootstrap to minimize initial language switch latency
-8. WHEN the System loads a new language THEN it SHALL update React Context to trigger re-renders of all components using the `useLanguage()` hook
-
-
-### Requirement 4: Glossary Definition and Structure
-
-**User Story:** As an educator and student, I want comprehensive, language-specific glossaries containing AI/ML terminology with examples and relationships, so that learners can understand complex concepts in their native language.
+**User Story:** As a developer, I want a centralized Language Context that manages language selection, dictionaries, and translation functions, so that all components can access localized content consistently.
 
 #### Acceptance Criteria
 
-1. EACH Glossary for a Supported_Language SHALL contain a minimum of 85 Glossary_Entry records covering core AI, ML, and LLM concepts
-2. EACH Glossary_Entry SHALL contain: unique identifier (id), term name, beginner-friendly definition, optional array of analogies, optional array of prerequisite term IDs, curriculum section number (1-12), optional tags array, optional language-specific audio URL, and optional visual diagram URL
-3. WHEN a Glossary_Entry is retrieved THEN its definition SHALL use zero-jargon language with real-world analogies appropriate to the specific language and cultural context
-4. WHEN a Glossary_Entry includes prerequisite terms THEN the prerequisites SHALL be provided as a list of term IDs that the user should understand before mastering the current term
-5. THE System SHALL organize Glossary_Entries by curriculum section (numbered 1-12) allowing learners to understand prerequisite terms before advancing
-6. THE Glossary file for each language SHALL be located at `src/data/localization/glossaries/ai-terms-{lang_code}.ts`
-7. WHEN the System loads a Glossary_Entry with an audioUrl property THEN it SHALL support playback of the language-specific pronunciation and definition audio using the TTS_Engine
-8. THE System SHALL provide a function `tGlossary(term: string): Glossary_Entry | undefined` that retrieves a Glossary_Entry by term name, supporting case-insensitive matching
-9. WHEN a Glossary_Entry includes analogies THEN each analogy SHALL be specific to the target language's culture and familiar concepts (e.g., using Indian food, agriculture, or local professions as examples)
+1. WHEN the LanguageProvider initializes THEN the System SHALL create a Language Context with current language, metadata, dictionary, glossary, and translation methods
+2. WHEN useLanguage() hook is called from any component THEN the System SHALL return { lang, metadata, dict, glossary, setLanguage, t, tGlossary } properties
+3. THE System SHALL provide a t(key, params?) function that retrieves translated strings from the current dictionary with parameter interpolation support
+4. THE System SHALL provide a tGlossary(term) function that searches the glossary and returns the matching GlossaryEntry or undefined
+5. WHEN a user calls setLanguage(lang) THEN the System SHALL update document.documentElement.lang attribute to the language code
+6. WHEN a user calls setLanguage(lang) and lang is RTL THEN the System SHALL update document.documentElement.dir to "rtl" and all RTL-aware components SHALL adjust layout accordingly
+7. WHEN dictionary loading fails for any reason THEN the System SHALL gracefully fall back to English and log an error
 
+---
 
-### Requirement 5: RTL Layout Detection and Component Adaptation
+### Requirement 3: Translation Dictionary Structure
 
-**User Story:** As a user of Urdu or other RTL languages, I want the entire UI to adapt its layout to flow from right-to-left, so that text, buttons, and navigation are positioned correctly for my language.
-
-#### Acceptance Criteria
-
-1. WHEN a user selects the Urdu (ur) language THEN the System SHALL set the document root's dir attribute to 'rtl'
-2. WHEN a user selects any language other than Urdu THEN the System SHALL set the document root's dir attribute to 'ltr'
-3. WHEN a Localized_Component is rendered WHERE the active language's text direction is 'rtl' THEN the component SHALL apply RTL-specific CSS classes using the Tailwind @tailwindcss/rtl plugin
-4. WHEN text content appears in a Localized_Component AND the text direction is 'rtl' THEN alignment of text elements SHALL be set to 'text-right'
-5. WHEN flex or grid layouts are used in a Localized_Component AND the text direction is 'rtl' THEN layout direction SHALL automatically mirror horizontally
-6. THE System SHALL apply the Tailwind CSS @tailwindcss/rtl plugin globally to support automatic mirroring of margin, padding, and position properties based on the dir attribute
-7. WHEN icons or visual elements appear in a Localized_Component AND the text direction is 'rtl' THEN directional icons (e.g., arrows, chevrons) SHALL be flipped horizontally using CSS transform
-
-
-### Requirement 6: Lazy-Loading and Code-Splitting Strategy
-
-**User Story:** As the platform maintainer, I want language-specific dictionaries and glossaries to be loaded only when selected, so that the initial application bundle remains performant and users only download content for languages they use.
+**User Story:** As a content translator, I want a structured, scalable dictionary format for UI strings, so that translations can be organized by feature area and easily extended.
 
 #### Acceptance Criteria
 
-1. EACH language's Translation_Dictionary and Glossary_Entry array SHALL be packaged in separate ES6 module files enabling Code_Splitting
-2. WHEN the application initializes THEN it SHALL NOT load Translation_Dictionaries or Glossaries for any language except the detected active language and the Fallback_Language (English)
-3. WHEN a user selects a Supported_Language that is not yet loaded THEN the System SHALL trigger a dynamic import of the `src/data/localization/languages/{lang_code}.ts` file
-4. AFTER the dynamic import completes THEN the System SHALL cache the imported dictionary in memory to ensure subsequent language switches to that language incur no loading delay
-5. THE System SHALL provide a function `preloadCriticalLanguages()` that preloads dictionaries for English, Telugu, and Hindi during application bootstrap
-6. WHEN a user switches languages multiple times THEN the System SHALL retrieve cached dictionaries from memory rather than re-importing
-7. IF a dynamic import fails THEN the System SHALL log an error message including the language code and requested module path, then fallback to the Fallback_Language dictionary
-8. EACH individual language dictionary file SHALL target a bundle size of less than 50KB to minimize download time
-9. THE System SHALL implement Glossary lazy-loading using the same dynamic import pattern as Translation_Dictionaries, allowing Glossaries to be loaded independently
+1. WHEN the System loads a Translation Dictionary for any Supported Language THEN the Dictionary SHALL contain entries for all navigation items (nav.*), section titles (section.*), interactive components (sandbox.*), glossary terms (glossary.*), and mascot messages (clay.*)
+2. WHEN the t(key, params) function is called with a key like 'progress.completed' and params { count: 5 } THEN the System SHALL return the translated string with {{count}} replaced by "5"
+3. THE System SHALL organize Translation Dictionary keys using dot-notation (e.g., 'nav.home', 'section.basics') to prevent key collisions and enable hierarchical organization
+4. WHEN a Translation Dictionary is missing a key THEN the System SHALL return the key itself as fallback to indicate missing translation
+5. WHEN the Translation Dictionary is loaded for a new language THEN all existing keys SHALL map to their translated equivalents without requiring component changes
 
+---
 
-### Requirement 7: Multilingual TTS Engine Integration
+### Requirement 4: Multilingual Glossary with 85+ Terms Per Language
 
-**User Story:** As a student, I want to hear audio explanations in my native language, so that I can learn through multiple modalities and improve comprehension of complex concepts.
+**User Story:** As a learner, I want access to an AI terminology glossary in my language with clear definitions and real-world analogies, so that I can understand technical terms without confusion.
 
 #### Acceptance Criteria
 
-1. THE System SHALL support Text-to-Speech (TTS) in all 13 Supported_Languages using native Web Speech API and Google Cloud Text-to-Speech API
-2. WHEN TTS is invoked THEN the System SHALL apply the active language's Voice_Profile to configure speech rate, pitch, and prosody
-3. WHEN the active language is Telugu (te) or Hindi (hi) THEN the Voice_Profile SHALL specify a slower speech rate (0.80-0.85) compared to English (0.95) to accommodate complex phonetic structures
-4. WHEN the active language is Urdu (ur) THEN the Voice_Profile SHALL apply prosody style 'formal' to maintain cultural appropriateness
-5. WHEN a user requests audio narration of a section THEN the System SHALL invoke the TTS_Engine.speak() method passing the translated text and the current language code
-6. THE System SHALL maintain a Voice_Profile mapping containing male, female, and neutral voice options for each Supported_Language
-7. WHEN a user selects a specific voice option (male/female/neutral) THEN the System SHALL retrieve the corresponding voice from the Voice_Profile and apply it to the next TTS invocation
-8. THE System SHALL use the browser's native speech synthesis API as the primary TTS implementation, and gracefully handle cases where a specific language's voice is unavailable by falling back to any available voice for that language
-9. IF the TTS_Engine.speak() method is called with a language that has no available voices THEN the System SHALL fall back to Fallback_Language audio
+1. WHEN the System loads a glossary for any Supported Language THEN the Glossary SHALL contain 85+ GlossaryEntry objects covering AI fundamentals, machine learning, generative AI, and advanced topics
+2. WHEN a GlossaryEntry is loaded THEN it SHALL include: id, term, definition, analogies array (2-3 items), prerequisites array (related term IDs), section number (1-12), tags array, and optional audioUrl
+3. WHEN a user searches for an AI term in the current language THEN the System SHALL perform full-text search across term names, definitions, and analogies using case-insensitive matching
+4. WHEN multiple Glossary Entries match a search query THEN the System SHALL return all matches sorted by relevance (term matches first, then definition, then analogy)
+5. WHEN a GlossaryEntry has prerequisites defined THEN the System SHALL visually indicate prerequisite terms and provide links to them in the UI
+6. WHEN the glossary for a language is first loaded THEN the System SHALL validate that all prerequisite term IDs reference existing entries, logging warnings for missing references
 
+---
 
-### Requirement 8: Glossary Search Across All Languages
+### Requirement 5: RTL Support for Urdu
 
-**User Story:** As a learner, I want to search for AI/ML terminology across all available languages, so that I can find relevant content in my native language regardless of how I phrase my search query.
+**User Story:** As an Urdu-speaking learner, I want the interface to render in right-to-left layout with correct text direction, so that reading is natural and accessible.
 
 #### Acceptance Criteria
 
-1. WHEN a user enters a search query in the GlossarySearch component THEN the System SHALL search the current active language's Glossary_Entry records by matching the query against: term name, definition text, and analogy text
-2. WHEN the search query matches a Glossary_Entry's term name THEN the System SHALL return that entry marked with matchType 'term'
-3. WHEN the search query appears within a Glossary_Entry's definition THEN the System SHALL return that entry marked with matchType 'definition' along with a substring excerpt (max 100 characters)
-4. WHEN the search query appears within a Glossary_Entry's analogies THEN the System SHALL return that entry marked with matchType 'analogy' along with the matching analogy text (max 100 characters)
-5. THE search matching SHALL be case-insensitive in all Supported_Languages
-6. WHEN the user searches for a term THEN the System SHALL return results ordered by: exact term match first, then definition match, then analogy match
-7. WHEN no Glossary_Entry results are found for the search query THEN the System SHALL display a message in the current language indicating no results were found (using the Translation_Dictionary key 'glossary.no_results')
-8. THE System SHALL support concurrent searching across the Glossary_Entry records with no artificial delays; searches SHALL complete within 100ms for a glossary of 85+ entries
-9. WHEN a user changes the active language THEN the GlossarySearch results SHALL update to search only the new language's Glossary and display appropriate results
+1. WHEN the user selects Urdu (ur) as the Supported Language THEN the System SHALL set document.documentElement.dir to "rtl"
+2. WHEN a component is rendered while the active language is Urdu THEN the Component SHALL apply CSS classes that mirror padding, margins, and text alignment (e.g., text-right instead of text-left)
+3. WHEN the user navigates between LTR and RTL languages THEN all components SHALL dynamically adjust layout without requiring page reload
+4. WHEN an RTL language is selected THEN flex and grid containers SHALL reverse their child element order automatically using CSS flexbox-reverse or grid-reverse utilities
+5. THE System SHALL use the @tailwindcss/rtl plugin to automatically handle RTL layout transformations
+6. WHEN input fields or textareas are rendered in RTL mode THEN the System SHALL set dir="rtl" on the input element
 
+---
 
-### Requirement 9: Language Context and State Management
+### Requirement 6: Script-Specific Handling and Font Support
 
-**User Story:** As a React component, I want access to the current language state, translated strings, glossary data, and metadata through a unified interface, so that I can render localized content without prop drilling or manual state management.
+**User Story:** As a platform administrator, I want script-specific fonts and rendering configurations applied per language, so that complex scripts (Devanagari, Dravidian, Perso-Arabic) display correctly.
 
 #### Acceptance Criteria
 
-1. THE System SHALL provide a `LanguageContext` React Context object containing: active language code, Language_Metadata, Translation_Dictionary, Glossary_Entry array, setLanguage function, translation function (t), and glossary lookup function (tGlossary)
-2. THE System SHALL provide a `LanguageProvider` component that wraps the application root and supplies the Language_Context to all descendant components
-3. WHEN a component calls the `useLanguage()` hook THEN it SHALL receive the complete Language_Context object including all properties and functions
-4. WHEN a component calls the `useLanguage()` hook AND the Language_Context is not available THEN the hook SHALL throw an error indicating the component must be wrapped by LanguageProvider
-5. WHEN the `setLanguage()` function is called with a Supported_Language THEN the System SHALL: load the Translation_Dictionary, load the Glossary_Entry array, update the LanguageContext, and trigger re-renders of all subscribed components
-6. WHEN the `setLanguage()` function is called THEN it SHALL update localStorage with the selected language code under key 'preferred_language'
-7. WHEN the active language changes THEN the System SHALL update the HTML document element's lang and dir attributes before re-rendering
-8. THE System SHALL guarantee that all components using `useLanguage()` receive consistent Language_Context data; multiple simultaneous calls to the hook within the same render cycle SHALL return identical context objects
+1. THE System SHALL classify each Supported Language by script type: Latin (en), Devanagari (hi, mr, gu, pa), Dravidian (te, ta, kn, ml), Bengali (bn, as), Perso-Arabic (ur)
+2. WHEN a Supported Language with Devanagari script is selected THEN the System SHALL apply fonts that support Devanagari diacritics and conjuncts
+3. WHEN a language's glossary terms are displayed THEN the System SHALL apply script-appropriate font stacks to ensure ligatures, conjuncts, and diacritics render correctly
+4. WHEN text containing complex script conjuncts is rendered THEN the System SHALL verify that all glyphs display without requiring user-side font installation
+5. THE System SHALL include web-safe font fallbacks for each script type in the Tailwind configuration
 
+---
 
-### Requirement 10: Localized Components and Cultural Adaptation
+### Requirement 7: Multilingual Text-to-Speech Integration
 
-**User Story:** As a content creator, I want to author UI components once and have them automatically adapt content, layout, and cultural references for each language, so that I don't maintain duplicate component logic for each language.
+**User Story:** As an auditory learner, I want to hear explanations in my language with optimized voice profiles, so that I can learn through listening without accent confusion.
 
 #### Acceptance Criteria
 
-1. THE System SHALL provide a `LocalizedCard` component that accepts: contentKey (Translation_Dictionary key), optional glossaryTerms array, optional interactiveElements, and optional language override
-2. WHEN LocalizedCard renders THEN it SHALL retrieve the translated text using the contentKey and the translation function (t)
-3. WHEN LocalizedCard receives glossaryTerms THEN it SHALL display each term's definition retrieved from the Glossary using the tGlossary function
-4. WHEN LocalizedCard is rendered WHERE the active language's text direction is 'rtl' THEN heading elements SHALL apply text-right alignment
-5. WHEN LocalizedCard renders motion animations THEN the animations SHALL use Framer Motion's whileInView trigger with consistent animation values (opacity: 0→1, y: 40→0)
-6. WHEN a Localized_Component renders Glossary_Entry content THEN it SHALL include region-specific analogies and cultural context from the Glossary_Entry
-7. THE System SHALL ensure all Localized_Components check the Language_Metadata's dir property and apply corresponding Tailwind CSS classes (rtl: prefix for RTL languages)
-8. WHEN a Localized_Component displays a Glossary_Entry THEN it SHALL render the term definition formatted as: **term**: definition_text
+1. WHEN a user clicks the audio narration button for a glossary term THEN the System SHALL play the term's definition using TTS with the current language's voice profile
+2. WHEN the System initializes TTS for any Supported Language THEN the TTS Engine SHALL apply language-specific configurations including: optimal speechRate, pitch, prosody style (natural/expressive/formal), and gender preference
+3. THE System SHALL define Voice Profiles for each Supported Language with optimized speechRate values: English (0.95), Telugu (0.85), Hindi (0.80), and similar values for other languages
+4. WHEN TTS is triggered in Urdu or another RTL language THEN the TTS Engine SHALL maintain correct speech flow without reversing word order
+5. WHEN multiple TTS requests are queued THEN the System SHALL cancel any previous utterance and start the new one, preventing overlapping audio
+6. WHEN TTS finishes speaking THEN the System SHALL emit an event that components can listen to for triggering animations or state updates
+7. IF TTS voice selection fails for a language THEN the System SHALL fall back to the system's default voice and log a warning
 
+---
 
-### Requirement 11: Dictionary and Glossary File Organization
+### Requirement 8: Glossary Search with Full-Text Capabilities
 
-**User Story:** As a developer maintaining the codebase, I want all translation and glossary files organized in a consistent, discoverable file structure, so that adding new languages or updating content is straightforward and error-free.
-
-#### Acceptance Criteria
-
-1. ALL Translation_Dictionary files SHALL be located in the directory `src/data/localization/languages/`
-2. EACH language's Translation_Dictionary file SHALL be named `{lang_code}.ts` where lang_code is the ISO 639-1 code (e.g., `te.ts` for Telugu)
-3. ALL Glossary files SHALL be located in the directory `src/data/localization/glossaries/`
-4. EACH language's Glossary file SHALL be named `ai-terms-{lang_code}.ts` where lang_code is the ISO 639-1 code (e.g., `ai-terms-hi.ts` for Hindi)
-5. EACH Translation_Dictionary file SHALL export a default export containing a Record<string, string> mapping translation keys to translated text
-6. EACH Glossary file SHALL export a default export containing an array of Glossary_Entry objects
-7. WHEN a new language is added THEN a developer SHALL create exactly two files: a Translation_Dictionary file and a Glossary file in their respective directories
-8. THE System's TypeScript configuration SHALL resolve imports from `../data/localization/` without requiring relative path traversal
-
-
-### Requirement 12: Performance Optimization and Bundle Size
-
-**User Story:** As a user on a slow network connection, I want the application to load quickly and efficiently, so that I can start learning without excessive waiting.
+**User Story:** As a learner, I want to search glossary terms across definitions and analogies, so that I can discover related concepts and deepen my understanding.
 
 #### Acceptance Criteria
 
-1. THE initial application bundle (excluding language-specific dictionaries) SHALL have a target maximum size of 500KB gzipped
-2. EACH individual language's Translation_Dictionary file SHALL have a target maximum size of 50KB gzipped
-3. EACH individual language's Glossary file SHALL have a target maximum size of 100KB gzipped
-4. WHEN the application loads THEN it SHALL preload only the detected active language's dictionary and glossary, plus the Fallback_Language (English) dictionaries
-5. WHEN a user switches to a language that has not been loaded THEN the System SHALL trigger a dynamic import of only that language's dictionary and glossary modules
-6. THE System SHALL utilize JavaScript's native ES6 module code-splitting to ensure each language module is bundled independently with no duplication across language bundles
-7. WHEN dictionary or glossary files are loaded THEN the System SHALL cache them in memory to prevent redundant downloads or imports during the application session
-8. THE System SHALL not preload or load any language dictionary or glossary that is not requested or detected as the active language, except for English (Fallback_Language)
+1. WHEN a user enters a search query in the Glossary Search component THEN the System SHALL perform case-insensitive full-text search across term names, definitions, and analogies of all loaded Glossary Entries
+2. WHEN search results are returned THEN the System SHALL display for each match: the term name, the matching text snippet (highlighted), match type (term/definition/analogy), and link to full glossary entry
+3. WHEN a search query matches multiple Glossary Entries THEN the System SHALL prioritize exact term matches first, then definition matches, then analogy matches
+4. WHEN a search query produces no results THEN the System SHALL display "No results found" message and suggest similar terms or related concepts
+5. WHEN the user selects a language THEN the Glossary Search SHALL search only Glossary Entries in the current language
+6. WHEN a search query length changes THEN the System SHALL perform search immediately without debouncing, limiting search scope to current glossary only (max 85 entries per language)
 
+---
 
-### Requirement 13: Parser and Serializer for Localization Data
+### Requirement 9: Dictionary Lazy-Loading with Caching Strategy
 
-**User Story:** As a developer, I want to validate and round-trip localization data (translations and glossaries) to ensure consistency and prevent data corruption during updates.
-
-#### Acceptance Criteria
-
-1. THE System SHALL provide a parser function `parseLanguageDictionary(input: unknown): TranslationDictionary` that validates the input is a valid Record<string, string> object and returns the parsed dictionary or throws a TypeError if invalid
-2. WHEN the parser receives a valid dictionary object THEN it SHALL return an identical TranslationDictionary with all keys and values preserved
-3. WHEN the parser receives an invalid input (null, undefined, array, non-string values) THEN it SHALL throw a descriptive error message indicating the validation failure
-4. THE System SHALL provide a serializer function `serializeLanguageDictionary(dict: TranslationDictionary): string` that converts a TranslationDictionary object to JSON string format
-5. WHEN serialization is performed on a valid TranslationDictionary THEN the serialized JSON SHALL be parseable back into an equivalent dictionary object
-6. FOR ANY valid TranslationDictionary object `d`, executing `parseLanguageDictionary(JSON.parse(serializeLanguageDictionary(d)))` SHALL produce an object equivalent to `d` (round-trip property)
-7. THE System SHALL provide a parser function `parseGlossary(input: unknown): Glossary_Entry[]` that validates the input is an array of valid Glossary_Entry objects
-8. EACH Glossary_Entry SHALL be validated to contain required properties: id (string), term (string), definition (string), and optional properties: analogies (string[]), prerequisites (string[]), section (number), tags (string[]), audioUrl (string), imageUrl (string)
-9. WHEN the Glossary parser encounters a Glossary_Entry with missing required fields THEN it SHALL throw a descriptive error identifying the invalid entry and missing fields
-10. THE System SHALL provide a serializer function `serializeGlossary(entries: Glossary_Entry[]): string` that converts a Glossary_Entry array to JSON string format
-11. FOR ANY valid Glossary_Entry array `g`, executing `parseGlossary(JSON.parse(serializeGlossary(g)))` SHALL produce an array equivalent to `g` (round-trip property)
-12. THE Pretty_Printer for localization data SHALL format serialized JSON with consistent indentation (2 spaces), sorted keys for dictionaries, and human-readable structure
-
-
-### Requirement 14: Language Switch Workflow and User Experience
-
-**User Story:** As a user, I want to change languages easily and see the entire application update immediately, so that I can switch between languages without refreshing the page or experiencing incomplete translations.
+**User Story:** As a platform operator, I want dictionaries loaded on-demand and cached to optimize performance, so that users experience minimal load times and the app stays responsive.
 
 #### Acceptance Criteria
 
-1. WHEN a user selects a new language from the language switcher UI THEN the System SHALL invoke `setLanguage()` with the selected language code
-2. WHEN `setLanguage()` is invoked THEN the System SHALL display a loading indicator (spinner or subtle opacity change) while loading the dictionary and glossary
-3. WHEN the dictionary and glossary are successfully loaded THEN the loading indicator SHALL disappear and all UI text SHALL update to the selected language
-4. WHEN language switching completes THEN the System SHALL preserve the user's current page location; the browser SHALL not reload and navigation history SHALL not be modified
-5. WHEN a language switch fails (dictionary/glossary fails to load) THEN the System SHALL display an error message in the current language indicating the language switch failed, and the UI SHALL remain in the previous language
-6. IF the language switch fails THEN the System SHALL allow the user to retry loading the failed language without manual intervention
-7. WHEN a user switches languages THEN the System SHALL update all rendered text, number formats, date formats, and RTL/LTR layout immediately without requiring a page refresh
-8. THE System SHALL ensure that language switching latency (time from user selection to complete UI update) is less than 200ms for cached languages and less than 500ms for newly loaded languages
+1. WHEN a user selects a language THEN the System SHALL asynchronously import the Translation Dictionary and Glossary for that language without blocking UI rendering
+2. WHEN a dictionary has been loaded once THEN subsequent language switches to that language SHALL retrieve the dictionary from the in-memory Cache without re-importing
+3. WHEN the System initializes THEN the System SHALL preload critical languages (English, Telugu, Hindi) in the background to reduce initial language-switch latency
+4. THE System SHALL organize Translation Dictionary files by language code in src/data/localization/languages/{lang}.ts to enable code-splitting by language
+5. THE System SHALL organize Glossary files by language code in src/data/localization/glossaries/ai-terms-{lang}.ts to enable code-splitting by language
+6. WHEN the application bundle is created THEN each language file SHALL be split into a separate chunk to reduce main bundle size
+7. IF dictionary loading fails after 5 seconds THEN the System SHALL timeout and fall back to English
 
+---
 
-### Requirement 15: Content Glossary Terms with Cultural and Linguistic Accuracy
+### Requirement 10: Language Preference Persistence
 
-**User Story:** As a teacher creating curriculum, I want all AI/ML glossary terms to be culturally relevant and linguistically accurate for each language, so that students connect concepts to their own experiences and understand the content deeply.
-
-#### Acceptance Criteria
-
-1. WHEN a Glossary_Entry for a non-English language is created THEN the definition text SHALL be specifically written for that language (not machine-translated) and reviewed by a native speaker fluent in both the target language and AI/ML concepts
-2. WHEN a Glossary_Entry includes analogies THEN each analogy SHALL reference concepts, objects, or experiences familiar to learners in that language's primary geographic region (e.g., Indian agricultural context for rural Indian languages)
-3. WHEN a Glossary_Entry specifies prerequisites THEN the prerequisite terms SHALL be available in the same target language's Glossary, ensuring learners can understand all prerequisites in their native language
-4. THE minimum Glossary size for each Supported_Language SHALL be 85 entries covering core AI, ML, LLM, and foundational computer science concepts
-5. WHEN a new Glossary_Entry is added THEN it SHALL include: term, definition (zero-jargon), at least one analogy, prerequisite term IDs if applicable, curriculum section assignment (1-12), and optional audio URL for pronunciation
-6. THE System SHALL ensure all Glossary_Entry definitions use active voice and avoid negative statements (e.g., use "works by analyzing patterns" instead of "doesn't work by following rules")
-7. WHEN a Glossary_Entry is displayed to a learner THEN the System SHALL include pronunciation audio in the target language if available, allowing learners to hear the correct pronunciation
-
-
-### Requirement 16: Language Detection and Fallback Robustness
-
-**User Story:** As a user with an uncommon browser language setting or no language preference, I want the application to gracefully detect my closest available language and provide a good user experience with reasonable default selections.
+**User Story:** As a returning user, I want my language preference saved so that I don't have to select my language every time I visit.
 
 #### Acceptance Criteria
 
-1. WHEN the application initializes AND navigator.language is set to an unsupported language code (e.g., 'fr-FR' for French) THEN the System SHALL attempt to match the two-letter language code against Supported_Languages
-2. IF the two-letter language code has no match THEN the System SHALL use the Fallback_Language (English)
-3. WHEN a language is detected or restored from localStorage THEN the System SHALL validate that the language code is in the Supported_Languages list before applying it
-4. IF the stored language code is invalid or no longer supported THEN the System SHALL fall back to the detected browser language and update localStorage accordingly
-5. THE System SHALL never load a language that is not explicitly in the Supported_Languages array
-6. IF a language fails to load due to network error OR module import error THEN the System SHALL log the error with context (language code, error type, stack trace) and fall back to the Fallback_Language
-7. WHEN the Fallback_Language is applied due to an error THEN the System SHALL display an informational message to the user (if appropriate) indicating the language was unavailable but core functionality continues
-8. THE System SHALL ensure that every possible code path during language initialization results in a valid, usable language state
+1. WHEN a user selects a language THEN the System SHALL persist the selection to localStorage under the key "preferred_language"
+2. WHEN a user returns to the application THEN the System SHALL retrieve the "preferred_language" from localStorage and restore the previous language selection
+3. WHEN localStorage is unavailable THEN the System SHALL fall back to browser locale detection and skip persistence without error
+4. WHEN a user's stored preference is an unsupported language THEN the System SHALL detect this and fall back to English, updating the stored preference
+5. WHEN a logged-in user updates their language preference THEN the System SHALL also sync the preference to their user profile in Firebase for cross-device consistency
 
+---
 
-### Requirement 17: Multilingual Component Text Interpolation and Formatting
+### Requirement 11: Login Dashboard with User Authentication
 
-**User Story:** As a developer, I want to include dynamic values in translated text (e.g., user names, counts, dates), so that translations remain flexible and correct for different languages' grammar and word order.
+**User Story:** As a learner, I want to create an account, log in, and see my personalized learning dashboard, so that I can track my progress and maintain continuity across sessions.
 
 #### Acceptance Criteria
 
-1. WHEN a Translation_Dictionary value includes placeholder text enclosed in double braces (e.g., `"progress.completed": "You've mastered {{count}} concepts"`) THEN the `t()` function SHALL support parameter substitution
-2. WHEN `t(key, params)` is called with a params object THEN the function SHALL replace each `{{paramName}}` occurrence in the translated text with the corresponding value from the params object
-3. WHEN a params object value is not a string THEN the function SHALL convert the value to a string using `String(value)` before substitution
-4. IF a placeholder `{{paramName}}` appears in translated text but no corresponding key exists in the params object THEN the placeholder SHALL remain unchanged in the output
-5. THE `t()` function SHALL support multiple placeholders in a single translated string and replace all occurrences
-6. WHEN performing parameter substitution in RTL languages THEN the parameter values SHALL maintain their original directionality and not be reversed
-7. THE System SHALL support number formatting placeholders using locale-specific formats (e.g., `{{count | number}}`) with optional formatting specifiers
-8. WHEN displaying formatted numbers in the active language THEN the System SHALL apply the language's Number_Format configuration (thousands separators, decimal separators)
+1. WHEN a user navigates to the login page THEN the System SHALL display a login form with email and password fields, plus social login options (Google, GitHub)
+2. WHEN a user submits valid credentials THEN the System SHALL authenticate against Firebase Authentication and create a user session
+3. WHEN a user successfully logs in THEN the System SHALL redirect to a personalized dashboard showing the user's name, profile picture, and learning summary
+4. WHEN authentication fails THEN the System SHALL display an error message indicating invalid credentials and allow retry
+5. THE System SHALL support Google OAuth and GitHub OAuth for frictionless social login
+6. WHEN a user logs out THEN the System SHALL clear the user session, localStorage, and redirect to the login page
 
+---
 
-### Requirement 18: Voice Profile Configuration and Language-Specific Audio Settings
+### Requirement 12: Per-User Language Preference Synchronization
 
-**User Story:** As an audio engineer, I want each language's TTS voice profiles to be configured with optimal speech rate and prosody, so that audio narration sounds natural and comprehensible for native speakers of each language.
-
-#### Acceptance Criteria
-
-1. EACH Supported_Language SHALL have a Voice_Profile configuration defining: male voice ID, female voice ID, neutral voice ID, optimal speech rate, pitch adjustment, and prosody style
-2. WHEN TTS is invoked for English (en) THEN the default Voice_Profile SHALL specify speech rate 0.95 and pitch 1.0
-3. WHEN TTS is invoked for Telugu (te) or Hindi (hi) THEN the Voice_Profile SHALL specify speech rate 0.80-0.85 to accommodate complex phonetic structures and consonant clusters
-4. WHEN TTS is invoked for Urdu (ur) THEN the Voice_Profile SHALL specify prosody style 'formal' to respect cultural communication norms
-5. WHEN a user requests male voice narration THEN the System SHALL apply the Voice_Profile's male voice ID to the TTS engine
-6. WHEN a user requests female voice narration THEN the System SHALL apply the Voice_Profile's female voice ID to the TTS engine
-7. WHEN a user requests neutral voice narration THEN the System SHALL apply the Voice_Profile's neutral voice ID to the TTS engine
-8. IF a requested voice (male/female/neutral) is unavailable for the active language THEN the System SHALL fall back to any available voice for that language rather than failing silently
-9. THE Voice_Profile configuration SHALL be defined in a centralized mapping `LANGUAGE_VOICE_PROFILES: Record<SupportedLanguage, LanguageVoiceProfile>` accessible to the AudioEngine class
-
-
-### Requirement 19: Application Bootstrap and Language Preloading
-
-**User Story:** As the system, I want to efficiently preload critical languages during application startup, so that users experience minimal latency when switching to Telugu, Hindi, or other common languages.
+**User Story:** As a multilingual learner, I want my language preferences saved to my account so that I can switch devices and continue in my chosen language.
 
 #### Acceptance Criteria
 
-1. DURING application bootstrap THEN the System SHALL invoke `preloadCriticalLanguages()` which triggers dynamic imports for: English (en), Telugu (te), and Hindi (hi) Translation_Dictionaries and Glossaries
-2. THE preloading of critical languages SHALL happen asynchronously in parallel using Promise.all(), not sequentially
-3. WHEN critical language preloading completes THEN the imported dictionaries and glossaries SHALL be cached in memory for immediate access
-4. IF preloading of a critical language fails THEN the System SHALL log the error but continue; the language will be loaded on-demand when requested
-5. WHEN the user switches to a critical language that has been preloaded THEN the language switch SHALL complete within 50ms (latency of cached retrieval only, no module import)
-6. WHEN the user switches to a non-critical language THEN the language switch SHALL trigger a dynamic import and complete within 500ms (including module download and parse time)
-7. THE System SHALL define critical languages as: English (en), Telugu (te), Hindi (hi)
-8. NON-critical languages (Marathi, Gujarati, Tamil, Kannada, Bengali, Punjabi, Malayalam, Odia, Assamese, Urdu) MAY be loaded on-demand without preloading
+1. WHEN an authenticated user selects a language THEN the System SHALL store the language code in their Firebase user profile under the field `preferred_language`
+2. WHEN an authenticated user logs in THEN the System SHALL retrieve their stored `preferred_language` and automatically load that language
+3. WHEN an authenticated user changes their language preference THEN the System SHALL immediately update Firebase and reflect the change across all open sessions
+4. IF a user's account has no saved language preference THEN the System SHALL default to their browser locale or English
+5. WHEN a user logs out THEN the System SHALL not clear their saved language preference so that it persists for next login
 
+---
 
-### Requirement 20: Data Migration and Update Workflow for Glossaries and Dictionaries
+### Requirement 13: Per-User Learning Progress Tracking
 
-**User Story:** As a content manager, I want to update glossary terms and translations without downtime, so that corrections and new content are deployed to users seamlessly.
+**User Story:** As a learner, I want to see my learning progress tracked separately for each language I study, so that I can measure improvement and stay motivated.
 
 #### Acceptance Criteria
 
-1. WHEN a Translation_Dictionary is updated THEN the updated file SHALL be committed to version control with a clear commit message indicating which language was updated
-2. WHEN a Glossary_Entry is added or modified THEN the update SHALL be validated against the `parseGlossary()` parser to ensure data integrity before being committed
-3. WHEN updating a Glossary_Entry's prerequisites THEN the System SHALL verify that all referenced prerequisite term IDs exist in the same language's Glossary
-4. IF a prerequisite term ID is invalid or missing THEN the update SHALL fail with an error message indicating the missing prerequisite
-5. WHEN a new language's Translation_Dictionary and Glossary are added THEN the System's supported languages configuration SHALL be updated to include the new language code
-6. AFTER a Translation_Dictionary or Glossary update is deployed THEN users with the cached version SHALL still experience correct content; caching logic ensures the new content is loaded on next language selection or session
-7. THE System SHALL NOT require a page refresh for users to access updated glossary content; dynamic imports ensure new versions are loaded on next language change
-8. WHEN updating a language's Voice_Profile THEN the update SHALL apply to all new TTS operations immediately; ongoing audio playback for previous users SHALL continue with cached voice settings
+1. WHEN a user completes a quiz or challenge in any language THEN the System SHALL record progress data including: language, quiz ID, score, timestamp, and completion status
+2. WHEN a user's progress is recorded THEN the System SHALL store it in Firebase under their user profile with structure: `progress[language_code][quiz_id]`
+3. WHEN a user views their dashboard THEN the System SHALL display separate progress bars for each language showing: concepts completed, quizzes passed, total study time, and current streak
+4. WHEN the System calculates learning metrics THEN all metrics SHALL be calculated per language, not aggregated across languages
+5. WHEN a user switches languages THEN the System SHALL update the dashboard to show progress in the newly selected language
+6. WHEN a user has zero progress in a language THEN the System SHALL display "Start your first quiz" prompt instead of empty progress bars
 
+---
 
-</content>
+### Requirement 14: Weekly Challenges Per User Per Language
+
+**User Story:** As a competitive learner, I want access to weekly challenges in my language that refresh automatically, so that I stay engaged and test my knowledge regularly.
+
+#### Acceptance Criteria
+
+1. WHEN a user selects a language THEN the System SHALL display the current week's challenge in that language with quiz questions, optional scenarios, and a scoring rubric
+2. WHEN a user completes a weekly challenge in any language THEN the System SHALL record the completion, calculate a score, and display results immediately
+3. WHEN a new week begins (Monday 00:00 UTC) THEN the System SHALL reset completed challenge status for all users and display the new week's challenge
+4. WHEN a user returns to a completed challenge from a previous week THEN the System SHALL show "Challenge completed" status with their score and option to retry
+5. THE System SHALL generate language-specific challenges where questions, scenarios, and answer options are all translated to the selected language
+6. WHEN a challenge is generated for a language THEN all glossary term references SHALL link to the glossary entry in that language
+
+---
+
+### Requirement 15: Achievement Badges per User per Language
+
+**User Story:** As a motivated learner, I want to earn badges for milestones in each language, so that I feel accomplished and stay engaged with learning.
+
+#### Acceptance Criteria
+
+1. WHEN a user completes specific learning milestones in any language THEN the System SHALL automatically award corresponding Achievement Badges (e.g., "First 5 Concepts", "Weekly Champion", "Glossary Master")
+2. WHEN a badge is earned THEN the System SHALL store it in Firebase under the user's profile with structure: `badges[language_code][badge_id]`
+3. WHEN a user views their dashboard THEN the System SHALL display earned badges for the current language only, with badge name, description, and award date
+4. WHEN a user selects a new language THEN the System SHALL display previously earned badges in that language if they exist, or show "Earn badges in [language name]" prompt
+5. THE System SHALL support 8+ badge types including: First Lesson, First Quiz, 5 Concepts, 10 Concepts, Weekly Challenge, Glossary Master, Expert (50+ concepts), and Multilingual Master (5+ languages)
+6. WHEN a badge description is displayed THEN the description and badge name SHALL be translated to the current language
+
+---
+
+### Requirement 16: Multilingual Learning Content Coherence
+
+**User Story:** As an educator, I want all learning content (analogies, examples, glossary terms) to be culturally appropriate and linguistically consistent across all languages, so that learners in any language have equal educational quality.
+
+#### Acceptance Criteria
+
+1. WHEN a Glossary Entry is created in English THEN the System SHALL require corresponding entries in all Supported Languages before the entry is marked complete
+2. WHEN analogies are created for a glossary term THEN analogies in each language SHALL be adapted to local cultural context, not machine-translated directly
+3. WHEN a localized component displays an analogy THEN the analogy SHALL reference culturally relevant examples from the learner's region
+4. WHEN glossary terms are displayed across different languages THEN the order of glossary entries (by section number) SHALL be identical across all language versions
+5. WHEN a glossary term has multiple meanings or connotations in different languages THEN the System SHALL provide language-specific definition entries to avoid confusion
+
+---
+
+### Requirement 17: Search Performance and Relevance
+
+**User Story:** As a user, I want glossary search to return results instantly with relevant matches prioritized, so that I can quickly find the concepts I'm looking for without waiting.
+
+#### Acceptance Criteria
+
+1. WHEN a search query is entered THEN the System SHALL return results within 100ms for glossary searches (85 entries maximum per language)
+2. WHEN search results are ranked THEN exact term matches SHALL appear first, followed by definition matches, followed by analogy matches
+3. WHEN a user searches with partial queries (e.g., "recur" for "recursion") THEN the System SHALL find and return the matching glossary entry
+4. WHEN a glossary has no matches for a search query THEN the System SHALL return zero results without hanging or displaying errors
+
+---
+
+### Requirement 18: Error Handling and Graceful Degradation
+
+**User Story:** As a user with unreliable internet, I want the application to continue functioning even if some language assets fail to load, so that I can still access content in other languages.
+
+#### Acceptance Criteria
+
+1. IF a Translation Dictionary fails to load THEN the System SHALL display the translation key as fallback text and log an error without crashing
+2. IF a Glossary fails to load for a selected language THEN the System SHALL disable glossary search, display a notification, and allow user to switch to a language with available glossary
+3. IF TTS voice is unavailable for a language THEN the System SHALL silently skip audio playback, log a warning, and allow user to continue without audio
+4. WHEN any language asset fails to load after a timeout THEN the System SHALL automatically fall back to English and display a user-friendly message explaining the temporary issue
+5. WHEN internet connectivity is restored THEN the System SHALL retry failed language loads automatically
+
+---
+
+### Requirement 19: Accessibility and Inclusion
+
+**User Story:** As a learner with accessibility needs, I want all multilingual content to be accessible with screen readers, keyboard navigation, and adjustable text sizes, so that I can learn independently.
+
+#### Acceptance Criteria
+
+1. WHEN glossary entries are displayed THEN the System SHALL provide semantic HTML structure with proper heading hierarchy for screen reader users
+2. WHEN TTS is playing THEN the System SHALL display live transcription or captions in the selected language for deaf learners
+3. WHEN any interactive element is focused THEN the System SHALL apply visible focus indicators that meet WCAG AA contrast requirements
+4. WHEN a user navigates with keyboard only THEN all components (language switcher, search, badges, dashboard) SHALL be accessible using Tab, Enter, and arrow keys
+5. WHEN text is displayed THEN the System SHALL support adjustable font sizes (100%, 125%, 150%) without breaking layout
+
+---
+
+### Requirement 20: Performance Optimization for Mobile Users
+
+**User Story:** As a mobile learner in a region with limited bandwidth, I want the app to load quickly with minimal data usage, so that I can study on the go without frustration.
+
+#### Acceptance Criteria
+
+1. WHEN the application loads THEN the main bundle SHALL be under 100KB and language dictionary files SHALL be under 50KB each
+2. WHEN a language is lazy-loaded THEN no blocking network calls SHALL occur in the critical rendering path
+3. WHEN images or assets are displayed THEN the System SHALL serve optimized formats and sizes based on device capabilities
+4. WHEN translation dictionaries are cached THEN subsequent language switches SHALL not require network requests
+5. THE System SHALL implement service worker caching for language assets to enable offline access for previously-loaded languages
+
+---
+
+## Non-Functional Requirements
+
+### Performance
+- Language context initialization SHALL complete within 500ms
+- Translation dictionary retrieval from cache SHALL be instantaneous (<50ms)
+- Glossary search across 85 terms SHALL complete within 100ms
+- Lazy-loaded dictionaries SHALL have a timeout of 5 seconds with fallback to English
+
+### Scalability
+- The system SHALL support addition of new Indian languages without code changes (only new dictionary files)
+- The caching strategy SHALL support loading 13+ language dictionaries without memory issues
+- Glossary search SHALL remain performant as glossary size grows to 100+ terms per language
+
+### Accessibility
+- All translations SHALL maintain semantic meaning and intent from English originals
+- RTL rendering SHALL not break component layout or interactivity
+- All UI text SHALL be translatable (no hardcoded strings in components)
+
+### Compatibility
+- Language support SHALL work across all modern browsers (Chrome, Firefox, Safari, Edge)
+- RTL support SHALL work correctly on mobile devices (iOS Safari, Android Chrome)
+- TTS SHALL fall back gracefully if browser doesn't support Web Speech API or language voice not available
+
+### Data Integrity
+- Language preference changes SHALL be atomic (either fully saved or not at all)
+- Progress data per language SHALL be isolated and not affected by data in other languages
+- Glossary entry prerequisites SHALL always reference valid existing entries
+
+### Security
+- User language preferences SHALL be stored securely in Firebase with proper authentication
+- Learning progress data SHALL be accessible only to authenticated users
+- No user-generated content in translations SHALL execute scripts (XSS prevention)
+
+---
+
+## Dependencies and Constraints
+
+### External Dependencies
+- Firebase Authentication for user login and profile management
+- Firebase Firestore for storing per-user progress and language preferences
+- Web Speech API for multilingual TTS support
+- Tailwind CSS with @tailwindcss/rtl plugin for RTL layout support
+
+### Technology Constraints
+- Dictionary files must be valid TypeScript/ES modules for dynamic imports
+- Glossary entries must have consistent schema across all languages
+- TTS support depends on browser and available language voices (may vary by OS)
+
+### Content Constraints
+- Each Supported Language requires 85+ translated glossary entries
+- Each language requires cultural adaptation of analogies (not just machine translation)
+- Glossary terms must reference valid prerequisite terms within the same language
+
+### Operational Constraints
+- Adding a new language requires: translation dictionary (100+ keys), glossary entries (85+), voice profile config, and RTL testing if applicable
+- Updates to English glossary require corresponding updates in all 12+ languages to maintain parity
+
+---
+
+## Success Metrics
+
+1. **Language Adoption**: At least 40% of monthly active users interact with a non-English language within 2 weeks of feature release
+2. **Learning Engagement**: Users selecting non-English languages complete 20% more glossary lookups and 15% more quizzes compared to baseline
+3. **Performance**: Language switching completes in under 500ms; glossary search returns results in under 100ms
+4. **Accessibility**: 95%+ of glossary searches return at least one result; zero errors from translation dictionary loading
+5. **Content Parity**: All 85+ glossary terms are available in all 12 Supported Languages within 4 weeks of launch
+6. **User Retention**: Users who log in and set a language preference show 30% higher 7-day retention compared to users without language preference
+7. **RTL Correctness**: Urdu interface renders with correct text direction; all RTL components pass visual regression tests
+8. **Multilingual Engagement**: Users active in 2+ languages complete 25% more weekly challenges than single-language users
+
+---
+
+## Success Definition
+
+The multilingual expansion is considered successful when:
+
+✅ All 12 Supported Languages load without errors and render correctly
+✅ Users can search glossary across 85+ terms in their language
+✅ Per-user progress tracking works correctly for each language
+✅ Weekly challenges and badges display correctly in all languages
+✅ RTL layout works flawlessly for Urdu
+✅ Language switching feels instantaneous (<500ms latency)
+✅ Mobile users on limited bandwidth can access the app with proper optimization
+✅ At least 35% of MAU engages with non-English content
+✅ Zero critical errors related to language loading or translation missing

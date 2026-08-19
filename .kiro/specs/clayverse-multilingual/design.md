@@ -757,3 +757,129 @@ src/
 7. **Fallback Strategy**: Always gracefully fall back to English
 8. **Analytics**: Track per-language learning outcomes separately
 
+---
+
+## 6. CORRECTNESS PROPERTIES
+
+*A property is a characteristic or behavior that should hold true across all valid executions of a system—essentially, a formal statement about what the system should do. Properties serve as the bridge between human-readable specifications and machine-verifiable correctness guarantees.*
+
+### Property 1: Language Initialization Correctness
+
+*For any* supported browser locale, the System SHALL initialize with a Supported Language matching the locale or fall back to English without error.
+
+**Validates: Requirements 1.1, 1.3, 1.4**
+
+### Property 2: Language Persistence Round-Trip
+
+*For any* Supported Language selection, storing the preference to localStorage and reloading the page SHALL restore the same language without user intervention.
+
+**Validates: Requirements 2.1, 10.1**
+
+### Property 3: Dictionary Lazy-Loading Completeness
+
+*For any* Supported Language, lazy-loading the Translation Dictionary and Glossary SHALL result in all translation keys being available to components via the useLanguage hook.
+
+**Validates: Requirements 2.2, 3.1, 9.1**
+
+### Property 4: Full-Text Search Coverage
+
+*For any* glossary term, definition, or analogy string in the current language's glossary, searching with a substring of that text SHALL return the corresponding GlossaryEntry in results.
+
+**Validates: Requirements 4.1, 8.1, 8.2**
+
+### Property 5: RTL Layout Consistency
+
+*When* Urdu (ur) or any RTL language is selected, the System SHALL apply document.documentElement.dir="rtl" and all RTL-aware components SHALL render with mirrored layout (text-right, margin-right instead of margin-left).
+
+**Validates: Requirements 5.1, 5.2, 5.3**
+
+### Property 6: Voice Profile Application
+
+*For any* Supported Language with a defined Voice Profile, selecting that language and triggering TTS SHALL apply the language-specific speechRate, pitch, and prosody settings to the synthesized speech.
+
+**Validates: Requirements 7.1, 7.2, 7.3**
+
+### Property 7: Search Result Accuracy
+
+*For any* search query and glossary, all returned search results SHALL have matchType (term/definition/analogy) matching the actual location of the query match within the entry.
+
+**Validates: Requirements 8.3, 8.4, 17.1**
+
+### Property 8: Cache Hit Behavior
+
+*For any* language, loading the same language twice without clearing cache SHALL retrieve the cached dictionary on the second load without re-importing from source.
+
+**Validates: Requirements 9.2, 9.3**
+
+### Property 9: Fallback Graceful Degradation
+
+*When* dictionary loading fails for any reason (network error, invalid language, timeout), the System SHALL automatically fall back to English and remain fully functional without throwing uncaught errors.
+
+**Validates: Requirements 9.4, 18.1, 18.2**
+
+### Property 10: Glossary Entry Schema Consistency
+
+*For any* Glossary Entry in any Supported Language, the entry SHALL include all required fields: id, term, definition, and section number, with optional fields (analogies, prerequisites, tags) being consistently structured.
+
+**Validates: Requirements 4.2, 4.3**
+
+### Property 11: Translation Key Coverage
+
+*For any* Supported Language, loading the Translation Dictionary SHALL provide translations for all navigation, section, component, and UI message keys without missing entries (missing keys fallback to key name).
+
+**Validates: Requirements 3.2, 3.3**
+
+### Property 12: Prerequisite Term Validation
+
+*For any* Glossary Entry with prerequisites defined, all referenced prerequisite term IDs SHALL correspond to valid entries within the same language's glossary.
+
+**Validates: Requirements 4.5, 4.6**
+
+### Property 13: Script Type Mapping Correctness
+
+*For each* Supported Language, the Language Metadata SHALL correctly assign script type (Latin, Devanagari, Dravidian, Bengali, Perso-Arabic) matching the language's writing system.
+
+**Validates: Requirements 6.1, 6.2**
+
+### Property 14: Language Metadata Completeness
+
+*For each* Supported Language, Language Metadata SHALL include: code, native name, English name, text direction (ltr/rtl), script type, and voice profile configuration.
+
+**Validates: Requirements 1.6, 2.3, 2.4**
+
+### Property 15: User Progress Isolation Per Language
+
+*For any* authenticated user, learning progress recorded in one language SHALL be stored and retrieved independently from progress in other languages, with progress data keyed by language code.
+
+**Validates: Requirements 12.2, 13.2, 13.3**
+
+### Property 16: Authentication and Preference Persistence
+
+*For any* authenticated user who sets a language preference, logging out and logging back in SHALL restore the same language preference from Firebase without manual re-selection.
+
+**Validates: Requirements 11.1, 11.3, 12.1, 12.2**
+
+### Property 17: Weekly Challenge Language Coherence
+
+*For any* weekly challenge generated in a given language, all quiz questions, scenarios, answer options, and glossary references SHALL be translated to and displayed in that language.
+
+**Validates: Requirements 14.1, 14.2, 14.5**
+
+### Property 18: Badge Award and Display Consistency
+
+*For any* user earning a badge in a given language, the badge SHALL be stored in Firebase under that user's badges[language_code] hierarchy and display with translated name and description when that language is selected.
+
+**Validates: Requirements 15.1, 15.2, 15.5, 15.6**
+
+### Property 19: Glossary Content Parity Across Languages
+
+*For any* glossary term ID that exists in English, the same term ID SHALL exist in all other Supported Languages with semantically equivalent (not machine-translated) definitions and analogies.
+
+**Validates: Requirements 16.1, 16.4, 16.5**
+
+### Property 20: Performance: Dictionary Load Timeout
+
+*For any* language, if lazy-loading a Translation Dictionary or Glossary exceeds 5 seconds, the System SHALL timeout, fall back to English, and allow the user to continue without blocking interaction.
+
+**Validates: Requirements 9.4, 20.1, 20.2**
+

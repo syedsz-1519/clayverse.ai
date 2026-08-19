@@ -1,9 +1,1 @@
-{
-  "specName": "Clayverse AI - Multilingual Expansion",
-  "specType": "feature",
-  "workflowType": "design-first",
-  "featureName": "clayverse-multilingual",
-  "createdAt": "2026-08-19",
-  "phase": "design",
-  "status": "in_progress"
-}
+{"specId": "a116b2ec-8c67-423e-9b85-d2b82d002d2c", "workflowType": "design-first", "specType": "feature"}

@@ -1,944 +1,1507 @@
-# Implementation Tasks: Clayverse AI - Multilingual Expansion
+# Tasks: Clayverse AI - Multilingual Expansion
 
-**Spec**: Clayverse AI - Multilingual Expansion  
-**Scope**: Transform the platform to support 12+ Indian languages with full localization, TTS, RTL support, and interactive sandboxes
+## Task Organization & Dependencies
 
----
+### Phase 1: Foundation Setup (Tasks 1.1 - 1.8)
+Core infrastructure for multilingual support - no other tasks can proceed without these.
 
-## TASK DEPENDENCY GRAPH
+### Phase 2: Core Localization (Tasks 2.1 - 2.13)
+Dictionary and glossary implementation - depends on Phase 1 completion.
 
-```
-┌─────────────────────────────────────────────────────────────────────┐
-│ PHASE 1: FOUNDATION (Weeks 1-2)                                     │
-├─────────────────────────────────────────────────────────────────────┤
-│                                                                     │
-│  Task 1.1: Set up multi-language file structure                    │
-│  Task 1.2: Implement Language Context API (useLanguage hook)       │
-│  Task 1.3: Create base English translation dictionary              │
-│  Task 1.4: Implement lazy-loading infrastructure                   │
-│                                                                     │
-│  ↓ ↓ ↓ ↓ (all must complete before Phase 2)                        │
-│                                                                     │
-├─────────────────────────────────────────────────────────────────────┤
-│ PHASE 2: MVP LANGUAGES (Weeks 3-4)                                 │
-├─────────────────────────────────────────────────────────────────────┤
-│                                                                     │
-│  Task 2.1: Create Telugu (te) translation dictionary               │
-│  Task 2.2: Create Hindi (hi) translation dictionary                │
-│  Task 2.3: Create Telugu AI glossary (85+ terms)                   │
-│  Task 2.4: Create Hindi AI glossary (85+ terms)                    │
-│  Task 2.5: Implement multilingual TTS integration                  │
-│  Task 2.6: Add language metadata & RTL support                     │
-│  Task 2.7: Localize Hero, WhatIsAI, AIFamilyTree components       │
-│  Task 2.8: Create language switcher UI                             │
-│                                                                     │
-│  ↓ ↓ ↓ ↓ (all must complete before Phase 3)                        │
-│                                                                     │
-├─────────────────────────────────────────────────────────────────────┤
-│ PHASE 3: EXPANSION LANGUAGES (Weeks 5-6)                           │
-├─────────────────────────────────────────────────────────────────────┤
-│                                                                     │
-│  Task 3.1: Create Marathi (mr) translation & glossary              │
-│  Task 3.2: Create Gujarati (gu) translation & glossary             │
-│  Task 3.3: Create Tamil (ta) translation & glossary                │
-│  Task 3.4: Create Kannada (kn) translation & glossary              │
-│  Task 3.5: Implement glossary search (multi-language)              │
-│  Task 3.6: Add pronunciation guides                                │
-│  Task 3.7: Test TTS across all Phase 3 languages                   │
-│                                                                     │
-│  ↓ ↓ ↓ ↓                                                            │
-│                                                                     │
-├─────────────────────────────────────────────────────────────────────┤
-│ PHASE 4: FINAL LANGUAGES & POLISH (Weeks 7-8)                      │
-├─────────────────────────────────────────────────────────────────────┤
-│                                                                     │
-│  Task 4.1: Create Bengali (bn) translation & glossary              │
-│  Task 4.2: Create Punjabi (pa) translation & glossary              │
-│  Task 4.3: Create Malayalam (ml) translation & glossary            │
-│  Task 4.4: Create Odia (or) translation & glossary                 │
-│  Task 4.5: Create Assamese (as) translation & glossary             │
-│  Task 4.6: Create Urdu (ur) translation & glossary + RTL fix       │
-│  Task 4.7: Localize all interactive sandboxes (Token, RAG, CNN)   │
-│  Task 4.8: Per-language learning progress tracking                 │
-│  Task 4.9: Language-specific analytics dashboard                   │
-│  Task 4.10: Performance optimization & code-splitting              │
-│  Task 4.11: Accessibility audit & fixes                            │
-│  Task 4.12: Cross-language integration testing                     │
-│                                                                     │
-└─────────────────────────────────────────────────────────────────────┘
-```
+### Phase 3: Audio & TTS (Tasks 3.1 - 3.4)
+Multilingual speech synthesis - depends on Phase 2 (language detection and metadata).
+
+### Phase 4: UI Components (Tasks 4.1 - 4.7)
+Localized UI components - depends on Phase 1 and Phase 2.
+
+### Phase 5: Login Dashboard (Tasks 5.1 - 5.9)
+User authentication and progress tracking - can proceed in parallel with Phase 4.
+
+### Phase 6: Testing & Optimization (Tasks 6.1 - 6.5)
+Performance and quality validation - final phase after core functionality complete.
+
+### Phase 7: Documentation & Deployment (Tasks 7.1 - 7.3)
+Developer docs and production deployment - final phase.
 
 ---
 
-## PHASE 1: FOUNDATION (Weeks 1-2)
+## PHASE 1: FOUNDATION SETUP
 
-### Task 1.1: Set Up Multi-Language File Structure
+### 1.1 Set Up Multi-Language File Structure
 
-**Objective**: Create the directory structure and configuration for supporting 12+ languages with lazy-loading
-
-**User Story**: As a developer, I need a scalable file structure for language dictionaries so that adding new languages is simple and consistent.
-
-**Acceptance Criteria**:
-1. Create `/src/data/localization/` directory with subdirectories:
-   - `languages/` (for UI translation files)
-   - `glossaries/` (for AI term definitions per language)
-   - `metadata.ts` (language metadata, voice profiles, formatting rules)
-2. Configure Vite/webpack for code-splitting by language (each language loads as separate chunk)
-3. Create `.config.kiro` with proper spec metadata
-4. Document file structure in project README
-5. Set up TypeScript types for language structure
-
+**Complexity**: Small | **Estimate**: 1-2 hours
+**Dependencies**: None
 **Subtasks**:
-- [ ] Create directory structure
-- [ ] Define TypeScript interfaces (`TranslationDictionary`, `GlossaryEntry`, `LanguageMetadata`)
-- [ ] Configure build tool code-splitting
-- [ ] Add to `.gitignore` (if needed for generated files)
-- [ ] Document localization guidelines
+- [ ] Create `src/data/localization/` directory structure
+- [ ] Create `src/data/localization/languages/` subdirectory
+- [ ] Create `src/data/localization/glossaries/` subdirectory
+- [ ] Create placeholder files for all 13 languages (en.ts, te.ts, hi.ts, mr.ts, gu.ts, ta.ts, kn.ts, bn.ts, pa.ts, ml.ts, or.ts, as.ts, ur.ts)
+- [ ] Create glossary placeholder files for all 13 languages (ai-terms-*.ts)
+- [ ] Configure TypeScript path aliases for easy imports from localization directory
 
-**Time Estimate**: 2-3 hours
+**Acceptance Criteria**:
+- Directory structure matches design specification: `src/data/localization/languages/` and `src/data/localization/glossaries/`
+- All 13 language files created with `.ts` extension
+- TypeScript can resolve imports from `../data/localization/` without errors
+- Each language file exports a default empty dictionary/glossary as placeholder
 
-**Dependencies**: None (starter task)
+**Test Cases**:
+- Verify directory tree structure with no errors
+- Confirm all 26 files created (13 languages × 2 file types)
+- Test TypeScript import resolution doesn't throw errors
 
 ---
 
-### Task 1.2: Implement Language Context API (useLanguage Hook)
+### 1.2 Implement Language Context and Hooks
 
-**Objective**: Create React Context and custom hooks for managing language state, translations, and glossary lookups
-
-**User Story**: As a component developer, I want a single hook I can use to access translations and language metadata, so I don't duplicate localization logic across components.
-
-**Acceptance Criteria**:
-1. Create `useLanguage()` hook that returns: `{ lang, metadata, dict, glossary, setLanguage, t, tGlossary }`
-2. Implement `t(key, params)` function for string translation with parameter substitution
-3. Implement `tGlossary(term)` function for glossary term lookup
-4. Hook uses lazy-loading to fetch dictionaries only when needed
-5. Implement caching so re-selecting a language doesn't re-fetch
-6. Browser language auto-detection with localStorage fallback
-7. Support for RTL detection based on language
-8. TypeScript fully typed with no `any` types
-
+**Complexity**: Medium | **Estimate**: 2-3 hours
+**Dependencies**: 1.1
 **Subtasks**:
-- [ ] Create LanguageContext with proper TypeScript types
-- [ ] Implement lazy dictionary loading with error handling
-- [ ] Add browser language detection logic
-- [ ] Implement localStorage persistence
-- [ ] Create `useLanguageMetadata()` hook for RTL/script detection
-- [ ] Write unit tests for context API
-- [ ] Document hook usage in components
+- [ ] Create `LanguageContext` and `LanguageProvider` in `src/hooks/useLanguage.tsx`
+- [ ] Implement `useLanguage()` hook with proper error handling
+- [ ] Add Language metadata constants and types
+- [ ] Implement browser locale detection with fallback logic
+- [ ] Add localStorage preference storage and retrieval
+- [ ] Implement `setLanguage()` with dictionary/glossary loading
+- [ ] Update HTML document lang and dir attributes on language change
 
-**Time Estimate**: 4-5 hours
+**Acceptance Criteria** (from Requirement 1, 2, 9):
+- LanguageContext provides: lang code, metadata, dict, glossary, setLanguage, t, tGlossary
+- Browser locale detection matches supported languages or falls back to English
+- localStorage preference restored on app startup (prioritized over browser locale)
+- useLanguage() hook throws error if component not wrapped by LanguageProvider
+- Document root lang/dir attributes updated when language changes
+- Three critical languages (en, te, hi) preloaded during bootstrap
 
-**Dependencies**: Task 1.1 (file structure, TypeScript types)
+**Test Cases**:
+- useLanguage() returns correct context
+- Browser locale detection for supported languages works
+- Fallback to English for unsupported languages
+- localStorage persists across sessions
+- Document attributes update correctly
+- Error thrown when hook used outside provider
 
 ---
 
-### Task 1.3: Create Base English Translation Dictionary
+### 1.3 Implement Dictionary Lazy-Loading Infrastructure
 
-**Objective**: Build comprehensive English translation dictionary covering all UI strings and component labels
-
-**User Story**: As a developer, I need a complete English translation file as the base dictionary, so other languages can use it as a reference and fallback.
-
-**Acceptance Criteria**:
-1. Create `src/data/localization/languages/en.ts` with all UI strings
-2. Include translations for: navigation, section titles, component labels, interactive elements, Clay dialogs, progress messages
-3. At minimum 200+ translation keys covering full app flow
-4. Use consistent key naming: `'section.name'`, `'button.action'`, `'error.message'` format
-5. Support parameterized strings: `'progress.completed': 'You\'ve mastered {{count}} concepts'`
-6. No hardcoded English strings in UI components after this task
-7. Export as default object with type `TranslationDictionary`
-
+**Complexity**: Medium | **Estimate**: 2-3 hours
+**Dependencies**: 1.1, 1.2
 **Subtasks**:
-- [ ] Audit all components and identify strings to translate
-- [ ] Create comprehensive key list (200+)
-- [ ] Write English translations for all keys
-- [ ] Add parameterized strings where needed
-- [ ] Test parameter substitution with t() function
-- [ ] Document translation keys in README
+- [ ] Create `src/lib/dictionaryLoader.ts` module
+- [ ] Implement `loadDictionary()` with dynamic imports and caching
+- [ ] Implement `loadGlossary()` with dynamic imports and caching
+- [ ] Implement `preloadCriticalLanguages()` function
+- [ ] Add error handling for failed imports
+- [ ] Add cache invalidation logic if needed
+- [ ] Add module size monitoring (target <50KB per language)
 
-**Time Estimate**: 4-5 hours
+**Acceptance Criteria** (from Requirement 3, 6):
+- Dynamic imports work for all language modules
+- Dictionaries cached in memory after first load
+- Failed imports fallback to English gracefully
+- Preload function runs at app bootstrap
+- Critical languages (en, te, hi) preloaded automatically
+- Cache prevents re-import on subsequent language switches
+- Each language file targets <50KB gzipped
 
-**Dependencies**: Task 1.1, Task 1.2
+**Test Cases**:
+- Dictionary loads and caches correctly
+- Failed imports fallback to English
+- Preload completes without errors
+- Cache hits on repeated loads
+- Module size stays under 50KB
 
 ---
 
-### Task 1.4: Implement Lazy-Loading Infrastructure for Dictionaries
+### 1.4 Create Language Metadata Configuration
 
-**Objective**: Set up efficient lazy-loading mechanism so dictionaries load only when user selects that language
-
-**User Story**: As a platform maintainer, I want language dictionaries to load on-demand, so the initial app bundle stays small and fast.
-
-**Acceptance Criteria**:
-1. Create `src/lib/dictionaryLoader.ts` with async loading functions
-2. Implement `loadDictionary(lang)` function with caching
-3. Implement `loadGlossary(lang)` function with caching
-4. Implement `preloadCriticalLanguages()` for English, Telugu, Hindi on app boot
-5. Show loading indicator while fetching non-cached language
-6. Handle loading failures gracefully (fallback to English)
-7. Measure bundle sizes: base bundle < 200KB, each language < 50KB
-8. Test lazy-loading with multiple language switches
-
+**Complexity**: Small | **Estimate**: 1-2 hours
+**Dependencies**: 1.2
 **Subtasks**:
-- [ ] Implement dictionary loader with caching
-- [ ] Add loading state to LanguageContext
-- [ ] Create loading indicator component
-- [ ] Implement critical language preloading
-- [ ] Add error handling & fallback
-- [ ] Measure bundle sizes for base + each language
-- [ ] Performance test: measure language switch time
+- [ ] Define LanguageMetadata interface with all required properties
+- [ ] Create metadata for all 13 languages (code, name, dir, script type, TTS profile, date format, number format)
+- [ ] Implement `useLanguageMetadata()` hook
+- [ ] Add pluralization rules for each language
+- [ ] Add RTL direction configuration for Urdu
+- [ ] Add script type mapping (Devanagari, Dravidian, Bengali, Perso-Arabic, Latin)
 
-**Time Estimate**: 3-4 hours
+**Acceptance Criteria** (from Requirement 2):
+- Language metadata defined for all 13 languages
+- Urdu (ur) has dir='rtl', all others have dir='ltr'
+- Script type mappings correct (ur→Perso-Arabic, te/ta→Dravidian, etc.)
+- useLanguageMetadata() returns complete metadata object
+- Date format and number format configured per language
+- Pluralization rules function provided for each language
 
-**Dependencies**: Task 1.1, Task 1.2, Task 1.3
+**Test Cases**:
+- Metadata for each language complete and accurate
+- RTL languages correctly configured
+- Script types match language specifications
+- useLanguageMetadata() returns correct metadata
 
 ---
 
-## PHASE 2: MVP LANGUAGES (Weeks 3-4)
+### 1.5 Implement RTL/LTR Support Infrastructure
 
-### Task 2.1: Create Telugu (te) Translation Dictionary
-
-**Objective**: Build complete Telugu translation for all UI strings, optimized for Telugu speakers
-
-**User Story**: As a Telugu learner, I want the entire platform interface in my language, so I can learn without code-switching to English.
-
-**Acceptance Criteria**:
-1. Create `src/data/localization/languages/te.ts` with all translation keys from English
-2. All 200+ keys translated to Telugu (not machine-translated; human-reviewed)
-3. Translations use formal, clear Telugu suitable for educational content
-4. No transliteration of English technical terms where not necessary
-5. All translated strings match or exceed English string length capacity (no layout breaking)
-6. Export as default object
-7. Tested with language switcher (verify no missing keys)
-
+**Complexity**: Medium | **Estimate**: 2-3 hours
+**Dependencies**: 1.2, 1.4
 **Subtasks**:
-- [ ] Compile master list of 200+ translation keys
-- [ ] Translate all keys to Telugu with native speaker review
-- [ ] Handle pluralization rules for Telugu
-- [ ] Test in UI with actual components
-- [ ] Verify no layout issues with Telugu text length
-- [ ] Final review by Telugu speaker
+- [ ] Install Tailwind CSS RTL plugin (`@tailwindcss/rtl`)
+- [ ] Configure Tailwind to enable RTL support
+- [ ] Create RTL detection utility function
+- [ ] Create helper component wrapper for RTL-aware styling
+- [ ] Update index.css with RTL-specific styles if needed
+- [ ] Test RTL class application in components
+- [ ] Create RTL test components for validation
 
-**Time Estimate**: 6-7 hours (with native speaker involvement)
+**Acceptance Criteria** (from Requirement 5):
+- Document root dir attribute updates to 'rtl' for Urdu
+- Document root dir attribute updates to 'ltr' for all other languages
+- Tailwind @tailwindcss/rtl plugin applied globally
+- RTL components auto-mirror layout, margins, padding
+- Text-right alignment applied for RTL languages
+- Directional icons can be flipped horizontally
 
-**Dependencies**: Task 1.3 (English dictionary)
+**Test Cases**:
+- Document dir attribute correct for each language
+- RTL components render correctly
+- Text alignment correct for RTL/LTR
+- Tailwind RTL classes applied
+- Icons flip correctly in RTL mode
 
 ---
 
-### Task 2.2: Create Hindi (hi) Translation Dictionary
+### 1.6 Create Type Definitions and Interfaces
 
-**Objective**: Build complete Hindi translation for all UI strings, culturally adapted for Hindi-speaking learners
-
-**User Story**: As a Hindi learner, I want the platform available in Hindi so I can learn AI concepts in my native language.
-
-**Acceptance Criteria**:
-1. Create `src/data/localization/languages/hi.ts` with all 200+ translation keys
-2. Hindi translations use Devanagari script correctly
-3. Formal Hindi suitable for educational context (not colloquial)
-4. Handle Hindi-specific grammar and gender where applicable
-5. All strings properly formatted and tested in UI
-6. No layout breaking with Hindi text length
-7. Export as default object
-
+**Complexity**: Small | **Estimate**: 1 hour
+**Dependencies**: None
 **Subtasks**:
-- [ ] Translate all 200+ keys to Hindi
-- [ ] Hindi speaker review for accuracy and formality
-- [ ] Handle Devanagari script rendering
-- [ ] Test in UI components
-- [ ] Verify layout stability
-- [ ] Final approval
+- [ ] Define `TranslationDictionary` type
+- [ ] Define `GlossaryEntry` interface with all properties
+- [ ] Define `LanguageMetadata` interface
+- [ ] Define `LanguageVoiceProfile` interface
+- [ ] Define `SupportedLanguage` union type
+- [ ] Define `LanguageContextType` interface
+- [ ] Add all types to `src/types.ts`
 
-**Time Estimate**: 6-7 hours
+**Acceptance Criteria**:
+- All interfaces well-defined with proper optional fields
+- Types imported from `src/types.ts` in all modules
+- No TypeScript errors in type usage
+- Interface properties match design specification
 
-**Dependencies**: Task 1.3
+**Test Cases**:
+- Types compile without errors
+- Type inference works correctly
+- No 'any' types in implementation
 
 ---
 
-### Task 2.3: Create Telugu AI Glossary (85+ Terms)
+### 1.7 Implement Parser and Serializer for Localization Data
 
-**Objective**: Build comprehensive glossary of AI terms in Telugu with definitions, analogies, and prerequisites
-
-**User Story**: As a Telugu learner, I want all 85+ AI concepts explained in Telugu with local analogies, so I understand complex topics through familiar contexts.
-
-**Acceptance Criteria**:
-1. Create `src/data/localization/glossaries/ai-terms-te.ts` with 85+ entries
-2. Each term includes: id, term (Telugu), definition (Telugu), analogies (2-3, culturally adapted), prerequisites, section (1-12), tags, optional audioUrl
-3. Analogies use Telugu/Indian contexts (farmers, daily life, local examples)
-4. Prerequisites correctly map to other Telugu terms
-5. Curriculum sections 1-12 are all populated
-6. Terms are organized by section and difficulty progression
-7. All terms reviewed by Telugu speaker for accuracy
-8. Tested with glossary search function
-
+**Complexity**: Medium | **Estimate**: 2-3 hours
+**Dependencies**: 1.6
 **Subtasks**:
-- [ ] Compile 85+ terms based on English glossary
-- [ ] Write Telugu definitions for each term
-- [ ] Create 2-3 culturally relevant analogies per term
-- [ ] Map prerequisites correctly
-- [ ] Organize by section (1-12)
-- [ ] Telugu speaker review
-- [ ] Test glossary search
-- [ ] Load testing with 85+ entries
+- [ ] Create `src/lib/localizationParser.ts` module
+- [ ] Implement `parseLanguageDictionary()` with validation
+- [ ] Implement `serializeLanguageDictionary()` function
+- [ ] Implement `parseGlossary()` with entry validation
+- [ ] Implement `serializeGlossary()` function
+- [ ] Add comprehensive error messages for validation failures
+- [ ] Add round-trip testing utilities
+- [ ] Add JSON pretty-printing with consistent indentation
 
-**Time Estimate**: 10-12 hours (with native speaker collaboration)
+**Acceptance Criteria** (from Requirement 13):
+- Parser validates dictionary is Record<string, string>
+- Parser validates glossary entries have required fields (id, term, definition)
+- Serialized JSON can be parsed back to identical object (round-trip property)
+- Descriptive errors thrown for invalid input
+- JSON formatted with 2-space indentation and sorted keys
+- All 12 glossary entry properties properly handled
 
-**Dependencies**: Task 2.1
+**Test Cases**:
+- Valid dictionary parses correctly
+- Invalid dictionary throws error with message
+- Valid glossary parses correctly
+- Invalid glossary entries throw descriptive errors
+- Round-trip works for dictionaries
+- Round-trip works for glossaries
+- JSON formatting consistent and readable
 
 ---
 
-### Task 2.4: Create Hindi AI Glossary (85+ Terms)
+### 1.8 Set Up Language Context Provider in App Root
 
-**Objective**: Build comprehensive glossary of AI terms in Hindi with cultural adaptations
-
-**User Story**: As a Hindi learner, I want Hindi explanations of AI concepts with Indian context, so learning feels personally relevant.
-
-**Acceptance Criteria**:
-1. Create `src/data/localization/glossaries/ai-terms-hi.ts` with 85+ entries
-2. Each term fully translated and defined in Hindi
-3. Analogies use Hindi/Indian cultural context
-4. All 12 curriculum sections populated
-5. Hindi speaker reviewed
-6. Tested with search and display
-
+**Complexity**: Small | **Estimate**: 1 hour
+**Dependencies**: 1.2, 1.3
 **Subtasks**:
-- [ ] Translate 85+ terms to Hindi
-- [ ] Write Hindi definitions
-- [ ] Create Hindi-context analogies
-- [ ] Map prerequisites
-- [ ] Organize by section
-- [ ] Hindi speaker review
-- [ ] Test glossary
+- [ ] Wrap App component with LanguageProvider in `src/main.tsx`
+- [ ] Verify provider initialization order (before any language-dependent components)
+- [ ] Add preload function call during app bootstrap
+- [ ] Test context availability in all components
+- [ ] Add error boundary for context-related errors
 
-**Time Estimate**: 10-12 hours
+**Acceptance Criteria**:
+- LanguageProvider wraps entire app
+- Preload function executes on app init
+- All components can access useLanguage() hook
+- No context-related errors in console
+- Language persistence works across sessions
 
-**Dependencies**: Task 2.2
+**Test Cases**:
+- Provider mounts without errors
+- Components can use useLanguage()
+- Context values persist on page reload
+- No console errors during startup
 
 ---
 
-### Task 2.5: Implement Multilingual TTS Integration
+## PHASE 2: CORE LOCALIZATION
 
-**Objective**: Integrate Web Speech Synthesis API with language-specific voice profiles and optimize speech quality per language
+### 2.1 Implement English (Base) Dictionary
 
-**User Story**: As a learner, I want Clay to speak explanations in my native language at a comfortable listening pace, so I can learn through audio narration.
-
-**Acceptance Criteria**:
-1. Extend `audioEngine.ts` to support multilingual TTS
-2. Implement `setLanguage(lang)` method to switch TTS language
-3. Define voice profiles for English, Telugu, Hindi with: voiceMap, speechRate, pitch, prosody
-4. Speech rate optimized per language (e.g., Telugu 0.85, English 0.95)
-5. Pitch adjusted to sound natural per language
-6. TTS works across all browsers (graceful fallback if unsupported)
-7. TTS works simultaneously with lo-fi audio (Web Audio API)
-8. User can adjust volume, speech rate, pitch independently
-9. Tested with sample text in English, Telugu, Hindi
-
+**Complexity**: Medium | **Estimate**: 3-4 hours
+**Dependencies**: 1.1, 1.6
 **Subtasks**:
-- [ ] Research Web Speech Synthesis API for language support
-- [ ] Define voice profiles for each language
-- [ ] Implement language switching in AudioEngine
-- [ ] Test TTS with all browsers (Chrome, Safari, Firefox)
-- [ ] Implement speech rate/pitch adjustment UI
-- [ ] Test concurrent audio (TTS + lo-fi synthesis)
-- [ ] Add fallback for unsupported browsers
-- [ ] Performance test on low-end devices
+- [ ] Create comprehensive English translation dictionary (`src/data/localization/languages/en.ts`)
+- [ ] Include all UI text keys for: navigation, sections, components, glossary labels, feedback messages
+- [ ] Structure with logical sections (nav.*, section.*, component.*, glossary.*, clay.*, progress.*)
+- [ ] Add 50+ common UI string keys
+- [ ] Include parameterized strings with {{}} placeholders for dynamic values
+- [ ] Add greeting, prompts, and instructional text from Clay mascot
+- [ ] Document all keys in comments for translator reference
 
-**Time Estimate**: 5-6 hours
+**Acceptance Criteria** (from Requirement 3, 10):
+- English dictionary exported as default from `en.ts`
+- Contains 50+ translation keys
+- Keys use dot notation for organization (nav.home, section.basics, etc.)
+- Parameterized strings use {{}} syntax
+- No hardcoded English text in components beyond fallback
+- File size under 50KB
 
-**Dependencies**: Task 1.2, existing audioEngine.ts
+**Test Cases**:
+- Dictionary imports without errors
+- All keys retrieve correct English text
+- Parameter interpolation works (t('key', {param: 'value'}))
+- File size within limits
+- No missing keys for core UI
 
 ---
 
-### Task 2.6: Add Language Metadata & RTL Support
+### 2.2 Implement English Glossary (AI Terms)
 
-**Objective**: Implement language metadata (text direction, script type, formatting rules) and RTL layout support
-
-**User Story**: As a developer, I want language-specific metadata (RTL, script type) to automatically apply correct styling, so RTL languages and special scripts render correctly without manual adjustments per component.
-
-**Acceptance Criteria**:
-1. Create `src/data/localization/metadata.ts` with `LANGUAGE_METADATA` for all 12 languages
-2. Include for each language: code, name, englishName, dir (ltr/rtl), scriptType, nativeSpeaker, pluralRules, dateFormat
-3. Create `useLanguageMetadata()` hook to access metadata
-4. Implement RTL detection: set `dir` attribute on HTML element
-5. Add Tailwind CSS RTL utilities (using `@tailwindcss/rtl` plugin or custom Tailwind config)
-6. Update components to use `metadata.dir` for conditional RTL styling
-7. Test RTL layout with Urdu (when available)
-8. No layout breaking in RTL mode
-
+**Complexity**: Large | **Estimate**: 6-8 hours
+**Dependencies**: 1.6, 2.1
 **Subtasks**:
-- [ ] Define metadata structure
-- [ ] Create metadata for all 12 languages
-- [ ] Install @tailwindcss/rtl plugin
-- [ ] Create useLanguageMetadata hook
-- [ ] Update HTML element RTL attribute
-- [ ] Audit components for RTL-unsafe styles
-- [ ] Update key components with RTL support
-- [ ] Test RTL layout
+- [ ] Create comprehensive English AI glossary (`src/data/localization/glossaries/ai-terms-en.ts`)
+- [ ] Define minimum 85 core AI/ML/LLM terms
+- [ ] Each entry: id, term, definition (zero-jargon), analogies, prerequisites, section (1-12), tags, optional audio/image URLs
+- [ ] Group terms by curriculum section (basics, ML, neural nets, LLMs, RAG, transformers, etc.)
+- [ ] Add analogies using familiar real-world examples
+- [ ] Define prerequisite relationships (term IDs that must be learned first)
+- [ ] Use active voice and positive language in definitions
+- [ ] Assign section numbers aligning with learning progression
 
-**Time Estimate**: 4-5 hours
+**Acceptance Criteria** (from Requirement 4, 15):
+- 85+ glossary entries with complete required fields
+- Each entry has: id, term, definition, analogies, prerequisites, section, tags
+- Definitions are beginner-friendly with zero jargon
+- Analogies use real-world examples (cooking, sports, nature, daily life)
+- Prerequisite term IDs reference valid entries
+- Section numbers 1-12 assign logical learning order
+- File size under 100KB
+- All entries reviewed for accuracy
 
-**Dependencies**: Task 1.2, Task 2.1, Task 2.2
+**Test Cases**:
+- Glossary imports without errors
+- All entries have required fields
+- Prerequisite IDs reference valid entries
+- Section numbers in range 1-12
+- File size within limits
+- 85+ entries present
+- No duplicate IDs
 
 ---
 
-### Task 2.7: Localize Hero, WhatIsAI, AIFamilyTree Components
+### 2.3 Implement Telugu Dictionary
 
-**Objective**: Update key educational components to render in the user's selected language
-
-**User Story**: As a learner, I want the main educational sections (Hero, What is AI, AI Family Tree) displayed in my language, so I can follow the entire learning path in my native language.
-
-**Acceptance Criteria**:
-1. Update `Hero.tsx` to use `useLanguage()` hook and display translated section titles, descriptions
-2. Update `WhatIsAI.tsx` to display content in selected language with translations for all text and labels
-3. Update `AIFamilyTree.tsx` to show AI hierarchy diagram with labels in selected language
-4. Verify all text nodes use `t()` function instead of hardcoded strings
-5. Test all three components with English, Telugu, Hindi
-6. No missing translations (use fallback keys to verify)
-7. Interactive elements work correctly in all languages
-
+**Complexity**: Medium | **Estimate**: 3-4 hours
+**Dependencies**: 1.1, 1.6, 2.1 (reference)
 **Subtasks**:
-- [ ] Audit Hero component for hardcoded strings
-- [ ] Replace strings with t() calls
-- [ ] Audit WhatIsAI for translations
-- [ ] Update interactive elements with translations
-- [ ] Audit AIFamilyTree
-- [ ] Update diagram labels and descriptions
-- [ ] Test with all three languages
-- [ ] Verify no layout breaking with translated text
+- [ ] Create Telugu translation dictionary (`src/data/localization/languages/te.ts`)
+- [ ] Translate all keys from English dictionary to Telugu
+- [ ] Ensure phonetically and culturally appropriate translations
+- [ ] Test with native Telugu speaker if possible
+- [ ] Preserve parameterized strings structure
+- [ ] Handle Telugu script rendering correctly
+- [ ] Verify all keys present and matching English structure
 
-**Time Estimate**: 4-5 hours
+**Acceptance Criteria**:
+- All keys from English dictionary translated to Telugu
+- Translations use proper Telugu script (Unicode)
+- Cultural references adapted to Telugu context
+- Parameterized strings preserved
+- File size under 50KB
+- No missing keys compared to English
 
-**Dependencies**: Task 2.1, Task 2.2, Task 1.2
+**Test Cases**:
+- Dictionary imports and parses correctly
+- All keys have Telugu translations
+- Script renders correctly in browser
+- Parameter interpolation works
+- File size within limits
+- Key structure matches English version
 
 ---
 
-### Task 2.8: Create Language Switcher UI
+### 2.4 Implement Telugu Glossary
 
-**Objective**: Build intuitive language switcher component allowing users to switch between languages easily
-
-**User Story**: As a learner, I want an easy way to switch between languages while learning, so I can explore concepts in different languages or help friends in their language.
-
-**Acceptance Criteria**:
-1. Create `FloatingLanguageSwitcher.tsx` component (or extend existing)
-2. Display all 12 languages with native names and English names
-3. Show currently selected language highlighted
-4. Clicking a language triggers language switch (< 500ms)
-5. Component positions: floating bubble or in navigation bar
-6. Mobile-friendly (touch targets 44px+)
-7. Display loading indicator while language loads
-8. Smooth animation on language switch
-9. Show language code on hover (e.g., "te", "hi")
-10. Persist selection to localStorage
-
+**Complexity**: Large | **Estimate**: 8-10 hours
+**Dependencies**: 2.2, 2.3
 **Subtasks**:
-- [ ] Design language switcher UI (floating or nav bar)
-- [ ] Create component with all 12 language options
-- [ ] Implement language switching logic
-- [ ] Add loading indicator
-- [ ] Test language switch performance
-- [ ] Mobile testing
-- [ ] Animation polishing
-- [ ] localStorage integration
+- [ ] Create Telugu AI glossary (`src/data/localization/glossaries/ai-terms-te.ts`)
+- [ ] Translate 85+ English glossary entries to Telugu with zero-jargon definitions
+- [ ] Use Telugu-specific analogies (farming, cooking, Telugu cultural references)
+- [ ] Ensure definitions are beginner-friendly
+- [ ] Verify cultural appropriateness with Telugu content expert
+- [ ] Translate prerequisite term IDs accordingly
+- [ ] Add Telugu pronunciation guides where beneficial
+- [ ] Review section assignments for Telugu learning context
 
-**Time Estimate**: 3-4 hours
+**Acceptance Criteria**:
+- 85+ glossary entries with all required fields
+- Definitions translated to Telugu (not machine-translated)
+- Analogies use Telugu cultural context (farming, cuisine, daily life)
+- Prerequisites reference Tamil term IDs
+- Culturally appropriate and educationally sound
+- File size under 100KB
 
-**Dependencies**: Task 1.2, Task 2.1, Task 2.2
+**Test Cases**:
+- Glossary imports without errors
+- 85+ entries present with Telugu translations
+- Prerequisite IDs valid
+- Script renders correctly
+- File size within limits
+- No missing keys compared to English version
 
 ---
 
-## PHASE 3: EXPANSION LANGUAGES (Weeks 5-6)
+### 2.5 Implement Hindi Dictionary
 
-### Task 3.1: Create Marathi (mr) Translation & Glossary
-
-**Objective**: Build Marathi language support (UI + 85+ glossary terms)
-
-**User Story**: As a Marathi learner, I want to access the platform entirely in Marathi, so I can learn AI in my native language.
-
-**Acceptance Criteria**:
-1. Create `src/data/localization/languages/mr.ts` with 200+ translations
-2. Create `src/data/localization/glossaries/ai-terms-mr.ts` with 85+ terms
-3. All translations human-reviewed by native Marathi speaker
-4. Analogies adapted for Marathi cultural context
-5. All 12 glossary sections populated
-6. Tested in UI with language switcher
-
+**Complexity**: Medium | **Estimate**: 3-4 hours
+**Dependencies**: 1.1, 1.6, 2.1
 **Subtasks**:
-- [ ] Translate UI strings to Marathi
-- [ ] Translate 85+ glossary terms
-- [ ] Create Marathi-context analogies
-- [ ] Native speaker review
-- [ ] Test in UI
-- [ ] Fix any layout issues
+- [ ] Create Hindi translation dictionary (`src/data/localization/languages/hi.ts`)
+- [ ] Translate all keys to Hindi using Devanagari script
+- [ ] Ensure culturally appropriate Hindi translations
+- [ ] Handle complex Hindi grammar appropriately
+- [ ] Test with native Hindi speaker if possible
+- [ ] Verify Devanagari script rendering
 
-**Time Estimate**: 10-11 hours
+**Acceptance Criteria**:
+- All keys from English dictionary translated to Hindi
+- Devanagari script used correctly
+- File size under 50KB
+- All keys present
 
-**Dependencies**: Task 1.3, Task 2.1
+**Test Cases**:
+- Dictionary imports and parses
+- All keys have Hindi translations
+- Script renders correctly
+- Parameter interpolation works
 
 ---
 
-### Task 3.2: Create Gujarati (gu) Translation & Glossary
+### 2.6 Implement Hindi Glossary
 
-**Objective**: Build Gujarati language support (UI + 85+ glossary terms)
-
-**User Story**: As a Gujarati learner, I want platform access in Gujarati for seamless learning.
-
-**Acceptance Criteria**:
-1. Create `src/data/localization/languages/gu.ts` (200+ keys)
-2. Create `src/data/localization/glossaries/ai-terms-gu.ts` (85+ terms)
-3. Native speaker review
-4. Cultural adaptation of analogies
-5. All sections populated
-
-**Time Estimate**: 10-11 hours
-
-**Dependencies**: Task 1.3, Task 2.1
-
----
-
-### Task 3.3: Create Tamil (ta) Translation & Glossary
-
-**Objective**: Build Tamil language support (UI + 85+ glossary terms)
-
-**Acceptance Criteria**:
-1. Create `src/data/localization/languages/ta.ts` (200+ keys)
-2. Create `src/data/localization/glossaries/ai-terms-ta.ts` (85+ terms)
-3. Native speaker review
-4. Tamil script properly rendered
-5. Cultural context analogies
-
-**Time Estimate**: 10-11 hours
-
-**Dependencies**: Task 1.3
-
----
-
-### Task 3.4: Create Kannada (kn) Translation & Glossary
-
-**Objective**: Build Kannada language support (UI + 85+ glossary terms)
-
-**Acceptance Criteria**:
-1. Create `src/data/localization/languages/kn.ts` (200+ keys)
-2. Create `src/data/localization/glossaries/ai-terms-kn.ts` (85+ terms)
-3. Native speaker review
-4. Kannada script rendering
-
-**Time Estimate**: 10-11 hours
-
-**Dependencies**: Task 1.3
-
----
-
-### Task 3.5: Implement Glossary Search (Multi-Language)
-
-**Objective**: Build full-text search across glossary terms in all languages
-
-**User Story**: As a learner, I want to search for AI glossary terms in my language, so I can quickly find definitions and related concepts.
-
-**Acceptance Criteria**:
-1. Create `GlossarySearch.tsx` component
-2. Search works across: term name, definition, analogies, tags
-3. Supports partial matches and case-insensitive search
-4. Results sorted by relevance (term match > definition > analogy)
-5. Highlights matched text in results
-6. Includes prerequisite terms in results
-7. Search performance < 200ms for any query
-8. Works across all 8+ languages available
-
+**Complexity**: Large | **Estimate**: 8-10 hours
+**Dependencies**: 2.2, 2.5
 **Subtasks**:
-- [ ] Create search component UI
-- [ ] Implement search algorithm
-- [ ] Add relevance ranking
-- [ ] Implement text highlighting
-- [ ] Add prerequisite linking
-- [ ] Performance testing
-- [ ] Mobile testing
+- [ ] Create Hindi AI glossary (`src/data/localization/glossaries/ai-terms-hi.ts`)
+- [ ] Translate 85+ entries with Hindi-specific analogies
+- [ ] Use Hindi cultural context (Bollywood, cricket, Indian agriculture, daily life)
+- [ ] Verify with Hindi content expert
+- [ ] Ensure beginner-friendly definitions
 
-**Time Estimate**: 4-5 hours
+**Acceptance Criteria**:
+- 85+ Hindi glossary entries
+- Hindi-specific analogies and cultural context
+- File size under 100KB
+- All required fields present
 
-**Dependencies**: Task 3.1-3.4
+**Test Cases**:
+- Glossary imports without errors
+- 85+ entries with Hindi translations
+- File size within limits
 
 ---
 
-### Task 3.6: Add Pronunciation Guides
+### 2.7 Implement Marathi, Gujarati, and Tamil Dictionaries
 
-**Objective**: Add optional pronunciation hints for complex AI terms in each language
-
-**User Story**: As a learner unfamiliar with technical terminology, I want pronunciation guides for complex AI terms, so I can pronounce them correctly.
+**Complexity**: Medium | **Estimate**: 3-4 hours each (9-12 hours total)
+**Dependencies**: 1.1, 1.6, 2.1
+**Subtasks per language**:
+- [ ] Create dictionary file for each language (mr.ts, gu.ts, ta.ts)
+- [ ] Translate all keys from English dictionary
+- [ ] Ensure cultural and script appropriateness
+- [ ] Verify script rendering (Devanagari for Marathi/Gujarati, Tamil script for Tamil)
+- [ ] Test with native speakers if possible
 
 **Acceptance Criteria**:
-1. Add optional `pronunciation` field to GlossaryEntry
-2. Create pronunciation guides for technical terms (Transformer, Convolution, Hallucination, etc.)
-3. Use International Phonetic Alphabet (IPA) or language-specific phonetic representation
-4. Pronunciation available in UI (hover tooltip or expandable section)
-5. Integrated with TTS (users can click to hear pronunciation)
-6. Cover at least 30+ technical terms per language
+- Complete dictionaries for Marathi, Gujarati, Tamil
+- All keys translated
+- File size under 50KB each
+- Proper scripts used
 
+**Test Cases**:
+- Each dictionary imports and parses
+- All keys present
+- Scripts render correctly
+- File sizes within limits
+
+---
+
+### 2.8 Implement Kannada, Bengali, and Punjabi Dictionaries
+
+**Complexity**: Medium | **Estimate**: 3-4 hours each (9-12 hours total)
+**Dependencies**: 1.1, 1.6, 2.1
+**Subtasks per language**:
+- [ ] Create dictionary file for each language (kn.ts, bn.ts, pa.ts)
+- [ ] Translate all keys from English
+- [ ] Use appropriate scripts (Kannada, Bengali, Devanagari)
+- [ ] Cultural adaptation for each region
+- [ ] Verify rendering
+
+**Acceptance Criteria**:
+- Complete dictionaries for Kannada, Bengali, Punjabi
+- All keys translated
+- File size under 50KB each
+- Proper scripts used
+
+**Test Cases**:
+- Each dictionary imports and parses
+- All keys present
+- Scripts render correctly
+
+---
+
+### 2.9 Implement Malayalam, Odia, Assamese, and Urdu Dictionaries
+
+**Complexity**: Medium | **Estimate**: 3-4 hours each (12-16 hours total)
+**Dependencies**: 1.1, 1.6, 2.1, 1.5 (for Urdu RTL)
+**Subtasks per language**:
+- [ ] Create dictionary file for each language (ml.ts, or.ts, as.ts, ur.ts)
+- [ ] Translate all keys to each language
+- [ ] Use proper scripts (Malayalam, Odia, Bengali for Assamese, Perso-Arabic for Urdu)
+- [ ] For Urdu: ensure RTL text rendering compatibility
+- [ ] Cultural and regional adaptation
+
+**Acceptance Criteria**:
+- Complete dictionaries for all 4 languages
+- Urdu RTL rendering verified
+- File sizes under 50KB each
+- All keys translated
+
+**Test Cases**:
+- Each dictionary imports without errors
+- All keys present and translated
+- Urdu renders RTL correctly
+- Scripts appropriate for each language
+
+---
+
+### 2.10 Implement Glossaries for Marathi, Gujarati, Tamil, Kannada, Bengali, Punjabi
+
+**Complexity**: Large | **Estimate**: 8-10 hours each (48-60 hours total)
+**Dependencies**: 2.2, 2.7, 2.8
+**Subtasks per language**:
+- [ ] Create glossary file with 85+ AI terms
+- [ ] Translate from English glossary with region-specific analogies
+- [ ] Use cultural context from each region (food, agriculture, local professions)
+- [ ] Zero-jargon definitions in each language
+- [ ] Verify section assignments and prerequisites
+
+**Acceptance Criteria**:
+- 85+ glossary entries per language
+- Region-specific analogies for each language
+- File size under 100KB each
+- All required fields present
+
+**Test Cases**:
+- Each glossary imports and parses
+- 85+ entries present
+- File sizes within limits
+- Prerequisite IDs valid
+
+---
+
+### 2.11 Implement Glossaries for Malayalam, Odia, Assamese, and Urdu
+
+**Complexity**: Large | **Estimate**: 8-10 hours each (32-40 hours total)
+**Dependencies**: 2.2, 2.9
+**Subtasks per language**:
+- [ ] Create glossary file with 85+ AI terms
+- [ ] Translate with culturally-appropriate analogies
+- [ ] Beginner-friendly, zero-jargon definitions
+- [ ] Proper script and RTL support for Urdu
+- [ ] Regional cultural context
+
+**Acceptance Criteria**:
+- 85+ glossary entries per language
+- Culturally appropriate for each region
+- File size under 100KB each
+- Proper scripts and rendering
+
+**Test Cases**:
+- Each glossary imports and parses
+- 85+ entries with full required fields
+- File sizes within limits
+- Urdu renders correctly RTL
+
+---
+
+### 2.12 Create Language Metadata Configuration
+
+**Complexity**: Small | **Estimate**: 1-2 hours
+**Dependencies**: 1.4
 **Subtasks**:
-- [ ] Add pronunciation field to GlossaryEntry interface
-- [ ] Create pronunciation guide for 30+ key terms
-- [ ] Implement pronunciation tooltip/display
-- [ ] Integrate with TTS playback
-- [ ] Test pronunciation audio quality
-- [ ] Mobile support
+- [ ] Create comprehensive metadata for all 13 languages
+- [ ] Define voice profiles for TTS (male, female, neutral per language)
+- [ ] Configure speech rates appropriate for each language (0.80-0.95)
+- [ ] Set pitch and prosody per language
+- [ ] Document date format for each language
 
-**Time Estimate**: 3-4 hours
+**Acceptance Criteria**:
+- Metadata complete for all 13 languages
+- Voice profiles defined with speech rate, pitch, prosody
+- Date/number formats configured
+- No missing metadata fields
 
-**Dependencies**: Task 2.3, Task 2.4
+**Test Cases**:
+- Metadata loads correctly
+- All 13 languages have complete metadata
+- Voice profiles are reasonable for each language
 
 ---
 
-### Task 3.7: Test TTS Across All Phase 3 Languages
+### 2.13 Validate Dictionary Consistency Across All Languages
 
-**Objective**: Validate and optimize TTS for Marathi, Gujarati, Tamil, Kannada
-
-**User Story**: As a platform maintainer, I want to ensure TTS quality is consistent and natural-sounding across all Indian languages, so learners have a pleasant audio experience.
-
-**Acceptance Criteria**:
-1. Test TTS with Web Speech Synthesis API for all 4 new languages (mr, gu, ta, kn)
-2. Verify speech rate is appropriate (not too fast, not too slow)
-3. Verify pitch sounds natural per language
-4. Verify pronunciation accuracy for 20+ sample terms
-5. Test on multiple browsers (Chrome, Safari, Firefox)
-6. Document any language-specific issues or optimizations
-7. Create fallback voices if system TTS unavailable
-8. User satisfaction: 80%+ of TTS feedback is positive
-
+**Complexity**: Small | **Estimate**: 2-3 hours
+**Dependencies**: 2.1-2.11
 **Subtasks**:
-- [ ] Research language voice support in browsers
-- [ ] Test TTS with sample sentences
-- [ ] Measure speech rate comfort level
-- [ ] Adjust pitch/rate as needed
-- [ ] Test cross-browser
-- [ ] Document findings
-- [ ] Create voice profile refinements
+- [ ] Create validation script to check all dictionaries have same keys
+- [ ] Check all glossaries have 85+ entries
+- [ ] Verify all glossary prerequisite IDs are valid within same language
+- [ ] Check for duplicate glossary IDs
+- [ ] Generate report of any inconsistencies
+- [ ] Fix any identified issues
 
-**Time Estimate**: 3-4 hours
+**Acceptance Criteria**:
+- All dictionaries have identical key structure
+- All glossaries have 85+ entries
+- No invalid prerequisite references
+- No duplicate glossary IDs
+- Validation script passes with 0 errors
 
-**Dependencies**: Task 2.5, Task 3.1-3.4
+**Test Cases**:
+- Validation script runs without errors
+- All dictionaries consistent
+- All glossaries valid
+- Report shows 0 inconsistencies
 
 ---
 
-## PHASE 4: FINAL LANGUAGES & POLISH (Weeks 7-8)
+## PHASE 3: AUDIO & TTS
 
-### Task 4.1: Create Bengali (bn) Translation & Glossary
+### 3.1 Extend AudioEngine for Multilingual TTS
 
-**Objective**: Build Bengali language support
-
-**Acceptance Criteria**:
-1. `src/data/localization/languages/bn.ts` (200+ keys)
-2. `src/data/localization/glossaries/ai-terms-bn.ts` (85+ terms)
-3. Bengali script rendering verified
-4. Native speaker reviewed
-
-**Time Estimate**: 10-11 hours
-
-**Dependencies**: Task 1.3
-
----
-
-### Task 4.2: Create Punjabi (pa) Translation & Glossary
-
-**Objective**: Build Punjabi language support
-
-**Acceptance Criteria**:
-1. `src/data/localization/languages/pa.ts` (200+ keys)
-2. `src/data/localization/glossaries/ai-terms-pa.ts` (85+ terms)
-3. Gurmukhi script support
-
-**Time Estimate**: 10-11 hours
-
-**Dependencies**: Task 1.3
-
----
-
-### Task 4.3: Create Malayalam (ml) Translation & Glossary
-
-**Objective**: Build Malayalam language support
-
-**Acceptance Criteria**:
-1. `src/data/localization/languages/ml.ts` (200+ keys)
-2. `src/data/localization/glossaries/ai-terms-ml.ts` (85+ terms)
-3. Complex Malayalam script rendering verified
-
-**Time Estimate**: 10-11 hours
-
-**Dependencies**: Task 1.3
-
----
-
-### Task 4.4: Create Odia (or) Translation & Glossary
-
-**Objective**: Build Odia language support
-
-**Acceptance Criteria**:
-1. `src/data/localization/languages/or.ts` (200+ keys)
-2. `src/data/localization/glossaries/ai-terms-or.ts` (85+ terms)
-
-**Time Estimate**: 10-11 hours
-
-**Dependencies**: Task 1.3
-
----
-
-### Task 4.5: Create Assamese (as) Translation & Glossary
-
-**Objective**: Build Assamese language support
-
-**Acceptance Criteria**:
-1. `src/data/localization/languages/as.ts` (200+ keys)
-2. `src/data/localization/glossaries/ai-terms-as.ts` (85+ terms)
-
-**Time Estimate**: 10-11 hours
-
-**Dependencies**: Task 1.3
-
----
-
-### Task 4.6: Create Urdu (ur) Translation & Glossary + RTL Fix
-
-**Objective**: Build Urdu language support with full RTL support
-
-**User Story**: As an Urdu learner, I want the platform in Urdu with proper right-to-left layout, so I can read naturally in my script direction.
-
-**Acceptance Criteria**:
-1. Create `src/data/localization/languages/ur.ts` (200+ keys, RTL-aware)
-2. Create `src/data/localization/glossaries/ai-terms-ur.ts` (85+ terms)
-3. Full RTL layout verification (HTML dir="rtl", component mirroring)
-4. Urdu script (Perso-Arabic) renders correctly
-5. All UI elements mirror properly in RTL
-6. Navigation and buttons align correctly
-7. Tested on desktop and mobile
-
+**Complexity**: Medium | **Estimate**: 3-4 hours
+**Dependencies**: 1.2, 2.12
 **Subtasks**:
-- [ ] Translate 200+ strings to Urdu
-- [ ] Translate 85+ glossary terms
-- [ ] Verify RTL layout works
-- [ ] Test component mirroring
-- [ ] Test on mobile RTL
-- [ ] Final QA
+- [ ] Extend `src/lib/audioEngine.ts` with language support
+- [ ] Add language voice profile mapping for all 13 languages
+- [ ] Implement `setLanguage()` method in AudioEngine
+- [ ] Add speech rate, pitch, prosody configuration per language
+- [ ] Modify `speak()` method to use language-specific settings
+- [ ] Handle Web Speech API language codes correctly
+- [ ] Add fallback voice handling for unsupported languages
 
-**Time Estimate**: 12-13 hours
+**Acceptance Criteria** (from Requirement 7):
+- AudioEngine supports all 13 languages
+- Voice profiles applied with correct speech rate, pitch, prosody
+- Telugu/Hindi have slower speech rate (0.80-0.85)
+- Urdu prosody set to 'formal'
+- setLanguage() updates active language in AudioEngine
+- speak() method uses language-specific settings
 
-**Dependencies**: Task 1.3, Task 2.6
+**Test Cases**:
+- AudioEngine initializes with language
+- Speech rate correct for each language
+- Voice selection works
+- Fallback handling for unavailable voices
+- TTS produces audio in correct language
 
 ---
 
-### Task 4.7: Localize All Interactive Sandboxes
+### 3.2 Implement Language-Specific Voice Profiles
 
-**Objective**: Localize Token Predictor, RAG Simulator, and CNN Explorer for all 12 languages
-
-**User Story**: As a learner, I want all interactive sandboxes (Token Predictor, RAG Simulator, CNN Explorer) fully translated into my language, so I understand the mechanics without language confusion.
+**Complexity**: Small | **Estimate**: 1-2 hours
+**Dependencies**: 2.12, 3.1
+**Subtasks**:
+- [ ] Define Voice Profile type/interface for all properties
+- [ ] Create voice profile mapping for all 13 languages
+- [ ] Include male, female, neutral voice options per language
+- [ ] Set appropriate speech rate for each language's phonetic complexity
+- [ ] Configure pitch suitable for each language
+- [ ] Set prosody style (natural, expressive, formal) per language
+- [ ] Document voice profile selections with rationale
 
 **Acceptance Criteria**:
-1. **Token Predictor Sandbox**:
-   - Prompts translated to each language
-   - Candidate words displayed in language
-   - Explanatory text translated
-   - Probability display correct per language formatting
-   - Interactive controls translated
+- Voice profile defined for each language
+- Three voice options (male, female, neutral) available per language
+- Speech rates optimized for language (0.80-0.95 range)
+- Prosody appropriate for cultural context
+- All properties properly configured
 
-2. **RAG Simulator**:
-   - Flow labels translated (Question, Search, Retrieved Context, Answer)
-   - Step-by-step narration in each language
-   - Example documents adapted for region
-   - All buttons/toggles translated
-
-3. **CNN Explorer**:
-   - Layer labels translated
-   - Descriptions in each language
-   - Sliders/controls translated
-
-**Subtasks**:
-- [ ] Audit Token Predictor component
-- [ ] Add translation keys for all labels/text
-- [ ] Test Token Predictor in all 12 languages
-- [ ] Audit RAG Simulator
-- [ ] Translate RAG flow labels
-- [ ] Test RAG Simulator across languages
-- [ ] Audit CNN Explorer
-- [ ] Translate CNN labels
-- [ ] Test CNN Explorer
-
-**Time Estimate**: 6-8 hours
-
-**Dependencies**: All language dictionaries (Tasks 2.1-4.6)
+**Test Cases**:
+- Voice profiles load correctly
+- Voice options available for each language
+- Speech rate in valid range per language
 
 ---
 
-### Task 4.8: Per-Language Learning Progress Tracking
+### 3.3 Integration with Web Speech API
 
-**Objective**: Implement learning progress tracking that maintains separate progress per language
+**Complexity**: Medium | **Estimate**: 2-3 hours
+**Dependencies**: 3.1
+**Subtasks**:
+- [ ] Map language codes to Web Speech API language codes
+- [ ] Implement voice selection from system voices
+- [ ] Add error handling for unavailable voices
+- [ ] Implement fallback to any available voice for language
+- [ ] Test voice availability on different browsers/platforms
+- [ ] Add browser compatibility checks
+- [ ] Handle speech synthesis events (start, end, error)
 
-**User Story**: As a learner, I want my progress tracked separately for each language, so switching languages doesn't affect my achievements and I can track mastery per language.
+**Acceptance Criteria** (from Requirement 7):
+- Web Speech API invoked with correct language code
+- Voice selection logic works across browsers
+- Fallback voice chosen when specific voice unavailable
+- All 13 languages have voice options
+- Error handling prevents crashes
+- Speech synthesis events handled
+
+**Test Cases**:
+- Web Speech API speaks in correct language
+- Voice availability checked
+- Fallback voice works
+- Error handling prevents app crashes
+- Cross-browser compatibility verified
+
+---
+
+### 3.4 Test TTS Across All Languages
+
+**Complexity**: Medium | **Estimate**: 3-4 hours
+**Dependencies**: 3.1, 3.2, 3.3
+**Subtasks**:
+- [ ] Create test utility for manual TTS testing
+- [ ] Test each language voice profile with sample text
+- [ ] Verify speech rate appropriate for each language
+- [ ] Check audio quality and clarity
+- [ ] Test male, female, neutral voices for each language
+- [ ] Verify pronunciation accuracy across languages
+- [ ] Test fallback voice behavior on unsupported systems
+- [ ] Document any issues or limitations
 
 **Acceptance Criteria**:
-1. Firebase schema stores progress with: userId + languageCode as composite key
-2. Track: language, glossary terms mastered, sections completed, quiz scores, timestamp
-3. Switching languages preserves progress in previously selected language
-4. Progress syncs in real-time or on save to Firebase
-5. Offline progress saved locally in IndexedDB, synced when online
-6. Progress bar shows mastery percentage for current language
-7. User can view progress history across all languages studied
+- All 13 languages produce clear, audible speech
+- Speech rate appropriate for language complexity
+- Voice quality acceptable for educational use
+- Pronunciation accurate
+- Fallback voices work as expected
 
-**Subtasks**:
-- [ ] Design Firebase schema for per-language progress
-- [ ] Implement progress context hook
-- [ ] Create IndexedDB schema for offline storage
-- [ ] Implement sync logic (online/offline)
-- [ ] Update progress UI to show language-specific data
-- [ ] Test language switching with progress preservation
-- [ ] Test offline sync
-
-**Time Estimate**: 5-6 hours
-
-**Dependencies**: Firebase setup, Task 1.2
+**Test Cases**:
+- Sample text speaks in each language
+- Speech rate audibly different between languages (te/hi slower than en)
+- Voices pronounce complex terms correctly
+- Quality acceptable for learning
+- Fallback mechanism works
 
 ---
 
-### Task 4.9: Language-Specific Analytics Dashboard
+## PHASE 4: UI COMPONENTS
 
-**Objective**: Create analytics views showing learning outcomes per language
+### 4.1 Create LocalizedCard Reusable Component
 
-**User Story**: As a platform administrator, I want to see per-language analytics (adoption, completion rates, popular terms), so I can identify which languages need improvement and where learners struggle.
+**Complexity**: Medium | **Estimate**: 2-3 hours
+**Dependencies**: 1.2, 2.1
+**Subtasks**:
+- [ ] Create `src/components/LocalizedCard.tsx` component
+- [ ] Implement props interface: contentKey, glossaryTerms, interactiveElements, lang override
+- [ ] Add translation lookup with `t()` function
+- [ ] Add glossary term display with `tGlossary()`
+- [ ] Integrate Framer Motion animations
+- [ ] Apply RTL/LTR styling based on metadata
+- [ ] Add responsive design with Tailwind
+- [ ] Document component API
+
+**Acceptance Criteria** (from Requirement 10):
+- LocalizedCard retrieves content using contentKey
+- Glossary terms displayed with definitions
+- Animations work with whileInView trigger
+- RTL/LTR styling applied correctly
+- Component exports type definitions
+- No hardcoded English text
+
+**Test Cases**:
+- LocalizedCard renders with contentKey
+- Glossary terms display correctly
+- RTL layout works for Urdu
+- Animations trigger on view
+- No console errors
+
+---
+
+### 4.2 Update Hero Component for Multilingual Support
+
+**Complexity**: Medium | **Estimate**: 2-3 hours
+**Dependencies**: 1.2, 4.1, 2.1
+**Subtasks**:
+- [ ] Update `src/components/Hero.tsx` to use useLanguage()
+- [ ] Replace hardcoded English text with translation keys
+- [ ] Add glossary term references for AI concepts
+- [ ] Apply RTL/LTR layout based on active language
+- [ ] Test with multiple languages
+- [ ] Verify animations work across languages
+- [ ] Update styling for different text lengths
 
 **Acceptance Criteria**:
-1. Dashboard shows: total learners per language, average completion rate per language, popular glossary terms per region
-2. Analytics distinguish between languages to identify regional gaps
-3. Data includes: language code, session duration, terms mastered, quiz performance
-4. Reports filterable by language, date range, learner demographics
-5. Visualizations: language adoption pie chart, regional completion heatmap, term difficulty by language
-6. Exportable reports (CSV)
+- Hero component displays translated content
+- RTL layout works for Urdu
+- Text lengths accommodated across languages
+- No hardcoded English strings
+- Animations work in all languages
 
-**Subtasks**:
-- [ ] Design analytics schema
-- [ ] Create Firebase queries for analytics
-- [ ] Build admin dashboard UI
-- [ ] Implement filtering/date range
-- [ ] Create visualizations
-- [ ] Test data accuracy
-- [ ] Add export functionality
-
-**Time Estimate**: 6-7 hours
-
-**Dependencies**: Task 4.8, Firebase setup
+**Test Cases**:
+- Hero renders content from translation dictionary
+- RTL layout correct for Urdu
+- Text fits properly in different languages
+- No missing keys in dictionary
 
 ---
 
-### Task 4.10: Performance Optimization & Code-Splitting
+### 4.3 Update WhatIsAI Component for Multilingual Support
 
-**Objective**: Optimize bundle size and performance for multilingual app
-
-**User Story**: As a user on slow networks in rural India, I want the app to load quickly and not consume excessive data, so I can access learning content without frustration.
+**Complexity**: Medium | **Estimate**: 2-3 hours
+**Dependencies**: 1.2, 4.1, 2.1
+**Subtasks**:
+- [ ] Update `src/components/WhatIsAI.tsx` to use translations
+- [ ] Replace hardcoded text with dictionary keys
+- [ ] Add glossary references for core concepts
+- [ ] Apply LocalizedCard pattern
+- [ ] Test RTL/LTR rendering
+- [ ] Verify all content keys exist in dictionaries
 
 **Acceptance Criteria**:
-1. Base app bundle (without dictionaries): < 200KB gzipped
-2. Each language dictionary: < 50KB gzipped
-3. Total app with 12 languages: < 1MB gzipped
-4. Language switching completes in < 500ms
-5. Glossary search performs in < 200ms
-6. App works on 3G (100-200ms latency) without major lag
-7. Lazy-load sandboxes if not immediately visible (Task 4.7)
-8. Implement React.lazy and Suspense for code-splitting
+- All text translated using dictionary
+- Glossary references work
+- RTL layout correct
+- All required keys in dictionaries
 
-**Subtasks**:
-- [ ] Measure current bundle sizes
-- [ ] Identify large bundles
-- [ ] Implement code-splitting by route/language
-- [ ] Enable gzip compression in build
-- [ ] Use tree-shaking to remove unused code
-- [ ] Lazy-load heavy components
-- [ ] Measure final sizes
-- [ ] Performance test on 3G connection
-
-**Time Estimate**: 4-5 hours
-
-**Dependencies**: All language tasks completed
+**Test Cases**:
+- Component renders translated content
+- Glossary links functional
+- RTL rendering correct
+- No missing translation keys
 
 ---
 
-### Task 4.11: Accessibility Audit & Fixes
+### 4.4 Update AIFamilyTree, GenerativeAI, and PromptingAndRAG Components
 
-**Objective**: Ensure platform is accessible to visually impaired and motor-impaired learners
-
-**User Story**: As a visually impaired learner, I want to use a screen reader to access all content and interact with sandboxes, so I can learn AI concepts as effectively as sighted learners.
+**Complexity**: Medium | **Estimate**: 2-3 hours
+**Dependencies**: 1.2, 4.1, 2.1
+**Subtasks**:
+- [ ] Update `AIFamilyTree.tsx` to use translations and glossary
+- [ ] Update `GenerativeAI.tsx` to use multilingual support
+- [ ] Update `PromptingAndRAG.tsx` to use multilingual support
+- [ ] Replace hardcoded text with dictionary keys
+- [ ] Add glossary term references
+- [ ] Apply RTL/LTR layout where needed
+- [ ] Test in multiple languages
 
 **Acceptance Criteria**:
-1. All interactive components have proper ARIA labels and roles
-2. Keyboard navigation works across all pages (Tab, Enter, Escape)
-3. Color contrast meets WCAG AA standards (4.5:1 for text)
-4. All images have descriptive alt text
-5. Form inputs have associated labels
-6. Focus indicators are visible and clear
-7. Screen reader testing: content reads correctly and in logical order
-8. Touchscreen targets are 44px+ (mobile accessibility)
-9. Audio descriptions available for complex visualizations (sandboxes)
+- All three components use translation dictionary
+- Glossary references functional
+- RTL layout correct where applicable
+- All content keys in dictionaries
 
-**Subtasks**:
-- [ ] Audit components for ARIA labels
-- [ ] Test keyboard navigation
-- [ ] Check color contrast (use WebAIM contrast checker)
-- [ ] Verify alt text on images
-- [ ] Test with screen reader (NVDA/JAWS)
-- [ ] Add audio descriptions for sandboxes
-- [ ] Mobile accessibility testing
-- [ ] Fix identified issues
-
-**Time Estimate**: 6-7 hours
-
-**Dependencies**: All previous tasks
+**Test Cases**:
+- Components render translated content
+- Glossary references work
+- RTL rendering correct
+- No missing translation keys
 
 ---
 
-### Task 4.12: Cross-Language Integration Testing
+### 4.5 Create Language Switcher UI Component
 
-**Objective**: Comprehensive testing of all languages working together seamlessly
+**Complexity**: Small | **Estimate**: 2-3 hours
+**Dependencies**: 1.2, 1.5
+**Subtasks**:
+- [ ] Create `src/components/LanguageSwitcher.tsx` component
+- [ ] Display all 13 supported languages with native names
+- [ ] Add country flags or language icons
+- [ ] Implement language selection handler
+- [ ] Add loading indicator during language switch
+- [ ] Show error message if language fails to load
+- [ ] Make component accessible (keyboard navigation, ARIA labels)
+- [ ] Add to FloatingNav or header
 
-**User Story**: As a QA engineer, I want to verify the entire app works correctly across all 12 languages, so users have a bug-free experience regardless of language choice.
+**Acceptance Criteria** (from Requirement 14):
+- All 13 languages selectable
+- Loading indicator shows during switch
+- Error message displays if switch fails
+- Language switch <200ms for cached, <500ms for new
+- Component accessible with keyboard
+- Responsive design works on mobile
+
+**Test Cases**:
+- All languages listed with correct names
+- Language switch works without page reload
+- Loading indicator appears/disappears
+- Error handling works
+- Keyboard navigation functional
+- Mobile responsive
+
+---
+
+### 4.6 Update Existing Components for i18n Support
+
+**Complexity**: Medium | **Estimate**: 3-4 hours
+**Dependencies**: 1.2, 4.1, 2.1
+**Subtasks**:
+- [ ] Audit all components for hardcoded text
+- [ ] Update AIToolsList, AITimeline, CheckYourKnowledge components
+- [ ] Replace hardcoded strings with translation keys
+- [ ] Add glossary references where appropriate
+- [ ] Test components in multiple languages
+- [ ] Verify no console errors
+- [ ] Update component documentation
 
 **Acceptance Criteria**:
-1. **Language Switching**: Switch between any two languages 10x, verify no data loss or layout breaking
-2. **Dictionary Completeness**: Verify no missing translation keys in any language (< 1% missing acceptable)
-3. **Glossary Search**: Search for 20+ terms in each language, verify results are accurate
-4. **TTS Quality**: Test TTS playback for 5+ terms in each language
-5. **RTL Rendering**: Test Urdu and any RTL language on desktop and mobile
-6. **Performance**: Measure app load time, language switch time, search time across all languages
-7. **Cross-Browser**: Test on Chrome, Safari, Firefox with at least 3 languages
-8. **Mobile**: Test all 12 languages on iOS and Android devices
-9. **Offline**: Verify offline functionality works across language switches
-10. **Progress Sync**: Switch languages and verify progress is preserved and synced
+- No hardcoded English text in components
+- All content uses translation dictionary
+- RTL layout correct where needed
+- All required translation keys present
 
-**Subtasks**:
-- [ ] Create comprehensive test plan
-- [ ] Test language switching (10x each language pair)
-- [ ] Audit dictionaries for missing keys
-- [ ] Test glossary search accuracy
-- [ ] Test TTS in all languages
-- [ ] Test RTL rendering
-- [ ] Performance benchmarking
-- [ ] Cross-browser testing
-- [ ] Mobile testing
-- [ ] Offline/online sync testing
-- [ ] File bug reports
-- [ ] Re-test after fixes
-
-**Time Estimate**: 10-12 hours
-
-**Dependencies**: All previous tasks
+**Test Cases**:
+- Components render translated content
+- All languages display correctly
+- RTL layout works
+- No missing translation keys in console
 
 ---
 
-## SUMMARY
+### 4.7 Create Glossary Search Component with Language Support
 
-**Total Tasks**: 49 (1 overview + 48 implementation)
-**Estimated Timeline**: 8 weeks
-**Total Development Hours**: ~250-300 hours
+**Complexity**: Medium | **Estimate**: 2-3 hours
+**Dependencies**: 1.2, 2.1, 2.2
+**Subtasks**:
+- [ ] Create or update `src/components/GlossarySearch.tsx`
+- [ ] Implement search across current language's glossary
+- [ ] Add search input with language-appropriate placeholder
+- [ ] Implement matching logic for term, definition, analogy
+- [ ] Add result ordering (term match first, then definition, then analogy)
+- [ ] Show "no results" message from translation dictionary
+- [ ] Make search case-insensitive
+- [ ] Ensure search completes within 100ms for 85+ entries
 
-**Phases**:
-- Phase 1 (Foundation): 14-17 hours
-- Phase 2 (MVP): 40-45 hours
-- Phase 3 (Expansion): 45-50 hours
-- Phase 4 (Polish): 150-190 hours
+**Acceptance Criteria** (from Requirement 8):
+- Search matches term, definition, and analogy
+- Case-insensitive search across languages
+- Results ordered correctly
+- "No results" message in current language
+- Search performance <100ms
+- Results update when language changes
 
-**Key Milestones**:
-- Week 2: Foundation complete (support structure ready)
-- Week 4: MVP (English, Telugu, Hindi) production-ready
-- Week 6: 8 languages live (MVP + Marathi, Gujarati, Tamil, Kannada)
-- Week 8: All 12 languages + full polish
+**Test Cases**:
+- Search finds matching terms
+- Search finds in definitions
+- Search finds in analogies
+- Case-insensitive matching works
+- Result ordering correct
+- Performance acceptable
+- "No results" displays correctly
+
+---
+
+## PHASE 5: LOGIN DASHBOARD
+
+### 5.1 Set Up Firebase Authentication Configuration
+
+**Complexity**: Medium | **Estimate**: 2-3 hours
+**Dependencies**: None (can run parallel)
+**Subtasks**:
+- [ ] Configure Firebase authentication in `src/lib/firebase.ts`
+- [ ] Enable email/password authentication
+- [ ] Enable Google sign-in provider
+- [ ] Configure Firebase project security rules
+- [ ] Test authentication flow
+- [ ] Add error handling for auth failures
+- [ ] Document Firebase setup
+
+**Acceptance Criteria**:
+- Firebase authentication configured and working
+- Email/password auth functional
+- Google sign-in working
+- Security rules prevent unauthorized access
+- Error messages user-friendly
+
+**Test Cases**:
+- Firebase initializes without errors
+- Email/password sign-up works
+- Google sign-in works
+- Authentication state persists
+- Error handling works
+
+---
+
+### 5.2 Create Login and Register Page Components
+
+**Complexity**: Medium | **Estimate**: 3-4 hours
+**Dependencies**: 1.2, 5.1
+**Subtasks**:
+- [ ] Create `src/components/LoginPage.tsx` component
+- [ ] Create `src/components/RegisterPage.tsx` component
+- [ ] Implement email/password forms with validation
+- [ ] Add Google sign-in button
+- [ ] Integrate Firebase authentication
+- [ ] Add multilingual support (all 13 languages)
+- [ ] Add error message display
+- [ ] Add loading states
+- [ ] Implement form field validation
+
+**Acceptance Criteria**:
+- Login page functional with email/password
+- Register page functional
+- Google sign-in button works
+- Form validation prevents invalid submissions
+- Error messages displayed in user's language
+- Loading states show during auth operations
+- RTL layout works for Urdu
+
+**Test Cases**:
+- Login with valid credentials works
+- Register creates new user
+- Google sign-in works
+- Form validation prevents invalid email
+- Error messages appear in all languages
+- Loading indicators show
+
+---
+
+### 5.3 Create User Profile Page Component
+
+**Complexity**: Medium | **Estimate**: 2-3 hours
+**Dependencies**: 5.1, 5.2
+**Subtasks**:
+- [ ] Create `src/components/ProfilePage.tsx` component
+- [ ] Display user name, email, profile picture
+- [ ] Add edit profile functionality
+- [ ] Add language preference selector
+- [ ] Add theme preference toggle (if applicable)
+- [ ] Add logout button
+- [ ] Integrate Firebase Firestore for user data
+- [ ] Add multilingual support
+
+**Acceptance Criteria**:
+- User profile displays correctly
+- Language preference changeable from profile
+- User data persists in Firestore
+- Logout works correctly
+- Profile updates reflected immediately
+- All content in user's selected language
+
+**Test Cases**:
+- Profile page loads user data
+- Edit profile saves changes
+- Language preference updates
+- Logout works
+- Data persists across sessions
+
+---
+
+### 5.4 Create Learning Progress Dashboard
+
+**Complexity**: Large | **Estimate**: 4-5 hours
+**Dependencies**: 1.2, 5.1
+**Subtasks**:
+- [ ] Create `src/components/ProgressDashboard.tsx` component
+- [ ] Display user's learning progress visually (charts, progress bars)
+- [ ] Show concepts completed vs. remaining
+- [ ] Display learning streak
+- [ ] Show time spent learning
+- [ ] Add per-language progress tracking
+- [ ] Integrate with Firestore for data persistence
+- [ ] Add multilingual support
+
+**Acceptance Criteria**:
+- Dashboard displays comprehensive learning metrics
+- Progress tracked accurately
+- Per-language progress shown separately
+- Visual charts display correctly
+- Data updated when user completes lessons
+- Multilingual support complete
+
+**Test Cases**:
+- Dashboard displays progress correctly
+- Progress updates after completing lesson
+- Charts render without errors
+- Per-language tracking accurate
+- Data persists in Firestore
+
+---
+
+### 5.5 Implement Per-Language Progress Tracking
+
+**Complexity**: Medium | **Estimate**: 2-3 hours
+**Dependencies**: 1.2, 5.4
+**Subtasks**:
+- [ ] Modify Firestore data model to track progress per language
+- [ ] Create UserProgress interface with per-language fields
+- [ ] Implement progress update function for each language
+- [ ] Track concepts learned per language separately
+- [ ] Track learning time per language
+- [ ] Add progress analytics per language
+- [ ] Create dashboard visualization for multi-language progress
+
+**Acceptance Criteria**:
+- Progress tracked separately for each language
+- User can switch languages and see different progress
+- Firestore schema supports multi-language tracking
+- Dashboard shows per-language metrics
+
+**Test Cases**:
+- Progress tracked separately per language
+- Switching languages shows correct progress
+- Data persists correctly
+- Analytics calculations accurate
+
+---
+
+### 5.6 Implement Weekly Challenges System
+
+**Complexity**: Medium | **Estimate**: 3-4 hours
+**Dependencies**: 1.2, 5.4
+**Subtasks**:
+- [ ] Create weekly challenge data structure
+- [ ] Create challenge generation logic (different challenges each week)
+- [ ] Create `WeeklyChallenges.tsx` component
+- [ ] Implement challenge completion tracking
+- [ ] Add rewards/points for completed challenges
+- [ ] Add challenge display with multilingual support
+- [ ] Integrate with Firestore for challenge data
+
+**Acceptance Criteria**:
+- Weekly challenges generate fresh each week
+- Challenges display in user's language
+- Completion tracking works
+- Rewards awarded correctly
+- Challenges visible in dashboard
+
+**Test Cases**:
+- Weekly challenge displays correctly
+- Challenge completion tracked
+- Rewards calculated correctly
+- Challenge changes weekly
+- Multilingual support works
+
+---
+
+### 5.7 Implement Achievement Badges System
+
+**Complexity**: Medium | **Estimate**: 2-3 hours
+**Dependencies**: 5.4
+**Subtasks**:
+- [ ] Define badge types and achievement criteria
+- [ ] Create `BadgeSystem.tsx` component
+- [ ] Implement badge award logic
+- [ ] Create badge display with names in all languages
+- [ ] Add badge sharing functionality
+- [ ] Store badges in Firestore
+- [ ] Add badge progression tracking
+- [ ] Create badge achievements page
+
+**Acceptance Criteria**:
+- Badges awarded for milestones
+- Badge names/descriptions in user's language
+- Badge sharing works
+- Achievements tracked in Firestore
+- Badge progression visible
+
+**Test Cases**:
+- Badges awarded correctly
+- Badge names display in all languages
+- Sharing functionality works
+- Badge data persists
+
+---
+
+### 5.8 Create User Settings Component
+
+**Complexity**: Small | **Estimate**: 2-3 hours
+**Dependencies**: 1.2, 5.3
+**Subtasks**:
+- [ ] Create `UserSettings.tsx` component
+- [ ] Add language preference setting
+- [ ] Add theme preference setting (light/dark)
+- [ ] Add notification preferences
+- [ ] Add privacy settings
+- [ ] Integrate with Firestore for settings persistence
+- [ ] Add multilingual support
+
+**Acceptance Criteria**:
+- Settings changeable from component
+- Settings persist across sessions
+- Language change updates all UI immediately
+- Theme preference respected
+- All settings in user's language
+
+**Test Cases**:
+- Settings update and persist
+- Language change works immediately
+- Theme change works
+- Privacy settings functional
+
+---
+
+### 5.9 Implement Progress Persistence and Analytics
+
+**Complexity**: Medium | **Estimate**: 3-4 hours
+**Dependencies**: 5.4, 5.5
+**Subtasks**:
+- [ ] Create Firestore data model for user progress
+- [ ] Implement progress save function
+- [ ] Track learning analytics per language
+- [ ] Implement analytics dashboard for educators
+- [ ] Create progress export functionality
+- [ ] Add data backup/recovery
+- [ ] Implement progress sync across devices
+- [ ] Add privacy safeguards for data
+
+**Acceptance Criteria**:
+- User progress persists in Firestore
+- Analytics tracked accurately
+- Progress syncs across devices
+- Data privacy protected
+- Export functionality works
+
+**Test Cases**:
+- Progress saves to Firestore
+- Cross-device sync works
+- Analytics data accurate
+- Export format valid
+- Privacy settings respected
+
+---
+
+## PHASE 6: TESTING & OPTIMIZATION
+
+### 6.1 Dictionary Lazy-Loading Performance Testing
+
+**Complexity**: Medium | **Estimate**: 2-3 hours
+**Dependencies**: 1.3, 2.1-2.11
+**Subtasks**:
+- [ ] Benchmark dictionary load times for each language
+- [ ] Verify bundle size <50KB per language dictionary
+- [ ] Test lazy-loading triggers correctly on language switch
+- [ ] Verify caching prevents re-imports
+- [ ] Test fallback behavior on import failure
+- [ ] Measure initial app load time
+- [ ] Measure language switch latency
+- [ ] Document performance metrics
+
+**Acceptance Criteria** (from Requirement 6, 12):
+- Each dictionary <50KB gzipped
+- Initial app load <500ms
+- Cached language switch <200ms
+- New language load <500ms
+- No redundant imports on repeated language switches
+
+**Test Cases**:
+- Dictionary load time acceptable
+- Bundle sizes meet targets
+- Cache prevents re-imports
+- Performance benchmarks meet targets
+- Fallback works on failure
+
+---
+
+### 6.2 TTS Quality Testing Across All Languages
+
+**Complexity**: Medium | **Estimate**: 3-4 hours
+**Dependencies**: 3.1-3.4
+**Subtasks**:
+- [ ] Test TTS output quality for each language
+- [ ] Verify pronunciation accuracy
+- [ ] Check speech rate appropriateness
+- [ ] Test voice clarity and intelligibility
+- [ ] Verify multiple voice options work
+- [ ] Test edge cases (long text, special characters)
+- [ ] Document any platform-specific issues
+- [ ] Create test report with findings
+
+**Acceptance Criteria**:
+- TTS quality acceptable for education
+- Pronunciation accurate for all languages
+- Speech rate appropriate
+- Voice options functional
+- No crashes on edge cases
+
+**Test Cases**:
+- TTS speaks clearly in all languages
+- Pronunciation correct for complex terms
+- Speech rate appropriate for language
+- Multiple voices available
+- Long text handled correctly
+
+---
+
+### 6.3 Performance Optimization and Bundle Size Analysis
+
+**Complexity**: Medium | **Estimate**: 2-3 hours
+**Dependencies**: All previous phases
+**Subtasks**:
+- [ ] Analyze application bundle size
+- [ ] Identify code-splitting opportunities
+- [ ] Optimize imports and exports
+- [ ] Remove unused dependencies
+- [ ] Implement tree-shaking where possible
+- [ ] Test bundle size with production build
+- [ ] Create bundle analysis report
+- [ ] Document optimization recommendations
+
+**Acceptance Criteria**:
+- Main bundle <500KB gzipped
+- Language bundles <50KB each
+- No unused code in bundle
+- Production build optimized
+
+**Test Cases**:
+- Production bundle size within targets
+- Code-splitting working correctly
+- No unused dependencies
+
+---
+
+### 6.4 Accessibility Testing Across Languages
+
+**Complexity**: Medium | **Estimate**: 3-4 hours
+**Dependencies**: 4.1-4.7
+**Subtasks**:
+- [ ] Test keyboard navigation in all languages
+- [ ] Verify screen reader support for all content
+- [ ] Test ARIA labels in all languages
+- [ ] Verify color contrast ratios
+- [ ] Test with assistive technologies
+- [ ] Check RTL/LTR accessibility (especially Urdu)
+- [ ] Test with various zoom levels
+- [ ] Create accessibility report
+
+**Acceptance Criteria**:
+- All content keyboard accessible
+- Screen reader compatible
+- ARIA labels descriptive in all languages
+- Color contrast meets WCAG standards
+- RTL accessibility works
+- No accessibility blockers
+
+**Test Cases**:
+- Keyboard navigation works
+- Screen reader announces content
+- Color contrast sufficient
+- RTL navigation accessible
+- Mobile accessibility works
+
+---
+
+### 6.5 End-to-End Testing of Multilingual Features
+
+**Complexity**: Large | **Estimate**: 4-5 hours
+**Dependencies**: All previous phases
+**Subtasks**:
+- [ ] Create E2E test suite for language switching
+- [ ] Test glossary search in all languages
+- [ ] Test user progress tracking in multiple languages
+- [ ] Test TTS playback in all languages
+- [ ] Test RTL layout in Urdu
+- [ ] Test login/authentication flow in all languages
+- [ ] Test dashboard functionality across languages
+- [ ] Create test report and document issues
+
+**Acceptance Criteria**:
+- All multilingual features work end-to-end
+- Language switching seamless
+- No broken links or missing content
+- User data persists correctly
+- No console errors
+
+**Test Cases**:
+- Complete user journey in each language
+- Language switching during usage
+- Glossary search works
+- Progress tracking accurate
+- RTL rendering correct
+- All features functional
+
+---
+
+## PHASE 7: DOCUMENTATION & DEPLOYMENT
+
+### 7.1 Create Developer Documentation
+
+**Complexity**: Small | **Estimate**: 2-3 hours
+**Dependencies**: All previous phases
+**Subtasks**:
+- [ ] Create `docs/MULTILINGUAL.md` with architecture overview
+- [ ] Document file structure and organization
+- [ ] Create contributor guide for adding languages
+- [ ] Document translation key naming conventions
+- [ ] Create glossary term template
+- [ ] Document how to use useLanguage() hook
+- [ ] Create troubleshooting guide
+- [ ] Add code examples and best practices
+
+**Acceptance Criteria**:
+- Documentation comprehensive and clear
+- File structure well-explained
+- Contributing guide available
+- All APIs documented
+- Code examples included
+
+**Test Cases**:
+- Documentation builds without errors
+- Examples are accurate
+- New contributor can follow guide
+
+---
+
+### 7.2 Create Deployment Guide
+
+**Complexity**: Small | **Estimate**: 1-2 hours
+**Dependencies**: All previous phases
+**Subtasks**:
+- [ ] Document production build process
+- [ ] Create deployment checklist
+- [ ] Document environment variable setup
+- [ ] Create rollback procedures
+- [ ] Document monitoring and logging
+- [ ] Create performance benchmarks for production
+- [ ] Document CDN setup for static assets
+- [ ] Create maintenance guide
+
+**Acceptance Criteria**:
+- Deployment process documented
+- All steps clear and actionable
+- Rollback procedures defined
+- Monitoring strategy documented
+
+**Test Cases**:
+- Production build succeeds
+- Deployment checklist complete
+- Monitoring configured
+
+---
+
+### 7.3 Production Optimization and Go-Live
+
+**Complexity**: Medium | **Estimate**: 2-3 hours
+**Dependencies**: 7.1, 7.2
+**Subtasks**:
+- [ ] Final performance benchmarking
+- [ ] Configure CDN for dictionary delivery
+- [ ] Set up analytics tracking
+- [ ] Test production deployment
+- [ ] Verify all 13 languages functional
+- [ ] Monitor error rates
+- [ ] Verify database performance
+- [ ] Create post-launch checklist
+
+**Acceptance Criteria**:
+- Production deployment successful
+- All features functional in production
+- Performance meets targets
+- Analytics working
+- Monitoring alerts configured
+- No critical errors
+
+**Test Cases**:
+- Production site loads correctly
+- All languages work
+- Dictionary loading fast
+- Analytics tracking events
+- Error monitoring working
+
+---
+
+## SUMMARY OF TASK METRICS
+
+**Total Tasks**: 52 organized in 7 phases
+
+**Complexity Distribution**:
+- Small: 12 tasks (23%)
+- Medium: 28 tasks (54%)
+- Large: 12 tasks (23%)
+
+**Estimated Total Time**: 200-250 hours
+
+**Phase Breakdown**:
+- Phase 1: Foundation Setup: 15-20 hours
+- Phase 2: Core Localization: 90-110 hours
+- Phase 3: Audio & TTS: 12-15 hours
+- Phase 4: UI Components: 18-22 hours
+- Phase 5: Login Dashboard: 28-34 hours
+- Phase 6: Testing & Optimization: 18-22 hours
+- Phase 7: Documentation & Deployment: 8-10 hours
+
+**Recommended Workflow**:
+1. Complete Phase 1 entirely before starting Phase 2
+2. Start Phase 3 and Phase 4 after Phase 1 completes (can run in parallel)
+3. Start Phase 5 after Phase 1 and 3 complete
+4. Start Phase 6 only after all feature phases substantially complete
+5. Complete Phase 7 last
+
+**Dependency Constraints**:
+- Tasks 1.1-1.8 have no dependencies (critical path start)
+- Tasks 2.1-2.13 depend on Phase 1
+- Task 3.1-3.4 depend on 1.2, 1.4, 2.12
+- Tasks 4.1-4.7 depend on 1.2 and 2.1
+- Tasks 5.1-5.9 can start after 1.2 is complete
+- Tasks 6.1-6.5 depend on completion of all feature phases
+- Tasks 7.1-7.3 final phase, can start during Phase 6
+
+---
+
+## Task Acceptance Criteria Quick Reference
+
+Each task includes acceptance criteria derived from corresponding requirements. Use these to validate completion:
+
+- **Requirement 1** → Tasks 1.2, 1.3 (Language detection and fallback)
+- **Requirement 2** → Tasks 1.4, 2.12 (Language metadata)
+- **Requirement 3** → Tasks 1.3, 2.1 (Dictionary loading)
+- **Requirement 4** → Tasks 2.2, 2.4-2.11 (Glossaries)
+- **Requirement 5** → Tasks 1.5, 4.2-4.6 (RTL support)
+- **Requirement 6** → Tasks 1.3, 6.1 (Lazy-loading)
+- **Requirement 7** → Tasks 3.1-3.4 (TTS)
+- **Requirement 8** → Task 4.7 (Glossary search)
+- **Requirement 9** → Tasks 1.2, 1.8 (Context management)
+- **Requirement 10** → Tasks 4.1-4.6 (Localized components)
+- **Requirement 11** → Tasks 1.1, 2.1-2.11 (File organization)
+- **Requirement 12** → Tasks 1.3, 6.1, 6.3 (Performance)
+- **Requirement 13** → Task 1.7 (Parser/Serializer)
+- **Requirement 14** → Tasks 4.5, 5.1-5.9 (Language switching)
+- **Requirement 15** → Tasks 2.2-2.11 (Cultural accuracy)
+- **Requirement 16** → Tasks 1.2, 1.3 (Robustness)
 
