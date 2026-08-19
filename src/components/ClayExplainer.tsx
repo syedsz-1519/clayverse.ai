@@ -1,6 +1,6 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
-import { Sparkles, ArrowRight, Volume2, VolumeX, Headphones } from 'lucide-react';
+import { Sparkles, ArrowRight, Volume2, Mic, MicOff } from 'lucide-react';
 import { audioEngine } from '../lib/audioEngine';
 import { useLanguage } from '../hooks/useLanguage';
 
@@ -10,6 +10,10 @@ export default function ClayExplainer() {
   const [isBlinking, setIsBlinking] = useState(false);
   const [isWaving, setIsWaving] = useState(false);
   const [isPlayingVoice, setIsPlayingVoice] = useState(false);
+  const [isListening, setIsListening] = useState(false);
+  const [listenError, setListenError] = useState<string | null>(null);
+  const [lastTranscript, setLastTranscript] = useState<string | null>(null);
+  const recognitionRef = useRef<any>(null);
 
   // Sync state with SpeechSynthesis
   useEffect(() => {
