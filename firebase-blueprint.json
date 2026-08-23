@@ -19,6 +19,21 @@
         "bookmarks": "map",
         "updatedAt": "timestamp"
       }
+    },
+    "studyGroups": {
+      "description": "Collaborative study groups for curriculum topics",
+      "fields": {
+        "name": "string",
+        "topicId": "string",
+        "topicTitle": "string",
+        "description": "string",
+        "createdBy": "string",
+        "createdByName": "string",
+        "createdAt": "string",
+        "meetingTime": "string",
+        "members": "array",
+        "maxMembers": "number"
+      }
     }
   }
 }

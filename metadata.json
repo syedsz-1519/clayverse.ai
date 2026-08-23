@@ -1,6 +1,6 @@
 {
-  "name": "Simple AI",
-  "description": "An elegant, interactive, beginner-safe guide to Artificial Intelligence with smooth animations and tactile interfaces.",
-  "requestFramePermissions": ["microphone"],
+  "name": "Clayverse AI",
+  "description": "An elegant, interactive, beginner-safe guide to Artificial Intelligence with AI mock interviews, camera tracking, and learning dashboard.",
+  "requestFramePermissions": ["camera", "microphone"],
   "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
 }

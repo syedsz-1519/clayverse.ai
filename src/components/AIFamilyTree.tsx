@@ -4,6 +4,9 @@ import { Network, HelpCircle, Layers, Fingerprint, Cpu, Sparkles, Activity, Zap 
 import { MLType } from '../types';
 import TechTooltip from './TechTooltip';
 import { useLanguage } from '../hooks/useLanguage';
+import ReadSectionButton from './ReadSectionButton';
+import CopyCodeButton from './CopyCodeButton';
+import CodeSnippetBlock from './CodeSnippetBlock';
 
 export default function AIFamilyTree() {
   const { lang, t } = useLanguage();
@@ -212,12 +215,15 @@ export default function AIFamilyTree() {
           <h2 className="font-display text-3xl sm:text-4xl font-extrabold text-brand-charcoal mt-1 mb-3">
             {lang === 'en' ? "The AI Family Tree" : "AI ka Khandan (Family Tree)"}
           </h2>
-          <p className="font-sans text-xs sm:text-sm text-brand-muted leading-relaxed">
+          <p className="font-sans text-xs sm:text-sm text-brand-muted leading-relaxed mb-4">
             {lang === 'en'
               ? "Many terms get thrown around like they mean the same thing. In reality, they are nested inside each other like Russian nesting dolls."
               : "Bohot saare log samjhte hain sab ka matlab ek hi hai. Par asal mein ye Russian nesting dolls ke jaise ek dusre ke andar nested hain."
             }
           </p>
+          <div className="flex justify-center">
+            <ReadSectionButton sectionId="family-tree" />
+          </div>
         </div>
 
         {/* Nesting Interactive Diagram & Explanations (Bento Grid with Parallax Depth) */}
@@ -409,7 +415,14 @@ export default function AIFamilyTree() {
                           {lang === 'en' ? "Deeps Explained" : "Gehri Baat"}
                         </h4>
                       </div>
-                      <span className="text-xs text-brand-amber">🔄</span>
+                      <div className="flex items-center gap-1.5">
+                        <CopyCodeButton
+                          text={`${nestingLevels[activeNestingLevel].title}: ${lang === 'en' ? deeperDetails[activeNestingLevel].conceptsEn : deeperDetails[activeNestingLevel].conceptsHyd}\nExamples: ${lang === 'en' ? deeperDetails[activeNestingLevel].examplesEn : deeperDetails[activeNestingLevel].examplesHyd}`}
+                          label={lang === 'en' ? "Copy Notes" : "Notes Copy"}
+                          variant="compact"
+                        />
+                        <span className="text-xs text-brand-amber">🔄</span>
+                      </div>
                     </div>
 
                     {/* Concepts Block */}
@@ -568,7 +581,15 @@ export default function AIFamilyTree() {
                           <span className="font-mono text-[9px] font-bold text-brand-amber uppercase tracking-wider">
                             0{i + 1} {lang === 'en' ? "Deep Engine" : "Khaas Engine"}
                           </span>
-                          <span className="text-[10px]">🔄</span>
+                          <div className="flex items-center gap-1">
+                            <CopyCodeButton
+                              text={`${type.title}: ${lang === 'en' ? deeperMLDetails[i].techEn : deeperMLDetails[i].techHyd}\nUse: ${lang === 'en' ? deeperMLDetails[i].examplesEn : deeperMLDetails[i].examplesHyd}`}
+                              label={lang === 'en' ? "Copy" : "Copy"}
+                              variant="compact"
+                              showIconOnly={true}
+                            />
+                            <span className="text-[10px]">🔄</span>
+                          </div>
                         </div>
                         
                         <div className="mb-1.5">
@@ -771,6 +792,106 @@ export default function AIFamilyTree() {
               </div>
             </div>
 
+          </div>
+        </motion.div>
+
+        {/* Developer Technical Snippets: Scikit-Learn vs PyTorch */}
+        <motion.div
+          initial={{ opacity: 0, y: 30 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.6 }}
+          className="mt-8 p-6 sm:p-8 bg-white border border-brand-slate/10 rounded-3xl skeuo-raised text-left"
+        >
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6 border-b border-brand-slate/10 pb-4">
+            <div className="flex items-center gap-3">
+              <div className="w-10 h-10 rounded-2xl bg-brand-amber/10 border border-brand-amber/20 flex items-center justify-center text-brand-amber">
+                <Cpu className="w-5 h-5" />
+              </div>
+              <div>
+                <span className="text-[10px] font-mono font-bold uppercase tracking-wider text-brand-amber block">
+                  {lang === 'en' ? "Developer Code Snippets" : "Developer Code Snippets"}
+                </span>
+                <h3 className="font-display text-lg font-black text-brand-charcoal">
+                  {lang === 'en' ? "Machine Learning vs Neural Networks in Python" : "ML aur Deep Learning ka Python Code"}
+                </h3>
+              </div>
+            </div>
+            <span className="text-xs font-mono text-brand-muted bg-brand-sand px-3 py-1 rounded-full border border-brand-slate/10 self-start sm:self-auto">
+              {lang === 'en' ? "scikit-learn & PyTorch" : "scikit-learn & PyTorch"}
+            </span>
+          </div>
+
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+            {/* Snippet 1: Classical ML (scikit-learn) */}
+            <div>
+              <span className="text-xs font-bold text-brand-charcoal block mb-1">
+                {lang === 'en' ? "1. Classical ML Classifier (scikit-learn)" : "1. Classical ML Model (scikit-learn)"}
+              </span>
+              <p className="text-[11px] text-brand-muted mb-2">
+                {lang === 'en'
+                  ? "Fit a tabular dataset with a Random Forest or Logistic Regression classifier."
+                  : "Tabular data ko train karke prediction lene ka standard Python code."
+                }
+              </p>
+              <CodeSnippetBlock
+                language="python"
+                filename="ml_classifier.py"
+                showLineNumbers={true}
+                code={`from sklearn.ensemble import RandomForestClassifier
+from sklearn.model_selection import train_test_split
+
+# 1. Prepare labeled features (X) and target labels (y)
+X = [[5.1, 3.5], [4.9, 3.0], [6.2, 3.4], [5.9, 3.0]]
+y = [0, 0, 1, 1]
+
+# 2. Train-test split & train model
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2)
+clf = RandomForestClassifier(n_estimators=100)
+clf.fit(X_train, y_train)
+
+# 3. Predict on unseen example
+prediction = clf.predict([[5.0, 3.2]])
+print("Predicted Class:", prediction[0])`}
+                copyLabel={lang === 'en' ? "Copy ML Code" : "ML Code Copy"}
+              />
+            </div>
+
+            {/* Snippet 2: Deep Learning Neural Network (PyTorch) */}
+            <div>
+              <span className="text-xs font-bold text-brand-charcoal block mb-1">
+                {lang === 'en' ? "2. Deep Neural Network Layer (PyTorch)" : "2. Deep Neural Network (PyTorch)"}
+              </span>
+              <p className="text-[11px] text-brand-muted mb-2">
+                {lang === 'en'
+                  ? "Feedforward neural network with Linear layers, ReLU activations, and Dropout."
+                  : "Input, Hidden aur Output layers ke sath neural network banane ka snippet."
+                }
+              </p>
+              <CodeSnippetBlock
+                language="python"
+                filename="neural_net.py"
+                showLineNumbers={true}
+                code={`import torch
+import torch.nn as nn
+
+class DeepNeuralNetwork(nn.Module):
+    def __init__(self, input_dim=128, hidden_dim=64, num_classes=10):
+        super().__init__()
+        self.network = nn.Sequential(
+            nn.Linear(input_dim, hidden_dim),   # Input -> Hidden 1
+            nn.ReLU(),                          # Non-linear activation
+            nn.Dropout(0.2),                    # Regularization
+            nn.Linear(hidden_dim, num_classes)  # Hidden -> Output
+        )
+
+    def forward(self, x):
+        return self.network(x)
+
+model = DeepNeuralNetwork()`}
+                copyLabel={lang === 'en' ? "Copy PyTorch Code" : "PyTorch Copy"}
+              />
+            </div>
           </div>
         </motion.div>
 

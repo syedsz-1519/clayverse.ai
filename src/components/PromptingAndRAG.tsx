@@ -9,11 +9,15 @@ import {
   BookOpen, 
   CheckCircle,
   HelpCircle as QuestionIcon,
-  MessageSquare
+  MessageSquare,
+  Code2
 } from 'lucide-react';
 import { PromptingType } from '../types';
 import TechTooltip from './TechTooltip';
 import { useLanguage } from '../hooks/useLanguage';
+import ReadSectionButton from './ReadSectionButton';
+import CopyCodeButton from './CopyCodeButton';
+import CodeSnippetBlock from './CodeSnippetBlock';
 
 export default function PromptingAndRAG() {
   const { lang, t } = useLanguage();
@@ -110,9 +114,12 @@ export default function PromptingAndRAG() {
             <div className="absolute top-0 right-0 w-32 h-32 bg-brand-amber/5 rounded-full blur-2xl pointer-events-none" />
             
             <div>
-              {/* 3D-style Tactile Icon Tile */}
-              <div className="relative w-12 h-12 rounded-2xl bg-gradient-to-br from-white to-[#F4EFE6] border border-t-white border-l-white border-b-4 border-r border-brand-amber/20 shadow-[0_6px_12px_-3px_rgba(211,98,64,0.12),0_10px_20px_-5px_rgba(211,98,64,0.06),inset_0_2px_4px_rgba(255,255,255,0.95)] flex items-center justify-center shrink-0 mb-5 text-brand-amber">
-                <Zap className="w-5 h-5 drop-shadow-[0_1.5px_2px_rgba(211,98,64,0.15)]" />
+              {/* Top row with Icon and Read Aloud button */}
+              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-5">
+                <div className="relative w-12 h-12 rounded-2xl bg-gradient-to-br from-white to-[#F4EFE6] border border-t-white border-l-white border-b-4 border-r border-brand-amber/20 shadow-[0_6px_12px_-3px_rgba(211,98,64,0.12),0_10px_20px_-5px_rgba(211,98,64,0.06),inset_0_2px_4px_rgba(255,255,255,0.95)] flex items-center justify-center shrink-0 text-brand-amber">
+                  <Zap className="w-5 h-5 drop-shadow-[0_1.5px_2px_rgba(211,98,64,0.15)]" />
+                </div>
+                <ReadSectionButton sectionId="prompting-rag" />
               </div>
 
               <span className="text-xs font-bold uppercase tracking-wider text-brand-amber block mb-2 font-mono">
@@ -137,19 +144,30 @@ export default function PromptingAndRAG() {
             </div>
 
             {/* Quick-tips tactile drawer */}
-            <div className="bg-[#F9F7F3] border border-brand-slate/10 p-4 rounded-2xl flex items-center gap-3.5 shadow-inner">
-              <Zap className="w-5 h-5 text-brand-amber shrink-0 animate-pulse" />
-              <div className="text-[11px] leading-normal text-left">
-                <span className="font-bold text-brand-charcoal block">
-                  {lang === 'en' ? "Prompting Rule of Thumb" : "Prompting ka Pakka Rule"}
-                </span>
-                <span className="text-brand-muted">
-                  {lang === 'en'
-                    ? "Treat the AI like a highly capable intern with zero context. Spell out exactly what you want."
-                    : "AI ko ek dhang ka hoshiyar intern samjho jisko tumhare project ka zero pata hai. Ek-ek baat khol ke samjhao."
-                  }
-                </span>
+            <div className="bg-[#F9F7F3] border border-brand-slate/10 p-4 rounded-2xl flex items-center justify-between gap-3.5 shadow-inner">
+              <div className="flex items-center gap-3.5">
+                <Zap className="w-5 h-5 text-brand-amber shrink-0 animate-pulse" />
+                <div className="text-[11px] leading-normal text-left">
+                  <span className="font-bold text-brand-charcoal block">
+                    {lang === 'en' ? "Prompting Rule of Thumb" : "Prompting ka Pakka Rule"}
+                  </span>
+                  <span className="text-brand-muted">
+                    {lang === 'en'
+                      ? "Treat the AI like a highly capable intern with zero context. Spell out exactly what you want."
+                      : "AI ko ek dhang ka hoshiyar intern samjho jisko tumhare project ka zero pata hai. Ek-ek baat khol ke samjhao."
+                    }
+                  </span>
+                </div>
               </div>
+              <CopyCodeButton
+                text={lang === 'en' 
+                  ? "Treat the AI like a highly capable intern with zero context. Spell out role, constraints, formatting, and step-by-step reasoning."
+                  : "AI ko ek dhang ka hoshiyar intern samjho jisko project ka zero pata hai. Role, constraints, format aur step-by-step reasoning saaf likho."
+                }
+                label={lang === 'en' ? "Copy Rule" : "Rule Copy"}
+                variant="compact"
+                className="shrink-0"
+              />
             </div>
           </motion.div>
 
@@ -195,13 +213,21 @@ export default function PromptingAndRAG() {
                   </p>
                 </div>
 
-                <div className="bg-brand-sand/30 border border-brand-slate/5 p-2.5 rounded-xl text-left">
-                  <span className="text-[8px] font-mono font-bold text-brand-slate uppercase tracking-wider block mb-0.5">
-                    {lang === 'en' ? "Real World Example" : "Misaal"}
-                  </span>
-                  <p className="text-[10px] font-mono font-semibold text-brand-charcoal leading-snug">
-                    {promptingTypes[selectedPromptType].example}
-                  </p>
+                <div className="bg-brand-sand/30 border border-brand-slate/5 p-3 rounded-xl text-left flex items-center justify-between gap-3">
+                  <div className="min-w-0 flex-1">
+                    <span className="text-[8px] font-mono font-bold text-brand-slate uppercase tracking-wider block mb-0.5">
+                      {lang === 'en' ? "Real World Example" : "Misaal"}
+                    </span>
+                    <p className="text-[10px] font-mono font-semibold text-brand-charcoal leading-snug">
+                      {promptingTypes[selectedPromptType].example}
+                    </p>
+                  </div>
+                  <CopyCodeButton
+                    text={promptingTypes[selectedPromptType].example.replace(/^"|"$/g, '')}
+                    label={lang === 'en' ? "Copy Prompt" : "Prompt Copy"}
+                    variant="compact"
+                    className="shrink-0"
+                  />
                 </div>
               </motion.div>
             </div>
@@ -347,6 +373,108 @@ export default function PromptingAndRAG() {
           </motion.div>
 
         </div>
+
+        {/* 3. Developer Technical Snippets & Code Blocks (Full Width Bento Row) */}
+        <motion.div
+          initial={{ opacity: 0, y: 30 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.6 }}
+          className="mt-12 p-6 sm:p-8 bg-white border border-brand-slate/10 rounded-3xl skeuo-raised text-left"
+        >
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6 border-b border-brand-slate/10 pb-4">
+            <div className="flex items-center gap-3">
+              <div className="w-10 h-10 rounded-2xl bg-brand-amber/10 border border-brand-amber/20 flex items-center justify-center text-brand-amber">
+                <Code2 className="w-5 h-5" />
+              </div>
+              <div>
+                <span className="text-[10px] font-mono font-bold uppercase tracking-wider text-brand-amber block">
+                  {lang === 'en' ? "Developer Code Snippets" : "Developer Code Snippets"}
+                </span>
+                <h3 className="font-display text-lg font-black text-brand-charcoal">
+                  {lang === 'en' ? "Production Prompting & RAG Architecture" : "Prompting & RAG Code Pipeline"}
+                </h3>
+              </div>
+            </div>
+            <span className="text-xs font-mono text-brand-muted bg-brand-sand px-3 py-1 rounded-full border border-brand-slate/10 self-start sm:self-auto">
+              {lang === 'en' ? "Ready to Copy & Run" : "Copy karke direct chalao"}
+            </span>
+          </div>
+
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+            {/* Snippet 1: Production System Prompt Template */}
+            <div>
+              <span className="text-xs font-bold text-brand-charcoal block mb-1">
+                {lang === 'en' ? "1. Structured System Prompt Template" : "1. Standard System Prompt Template"}
+              </span>
+              <p className="text-[11px] text-brand-muted mb-2">
+                {lang === 'en' 
+                  ? "Standard blueprint used by AI engineers to enforce roles, constraints, and structured JSON output."
+                  : "AI engineers ka standard prompt structure jisse role aur format fix rehta hai."
+                }
+              </p>
+              <CodeSnippetBlock
+                language="markdown"
+                filename="system_prompt_template.md"
+                code={`# ROLE & OBJECTIVE
+You are an expert AI tutor. Explain machine learning concepts clearly to curious learners.
+
+# CONSTRAINTS & RULES
+1. Ground answers strictly in provided facts.
+2. If uncertain, say "I do not have verified data on this" rather than guessing.
+3. Keep technical terms bolded and followed by intuitive 1-sentence analogies.
+
+# OUTPUT FORMAT (JSON)
+{
+  "summary": "1-sentence executive takeaway",
+  "key_points": ["point 1", "point 2"],
+  "code_or_math": "clean example",
+  "confidence_score": 0.98
+}`}
+                copyLabel={lang === 'en' ? "Copy Prompt Template" : "Template Copy"}
+              />
+            </div>
+
+            {/* Snippet 2: Minimal Python RAG Pipeline with Gemini */}
+            <div>
+              <span className="text-xs font-bold text-brand-charcoal block mb-1">
+                {lang === 'en' ? "2. Minimal 5-Line RAG Pipeline" : "2. 5-Line RAG Python Code"}
+              </span>
+              <p className="text-[11px] text-brand-muted mb-2">
+                {lang === 'en'
+                  ? "How retrieval and generation bind together in modern Python SDKs."
+                  : "Python mein documents search karke LLM ko pass karne ka clean example."
+                }
+              </p>
+              <CodeSnippetBlock
+                language="python"
+                filename="rag_pipeline.py"
+                showLineNumbers={true}
+                code={`from google import genai
+
+ai = genai.Client()
+
+# 1. Retrieve relevant facts from vector store / private DB
+trusted_context = "Clayverse AI was created to make machine learning intuitive."
+user_question = "What is the core philosophy of Clayverse AI?"
+
+# 2. Augment prompt with retrieved verified context
+prompt = f"""Use ONLY the following context to answer:
+Context: {trusted_context}
+
+Question: {user_question}"""
+
+# 3. Generate factually grounded answer (Zero Hallucinations)
+response = ai.models.generate_content(
+    model="gemini-2.5-flash",
+    contents=prompt,
+)
+print(response.text)`}
+                copyLabel={lang === 'en' ? "Copy Python Code" : "Python Code Copy"}
+              />
+            </div>
+          </div>
+        </motion.div>
 
       </div>
     </div>

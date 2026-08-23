@@ -249,7 +249,7 @@ export function linkSocialPlatformManually(platform: string, platformUsername?: 
 // 1. Listen to Auth state changes and sync (HYBRID: supports local manual + firebase fallback)
 export function setupAuthListener(
   onUserChanged: (profile: UserProfile | null) => void,
-  onProgressChanged: (progress: UserProgress | null) => void
+  onProgressChanged?: (progress: UserProgress | null) => void
 ) {
   const syncLocalOrFirebaseState = async (firebaseUser: FirebaseUser | null) => {
     const localUser = getActiveLocalUser();
@@ -281,7 +281,7 @@ export function setupAuthListener(
       
       localStorage.setItem('clay_completed_terms', JSON.stringify(progress.completedTerms));
       localStorage.setItem('clay_bookmarks', JSON.stringify(progress.bookmarks));
-      onProgressChanged(progress);
+      if (onProgressChanged) onProgressChanged(progress);
 
       // 3. Load user's quiz
       const savedQuiz = localStorage.getItem(`clay_quiz_${localUser.uid}`);
@@ -381,7 +381,7 @@ export function setupAuthListener(
         // Update local storage
         localStorage.setItem('clay_completed_terms', JSON.stringify(progress.completedTerms));
         localStorage.setItem('clay_bookmarks', JSON.stringify(progress.bookmarks));
-        onProgressChanged(progress);
+        if (onProgressChanged) onProgressChanged(progress);
 
         // Fetch Quiz Progress
         try {
@@ -645,5 +645,285 @@ export function useAuth() {
   }, []);
 
   return { user, loading };
+}
+
+// ==========================================
+// STUDY GROUPS CLOUD & LOCAL SYNC SYSTEM
+// ==========================================
+
+export interface StudyGroupMember {
+  uid: string;
+  name: string;
+  avatar: string;
+  role: 'leader' | 'member';
+  joinedAt: string;
+}
+
+export interface StudyGroupMessage {
+  id: string;
+  groupId: string;
+  senderUid: string;
+  senderName: string;
+  senderAvatar: string;
+  text: string;
+  timestamp: string;
+}
+
+export interface StudyGroup {
+  id: string;
+  name: string;
+  topicId: string;
+  topicTitle: string;
+  category: string;
+  level: 'Beginner' | 'Intermediate' | 'Advanced';
+  description: string;
+  createdBy: string;
+  createdByName: string;
+  createdAt: string;
+  meetingTime: string;
+  members: StudyGroupMember[];
+  maxMembers: number;
+  tags: string[];
+}
+
+export const INITIAL_DEFAULT_STUDY_GROUPS: StudyGroup[] = [
+  {
+    id: 'group_transformers',
+    name: 'Transformers & Self-Attention Cohort',
+    topicId: 'c4',
+    topicTitle: 'Transformer Architecture & Self-Attention',
+    category: 'GenAI',
+    level: 'Advanced',
+    description: 'Weekly deep dive into multi-head attention math, positional embeddings, and KV cache optimizations.',
+    createdBy: 'scholar_priya',
+    createdByName: 'Priya N. (Tutor)',
+    createdAt: '2026-08-15',
+    meetingTime: 'Tuesdays & Thursdays • 6:30 PM IST',
+    maxMembers: 15,
+    tags: ['Self-Attention', 'Transformers', 'Math Deep Dive'],
+    members: [
+      { uid: 'scholar_priya', name: 'Priya N.', avatar: 'https://api.dicebear.com/7.x/bottts/svg?seed=Priya', role: 'leader', joinedAt: '2026-08-15' },
+      { uid: 'scholar_arjun', name: 'Arjun K.', avatar: 'https://api.dicebear.com/7.x/bottts/svg?seed=Arjun', role: 'member', joinedAt: '2026-08-16' },
+      { uid: 'scholar_zainab', name: 'Zainab R.', avatar: 'https://api.dicebear.com/7.x/bottts/svg?seed=Zainab', role: 'member', joinedAt: '2026-08-18' }
+    ]
+  },
+  {
+    id: 'group_rag_architects',
+    name: 'RAG & Vector Search Builders',
+    topicId: 'c5',
+    topicTitle: 'RAG (Retrieval-Augmented Generation) & Vectors',
+    category: 'GenAI',
+    level: 'Advanced',
+    description: 'Hands-on practice implementing chunking strategies, hybrid BM25 + dense retrieval, and reranking.',
+    createdBy: 'scholar_farhan',
+    createdByName: 'Farhan M.',
+    createdAt: '2026-08-18',
+    meetingTime: 'Saturdays • 4:00 PM IST',
+    maxMembers: 12,
+    tags: ['RAG', 'Vector DB', 'Embeddings', 'LangChain'],
+    members: [
+      { uid: 'scholar_farhan', name: 'Farhan M.', avatar: 'https://api.dicebear.com/7.x/bottts/svg?seed=Farhan', role: 'leader', joinedAt: '2026-08-18' },
+      { uid: 'scholar_rahul', name: 'Rahul V.', avatar: 'https://api.dicebear.com/7.x/bottts/svg?seed=Rahul', role: 'member', joinedAt: '2026-08-19' }
+    ]
+  },
+  {
+    id: 'group_ai_foundations_hyd',
+    name: 'AI Foundations & ML Basics (Urdu / Telugu Focus)',
+    topicId: 'c1',
+    topicTitle: 'AI vs ML vs Deep Learning Hierarchy',
+    category: 'Foundations',
+    level: 'Beginner',
+    description: 'Beginner friendly cohort explaining neural networks, weights, and loss functions in plain colloquial language.',
+    createdBy: 'scholar_ali',
+    createdByName: 'Ali Hyder',
+    createdAt: '2026-08-19',
+    meetingTime: 'Daily Evening Practice • 7:00 PM IST',
+    maxMembers: 20,
+    tags: ['Beginners', 'Bilingual', 'Foundations', 'Intuition'],
+    members: [
+      { uid: 'scholar_ali', name: 'Ali Hyder', avatar: 'https://api.dicebear.com/7.x/bottts/svg?seed=Ali', role: 'leader', joinedAt: '2026-08-19' },
+      { uid: 'scholar_sneha', name: 'Sneha T.', avatar: 'https://api.dicebear.com/7.x/bottts/svg?seed=Sneha', role: 'member', joinedAt: '2026-08-20' }
+    ]
+  },
+  {
+    id: 'group_prompt_pros',
+    name: 'Prompt Engineering & System Personas',
+    topicId: 'c6',
+    topicTitle: 'Prompt Engineering & System Personas',
+    category: 'Prompting',
+    level: 'Beginner',
+    description: 'Techniques for few-shot reasoning, structured JSON schemas, and jailbreak guardrail testing.',
+    createdBy: 'scholar_maya',
+    createdByName: 'Maya S.',
+    createdAt: '2026-08-20',
+    meetingTime: 'Mondays & Wednesdays • 5:30 PM IST',
+    maxMembers: 10,
+    tags: ['Few-Shot', 'CoT', 'Structured Output', 'Safety'],
+    members: [
+      { uid: 'scholar_maya', name: 'Maya S.', avatar: 'https://api.dicebear.com/7.x/bottts/svg?seed=Maya', role: 'leader', joinedAt: '2026-08-20' }
+    ]
+  }
+];
+
+export function getLocalStudyGroups(): StudyGroup[] {
+  try {
+    const saved = localStorage.getItem('clay_study_groups');
+    if (saved) {
+      return JSON.parse(saved);
+    }
+    localStorage.setItem('clay_study_groups', JSON.stringify(INITIAL_DEFAULT_STUDY_GROUPS));
+    return INITIAL_DEFAULT_STUDY_GROUPS;
+  } catch {
+    return INITIAL_DEFAULT_STUDY_GROUPS;
+  }
+}
+
+export function saveLocalStudyGroups(groups: StudyGroup[]) {
+  localStorage.setItem('clay_study_groups', JSON.stringify(groups));
+  window.dispatchEvent(new CustomEvent('clay_study_groups_updated'));
+}
+
+export async function fetchStudyGroups(): Promise<StudyGroup[]> {
+  try {
+    const currentUser = auth.currentUser;
+    if (currentUser) {
+      const docSnap = await getDoc(doc(db, 'studyGroups', 'all_groups'));
+      if (docSnap.exists() && docSnap.data()?.groups) {
+        const cloudGroups = docSnap.data().groups as StudyGroup[];
+        saveLocalStudyGroups(cloudGroups);
+        return cloudGroups;
+      }
+    }
+  } catch (err) {
+    console.warn("Using local cache for study groups:", err);
+  }
+  return getLocalStudyGroups();
+}
+
+export async function createStudyGroupCloud(newGroup: Omit<StudyGroup, 'id' | 'createdAt'>): Promise<StudyGroup> {
+  const groups = getLocalStudyGroups();
+  const fullGroup: StudyGroup = {
+    ...newGroup,
+    id: `group_${Date.now()}`,
+    createdAt: new Date().toISOString().split('T')[0]
+  };
+
+  const updated = [fullGroup, ...groups];
+  saveLocalStudyGroups(updated);
+
+  try {
+    const currentUser = auth.currentUser;
+    if (currentUser) {
+      await setDoc(doc(db, 'studyGroups', 'all_groups'), {
+        groups: updated,
+        updatedAt: serverTimestamp()
+      }, { merge: true });
+    }
+  } catch (err) {
+    console.warn("Failed to sync new group to Firestore, saved locally:", err);
+  }
+
+  return fullGroup;
+}
+
+export async function joinStudyGroupCloud(groupId: string, user: UserProfile): Promise<boolean> {
+  const groups = getLocalStudyGroups();
+  const targetIndex = groups.findIndex(g => g.id === groupId);
+  if (targetIndex === -1) return false;
+
+  const target = groups[targetIndex];
+  const alreadyMember = target.members.some(m => m.uid === user.uid);
+  if (alreadyMember) return true;
+
+  if (target.members.length >= target.maxMembers) {
+    throw new Error('This study group is currently at full capacity.');
+  }
+
+  const newMember: StudyGroupMember = {
+    uid: user.uid,
+    name: user.fullName || user.email || 'Scholar',
+    avatar: user.avatar || `https://api.dicebear.com/7.x/bottts/svg?seed=${user.uid}`,
+    role: 'member',
+    joinedAt: new Date().toISOString().split('T')[0]
+  };
+
+  target.members.push(newMember);
+  groups[targetIndex] = target;
+  saveLocalStudyGroups(groups);
+
+  try {
+    const currentUser = auth.currentUser;
+    if (currentUser) {
+      await setDoc(doc(db, 'studyGroups', 'all_groups'), {
+        groups,
+        updatedAt: serverTimestamp()
+      }, { merge: true });
+    }
+  } catch (err) {
+    console.warn("Synced group join locally:", err);
+  }
+
+  return true;
+}
+
+export async function leaveStudyGroupCloud(groupId: string, userUid: string): Promise<boolean> {
+  const groups = getLocalStudyGroups();
+  const targetIndex = groups.findIndex(g => g.id === groupId);
+  if (targetIndex === -1) return false;
+
+  const target = groups[targetIndex];
+  target.members = target.members.filter(m => m.uid !== userUid);
+  groups[targetIndex] = target;
+  saveLocalStudyGroups(groups);
+
+  try {
+    const currentUser = auth.currentUser;
+    if (currentUser) {
+      await setDoc(doc(db, 'studyGroups', 'all_groups'), {
+        groups,
+        updatedAt: serverTimestamp()
+      }, { merge: true });
+    }
+  } catch (err) {
+    console.warn("Synced group leave locally:", err);
+  }
+
+  return true;
+}
+
+export function getStudyGroupMessages(groupId: string): StudyGroupMessage[] {
+  try {
+    const saved = localStorage.getItem(`clay_study_messages_${groupId}`);
+    if (saved) return JSON.parse(saved);
+  } catch {}
+  return [
+    {
+      id: 'msg_1',
+      groupId,
+      senderUid: 'scholar_tutor',
+      senderName: 'Cohort Guide',
+      senderAvatar: 'https://api.dicebear.com/7.x/bottts/svg?seed=Guide',
+      text: 'Welcome everyone! Review this week’s lesson notes and post your questions or project links below.',
+      timestamp: 'Yesterday at 5:30 PM'
+    }
+  ];
+}
+
+export function postStudyGroupMessage(groupId: string, user: UserProfile, text: string): StudyGroupMessage {
+  const messages = getStudyGroupMessages(groupId);
+  const newMsg: StudyGroupMessage = {
+    id: `msg_${Date.now()}`,
+    groupId,
+    senderUid: user.uid,
+    senderName: user.fullName || 'Scholar',
+    senderAvatar: user.avatar || `https://api.dicebear.com/7.x/bottts/svg?seed=${user.uid}`,
+    text: text.trim(),
+    timestamp: 'Just now'
+  };
+
+  const updated = [...messages, newMsg];
+  localStorage.setItem(`clay_study_messages_${groupId}`, JSON.stringify(updated));
+  window.dispatchEvent(new CustomEvent(`clay_group_chat_${groupId}`));
+  return newMsg;
 }
 

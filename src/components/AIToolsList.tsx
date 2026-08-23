@@ -15,6 +15,8 @@ import {
   Cpu
 } from 'lucide-react';
 import { useLanguage } from '../hooks/useLanguage';
+import ReadSectionButton from './ReadSectionButton';
+import CopyCodeButton from './CopyCodeButton';
 
 interface AITool {
   name: string;
@@ -479,6 +481,9 @@ export default function AIToolsList() {
               </>
             )}
           </p>
+          <div className="flex justify-center mt-4">
+            <ReadSectionButton sectionId="ai-tools-directory" />
+          </div>
         </div>
 
         {/* Search and Filters Bento Grid */}
@@ -575,17 +580,13 @@ export default function AIToolsList() {
 
                   {/* Actions */}
                   <div className="flex items-center gap-1.5 shrink-0">
-                    <button
-                      onClick={() => handleCopyLink(tool.url, tool.name)}
-                      className="p-1.5 hover:bg-brand-sand/50 rounded-lg text-brand-slate hover:text-brand-amber transition-colors border border-transparent hover:border-brand-slate/10 text-[9px] font-mono cursor-pointer"
-                      title="Copy URL"
-                    >
-                      {copiedId === tool.name ? (
-                        <Check className="w-3.5 h-3.5 text-emerald-600 stroke-[3]" />
-                      ) : (
-                        lang === 'en' ? "Copy" : "Copy"
-                      )}
-                    </button>
+                    <CopyCodeButton
+                      text={tool.url}
+                      label={lang === 'en' ? "Copy" : "Copy"}
+                      variant="compact"
+                      showIconOnly={true}
+                      title={lang === 'en' ? `Copy link for ${tool.name}` : `${tool.name} ka link copy karo`}
+                    />
                     <a
                       href={tool.url}
                       target="_blank"

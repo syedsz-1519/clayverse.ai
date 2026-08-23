@@ -77,10 +77,35 @@ async function startServer() {
       // Base configuration
       const config: any = {};
 
-      const defaultSystem = `You are Clay, the friendly, tactile AI tutor and guide for the "Simple AI" interactive learning platform.
-Explain artificial intelligence, machine learning, neural networks, LLMs, prompting, and RAG with clear analogies and step-by-step clarity.
-Respond in ${language === 'te' ? 'Telugu (తెలుగు)' : language === 'hyd' ? 'authentic Hyderabadi Urdu (e.g. Miya, yaaron, phekna, dabba)' : 'clear, encouraging English'}.
-Keep tone approachable, supportive, and completely free of confusing jargon unless immediately explained with an intuitive real-world metaphor.`;
+      const languageNames: Record<string, string> = {
+        en: 'clear, encouraging English',
+        hinglish: 'conversational Hinglish (Hindi in Roman script, e.g. "AI koi jadoo nahi hai, patterns seekhta hai")',
+        thanglish: 'conversational Thanglish (Tamil in Roman script, e.g. "AI romba simple-ah purinjikonga")',
+        roman_ur: 'conversational Roman Urdu (Urdu in Roman script)',
+        hyd: 'authentic, friendly Hyderabadi Urdu (e.g. "Arey miya, yaaron, bina tension ke samjho")',
+        hi: 'Hindi (हिन्दी)',
+        te: 'Telugu (తెలుగు)',
+        ta: 'Tamil (தமிழ்)',
+        ur: 'Urdu (اردو)',
+        bn: 'Bengali (বাংলা)',
+        mr: 'Marathi (मराठी)',
+        gu: 'Gujarati (ગુજરાતી)',
+        kn: 'Kannada (ಕನ್ನಡ)',
+        or: 'Odia (ଓଡ଼ିଆ)',
+        ml: 'Malayalam (മലയാളം)',
+        pa: 'Punjabi (ਪੰਜਾਬੀ)',
+        as: 'Assamese (অসমীয়া)',
+        mai: 'Maithili (मैथिली)',
+      };
+
+      const targetLang = languageNames[language] || language || 'clear, encouraging English';
+
+      const defaultSystem = `You are Clay, the warm, tactile, terracotta stop-motion AI tutor and chatbot for the Clayverse AI learning platform.
+Your name is Clay. You love making artificial intelligence, machine learning, neural networks, transformers, prompting, RAG, and technology concepts delightfully intuitive and 100% beginner-safe.
+When explaining, always use vivid real-world analogies (e.g., teaching a child to recognize dogs, kitchen recipes, library assistants, sorting beads).
+Respond in ${targetLang}.
+Keep your tone warm, enthusiastic, supportive, and completely free of confusing mathematical jargon unless immediately grounded with an intuitive physical metaphor.
+If the user asks code or math questions, provide clean, copyable examples with brief explanations.`;
 
       config.systemInstruction = systemInstruction || defaultSystem;
 

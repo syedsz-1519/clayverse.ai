@@ -58,7 +58,7 @@ export default function Hero() {
       onMouseMove={handleMouseMove}
       className="relative min-h-[95vh] flex flex-col justify-center items-center px-6 overflow-hidden pt-20 pb-16 select-none"
     >
-      {/* Progressive AI Background Image with Soft Mask & Parallax Motion (Increased Transparency) */}
+      {/* Progressive AI Background Image with High Clarity & Parallax Motion */}
       <motion.div 
         style={{ scale: bgImageScale, x: bgImageTranslate }}
         className="absolute inset-0 pointer-events-none z-0 overflow-hidden"
@@ -67,11 +67,12 @@ export default function Hero() {
           src={aiHeroBg}
           alt="Abstract Neural Network AI Visual Architecture"
           referrerPolicy="no-referrer"
-          className="w-full h-full object-cover object-center opacity-[0.08] mix-blend-multiply filter contrast-110 saturate-100"
+          className="w-full h-full object-cover object-center opacity-85 sm:opacity-90 filter contrast-105 saturate-105"
         />
-        {/* Soft Radial Vignette Mask so text has pristine contrast */}
-        <div className="absolute inset-0 bg-radial-[circle_at_center_rgba(245,242,237,0.85)_0%,var(--brand-cream)_90%] pointer-events-none" />
-        <div className="absolute inset-0 bg-gradient-to-b from-brand-cream/90 via-transparent to-brand-cream pointer-events-none" />
+        {/* Soft Radial Backing specifically behind center content so text has pristine contrast */}
+        <div className="absolute inset-0 bg-radial-[ellipse_at_center,rgba(245,242,237,0.85)_0%,rgba(245,242,237,0.45)_50%,transparent_85%] pointer-events-none" />
+        {/* Subtle bottom fade so background transitions smoothly into the next content section */}
+        <div className="absolute inset-x-0 bottom-0 h-32 bg-gradient-to-t from-brand-cream via-brand-cream/70 to-transparent pointer-events-none" />
       </motion.div>
 
       {/* Dynamic Background Graphic Elements (Softened & Transparent) */}
@@ -170,13 +171,16 @@ export default function Hero() {
       </motion.div>
 
       {/* Main Hero Content */}
-      <div className="max-w-4xl mx-auto text-center z-10 flex flex-col items-center">
+      <div className="max-w-4xl mx-auto text-center z-10 flex flex-col items-center relative">
+        {/* Subtle Radial Backlight Glow for maximum text readability */}
+        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[850px] max-w-[95vw] h-[480px] bg-white/70 backdrop-blur-sm rounded-[40px] pointer-events-none -z-10 shadow-2xl shadow-brand-slate/5 border border-white/60" />
+
         {/* Subtle Pill Badge */}
         <motion.div
           initial={{ opacity: 0, y: -15 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6 }}
-          className="inline-flex items-center gap-2 px-4 py-1.5 bg-white/90 backdrop-blur-md border border-brand-amber/25 rounded-full text-xs font-semibold text-brand-amber shadow-sm mb-6 hover:border-brand-amber/50 transition-all hover:scale-105"
+          className="inline-flex items-center gap-2 px-4 py-1.5 bg-white/95 backdrop-blur-md border border-brand-amber/30 rounded-full text-xs font-bold text-brand-amber shadow-sm mb-6 hover:border-brand-amber/60 transition-all hover:scale-105"
         >
           <ClayLogo size={20} />
           <span>{t('hero.badge')}</span>
@@ -188,19 +192,19 @@ export default function Hero() {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8, delay: 0.1 }}
-          className="font-display text-4xl sm:text-5xl md:text-6xl lg:text-[64px] font-extrabold text-brand-charcoal leading-[1.08] tracking-tight max-w-3xl mb-6 text-balance drop-shadow-2xs"
+          className="font-display text-4xl sm:text-5xl md:text-6xl lg:text-[64px] font-black text-slate-900 leading-[1.08] tracking-tight max-w-3xl mb-6 text-balance drop-shadow-sm"
         >
           {lang === 'en' ? (
             <>
-              AI is not magic. It’s <span className="text-brand-amber relative inline-block underline decoration-brand-amber/30 decoration-wavy underline-offset-8">pattern-matching</span> at massive scale.
+              AI is not magic. It’s <span className="text-brand-amber relative inline-block underline decoration-brand-amber/40 decoration-wavy underline-offset-8">pattern-matching</span> at massive scale.
             </>
           ) : lang === 'te' ? (
             <>
-              AI అంటే మాయ కాదు. ఇది భారీ స్థాయిలో <span className="text-brand-amber relative inline-block underline decoration-brand-amber/30 decoration-wavy underline-offset-8">ప్యాటర్న్ మ్యాచింగ్</span> మాత్రమే.
+              AI అంటే మాయ కాదు. ఇది భారీ స్థాయిలో <span className="text-brand-amber relative inline-block underline decoration-brand-amber/40 decoration-wavy underline-offset-8">ప్యాటర్న్ మ్యాచింగ్</span> మాత్రమే.
             </>
           ) : (
             <>
-              AI koi jaadu nahi hai yaaron. Ye bade paimane par <span className="text-brand-amber relative inline-block underline decoration-brand-amber/30 decoration-wavy underline-offset-8">pattern matching</span> hai.
+              AI koi jaadu nahi hai yaaron. Ye bade paimane par <span className="text-brand-amber relative inline-block underline decoration-brand-amber/40 decoration-wavy underline-offset-8">pattern matching</span> hai.
             </>
           )}
         </motion.h1>
@@ -210,7 +214,7 @@ export default function Hero() {
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ duration: 1, delay: 0.3 }}
-          className="font-sans text-base sm:text-lg md:text-xl text-brand-muted max-w-2xl leading-relaxed mb-4 text-balance font-normal"
+          className="font-sans text-base sm:text-lg md:text-xl text-slate-700 max-w-2xl leading-relaxed mb-5 text-balance font-medium"
         >
           {t('hero.subtitle')}
         </motion.p>
@@ -220,19 +224,19 @@ export default function Hero() {
           initial={{ opacity: 0, y: 10 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8, delay: 0.4 }}
-          className="flex flex-wrap justify-center items-center gap-3 sm:gap-6 mb-10 text-xs sm:text-sm font-medium text-brand-slate"
+          className="flex flex-wrap justify-center items-center gap-3 sm:gap-4 mb-7 text-xs sm:text-sm font-semibold text-slate-800"
         >
-          <div className="flex items-center gap-1.5 bg-white/70 backdrop-blur-xs px-3 py-1 rounded-full border border-brand-slate/10 shadow-2xs">
-            <CheckCircle2 className="w-3.5 h-3.5 text-emerald-600" />
+          <div className="flex items-center gap-1.5 bg-white/90 backdrop-blur-md px-3.5 py-1.5 rounded-full border border-slate-200 shadow-2xs">
+            <CheckCircle2 className="w-4 h-4 text-emerald-600" />
             <span>{lang === 'en' ? "Visual analogies" : lang === 'te' ? "విజువల్ ఉదాహరణలు" : "Aasan misaalein"}</span>
           </div>
-          <div className="flex items-center gap-1.5 bg-white/70 backdrop-blur-xs px-3 py-1 rounded-full border border-brand-slate/10 shadow-2xs">
-            <CheckCircle2 className="w-3.5 h-3.5 text-emerald-600" />
+          <div className="flex items-center gap-1.5 bg-white/90 backdrop-blur-md px-3.5 py-1.5 rounded-full border border-slate-200 shadow-2xs">
+            <CheckCircle2 className="w-4 h-4 text-emerald-600" />
             <span>{lang === 'en' ? "Hands-on sandboxes" : lang === 'te' ? "ఇంటరాక్టివ్ శ్యాండ్‌బాక్స్" : "Live interactive sandboxes"}</span>
           </div>
-          <div className="flex items-center gap-1.5 bg-white/70 backdrop-blur-xs px-3 py-1 rounded-full border border-brand-slate/10 shadow-2xs">
-            <CheckCircle2 className="w-3.5 h-3.5 text-emerald-600" />
-            <span>{lang === 'en' ? "3-Language support (EN / HYD / TEL)" : lang === 'te' ? "3 భాషల మద్దతు (EN / HYD / TEL)" : "3 Zabaano mein support"}</span>
+          <div className="flex items-center gap-1.5 bg-white/90 backdrop-blur-md px-3.5 py-1.5 rounded-full border border-slate-200 shadow-2xs">
+            <CheckCircle2 className="w-4 h-4 text-emerald-600" />
+            <span>{lang === 'en' ? "25+ Indian Languages" : lang === 'te' ? "25+ భారతీయ భాషల మద్దతు" : "25+ Zabaano mein support"}</span>
           </div>
         </motion.div>
 

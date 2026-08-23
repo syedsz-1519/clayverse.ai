@@ -16,6 +16,8 @@ import {
 } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
 import { useLanguage } from '../hooks/useLanguage';
+import ReadSectionButton from './ReadSectionButton';
+import CopyCodeButton from './CopyCodeButton';
 import { 
   googleSignInForClassroom, 
   getCachedClassroomToken, 
@@ -198,7 +200,7 @@ export default function GoogleClassroomHub() {
     {
       titleEn: "🤖 What is Artificial Intelligence?",
       titleUr: "🤖 AI kya hai?",
-      text: "Hello Class! Today we explored 'Simple AI' and learned that Artificial Intelligence is not magic—it's a set of smart algorithms, clean visual data loops, and neural structures designed to make predictions. Try this hands-on guide: " + window.location.origin
+      text: "Hello Class! Today we explored 'Clayverse AI' and learned that Artificial Intelligence is not magic—it's a set of smart algorithms, clean visual data loops, and neural structures designed to make predictions. Try this hands-on guide: " + window.location.origin
     },
     {
       titleEn: "🎨 Clay & Sound in Modern Tech",
@@ -214,14 +216,14 @@ export default function GoogleClassroomHub() {
 
   const presetAssignments = [
     {
-      titleEn: "Simple AI: Neural Net Family Tree Challenge",
-      titleUr: "Simple AI: Neural Net ka Challenge",
+      titleEn: "Clayverse AI: Neural Net Family Tree Challenge",
+      titleUr: "Clayverse AI: Neural Net ka Challenge",
       desc: "Go to " + window.location.origin + "#family-tree, explore the interactive clay neural network mapping, then test your knowledge in the Check Your Knowledge quiz. Write down 3 key learnings in your notebook."
     },
     {
       titleEn: "Practical Prompting & RAG Simulation",
       titleUr: "Practical Prompting aur RAG Simulation",
-      desc: "Connect to the Interactive AI Arena at the end of the Simple AI app (" + window.location.origin + "), run 3 RAG search simulations with custom queries, and take a screenshot of your earned AI Explorer badge."
+      desc: "Connect to the Interactive AI Arena at the end of the Clayverse AI app (" + window.location.origin + "), run 3 RAG search simulations with custom queries, and take a screenshot of your earned AI Explorer badge."
     }
   ];
 
@@ -244,11 +246,12 @@ export default function GoogleClassroomHub() {
               <GraduationCap className="w-7 h-7 text-brand-amber shrink-0" />
               {lang === 'en' ? "Google Classroom Hub" : "Google Classroom Hub"}
             </h2>
-            <p className="text-xs md:text-sm text-brand-slate leading-relaxed text-left">
+            <p className="text-xs md:text-sm text-brand-slate leading-relaxed text-left mb-3">
               {lang === 'en' 
-                ? "Connect your real-world Google Classroom account. Instantly synchronize course streams, distribute Simple AI learning assignments, and share live interactive sandboxes with your students."
-                : "Apne real-world Google Classroom account ko jorhein. Apne students ke sath fauri tor par learning materials share karein aur Simple AI ke challenges ko ba-zaria assignments bheinjein."}
+                ? "Connect your real-world Google Classroom account. Instantly synchronize course streams, distribute Clayverse AI learning assignments, and share live interactive sandboxes with your students."
+                : "Apne real-world Google Classroom account ko jorhein. Apne students ke sath fauri tor par learning materials share karein aur Clayverse AI ke challenges ko ba-zaria assignments bheinjein."}
             </p>
+            <ReadSectionButton sectionId="classroom-hub" variant="compact" />
           </div>
 
           <div className="flex items-center gap-2.5 shrink-0">
@@ -315,7 +318,7 @@ export default function GoogleClassroomHub() {
                   </div>
                   <div>
                     <strong>{lang === 'en' ? "Create Real Assignments" : "Real Assignments Banayein"}</strong>
-                    <p className="mt-0.5 text-brand-muted">{lang === 'en' ? "Instantly transform Simple AI's interactive quizzes and game scorecards into graded Google Classroom coursework." : "Simple AI ke quizzes ko graded coursework assignments me tabdeel karein."}</p>
+                    <p className="mt-0.5 text-brand-muted">{lang === 'en' ? "Instantly transform Clayverse AI's interactive quizzes and game scorecards into graded Google Classroom coursework." : "Clayverse AI ke quizzes ko graded coursework assignments me tabdeel karein."}</p>
                   </div>
                 </li>
               </ul>
@@ -463,9 +466,18 @@ export default function GoogleClassroomHub() {
 
                       {/* Announcement Templates */}
                       <div className="space-y-1.5">
-                        <span className="text-[10px] text-brand-muted font-mono font-bold block">
-                          {lang === 'en' ? "Quick Templates:" : "Aasan Sabaq Templates:"}
-                        </span>
+                        <div className="flex items-center justify-between">
+                          <span className="text-[10px] text-brand-muted font-mono font-bold block">
+                            {lang === 'en' ? "Quick Templates:" : "Aasan Sabaq Templates:"}
+                          </span>
+                          {announcementText.trim() && (
+                            <CopyCodeButton
+                              text={announcementText}
+                              label={lang === 'en' ? "Copy Text" : "Text Copy"}
+                              variant="compact"
+                            />
+                          )}
+                        </div>
                         <div className="flex flex-wrap gap-2">
                           {presetAnnouncements.map((preset, idx) => (
                             <button
@@ -497,7 +509,7 @@ export default function GoogleClassroomHub() {
                       <div className="flex items-center justify-between">
                         <h4 className="font-display font-bold text-xs text-brand-charcoal flex items-center gap-1.5">
                           <ClipboardList className="w-3.5 h-3.5 text-brand-amber" />
-                          {lang === 'en' ? "Assign Simple AI Challenges" : "Simple AI Tasks Assign Karein"}
+                          {lang === 'en' ? "Assign Clayverse AI Challenges" : "Clayverse AI Tasks Assign Karein"}
                         </h4>
                         <span className="font-mono text-[9px] font-bold text-brand-muted uppercase">
                           {lang === 'en' ? "CourseWork" : "Ghar Ka Kaam"}
@@ -524,12 +536,21 @@ export default function GoogleClassroomHub() {
                                 {assignment.desc}
                               </p>
                             </div>
-                            <button
-                              onClick={() => handleCreateAssignment(lang === 'en' ? assignment.titleEn : assignment.titleUr, assignment.desc)}
-                              className="w-full py-1.5 bg-white dark:bg-white/[0.03] border border-brand-slate/10 hover:border-brand-amber text-brand-charcoal font-bold text-[10px] rounded-lg cursor-pointer transition-all mt-2"
-                            >
-                              {lang === 'en' ? "Create Assignment" : "Assignment Banayein"}
-                            </button>
+                            <div className="flex items-center gap-2 mt-2">
+                              <button
+                                onClick={() => handleCreateAssignment(lang === 'en' ? assignment.titleEn : assignment.titleUr, assignment.desc)}
+                                className="flex-1 py-1.5 bg-white dark:bg-white/[0.03] border border-brand-slate/10 hover:border-brand-amber text-brand-charcoal font-bold text-[10px] rounded-lg cursor-pointer transition-all"
+                              >
+                                {lang === 'en' ? "Create Assignment" : "Assignment Banayein"}
+                              </button>
+                              <CopyCodeButton
+                                text={`${lang === 'en' ? assignment.titleEn : assignment.titleUr}\n\n${assignment.desc}`}
+                                label={lang === 'en' ? "Copy" : "Copy"}
+                                variant="compact"
+                                showIconOnly={true}
+                                title={lang === 'en' ? "Copy assignment description" : "Assignment description copy karo"}
+                              />
+                            </div>
                           </div>
                         ))}
                       </div>

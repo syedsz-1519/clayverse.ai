@@ -21,6 +21,7 @@ import { PocketExample, AIType } from '../types';
 import TechTooltip from './TechTooltip';
 import AITimeline from './AITimeline';
 import { useLanguage } from '../hooks/useLanguage';
+import ReadSectionButton from './ReadSectionButton';
 
 export default function WhatIsAI() {
   const { lang, t } = useLanguage();
@@ -146,6 +147,7 @@ export default function WhatIsAI() {
                 <div className="relative w-12 h-12 rounded-2xl bg-gradient-to-br from-white to-[#F4EFE6] border border-t-white border-l-white border-b-4 border-r border-brand-amber/20 shadow-[0_6px_12px_-3px_rgba(211,98,64,0.12),0_10px_20px_-5px_rgba(211,98,64,0.06),inset_0_2px_4px_rgba(255,255,255,0.95)] flex items-center justify-center shrink-0 text-brand-amber">
                   <BrainCircuit className="w-5 h-5 drop-shadow-[0_1.5px_2px_rgba(211,98,64,0.15)]" />
                 </div>
+                <ReadSectionButton sectionId="what-is-ai" />
               </div>
 
               <span className="text-xs font-bold uppercase tracking-wider text-brand-amber mb-2 block font-mono">

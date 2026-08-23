@@ -41,6 +41,7 @@ import ClayLogo from './ClayLogo';
 import Confetti from './Confetti';
 import Leaderboard from './Leaderboard';
 import BadgeShareModal from './BadgeShareModal';
+import ReadSectionButton from './ReadSectionButton';
 
 // Browser Audio Synthesizer for Retro Game SFX
 const playTone = (frequency: number, type: OscillatorType, duration: number, volume = 0.1) => {
@@ -159,16 +160,14 @@ export default function AIArena() {
   const explanationRef = useRef<HTMLDivElement>(null);
 
   const togglePracticeMode = () => {
-    setPracticeMode(prev => {
-      const newVal = !prev;
-      localStorage.setItem('clay_quiz_practice_mode', String(newVal));
-      if (soundEnabled) {
-        playTone(newVal ? 580 : 380, 'triangle', 0.1, 0.05);
-      }
-      // Dispatch event to sync with Settings
-      window.dispatchEvent(new Event('clay_practice_mode_changed'));
-      return newVal;
-    });
+    const newVal = !practiceMode;
+    setPracticeMode(newVal);
+    localStorage.setItem('clay_quiz_practice_mode', String(newVal));
+    if (soundEnabled) {
+      playTone(newVal ? 580 : 380, 'triangle', 0.1, 0.05);
+    }
+    // Dispatch event to sync with Settings safely outside updater
+    window.dispatchEvent(new Event('clay_practice_mode_changed'));
   };
 
   const selectedIdxRef = useRef<number | null>(null);
@@ -638,17 +637,17 @@ export default function AIArena() {
       multiplierApplied: multiplier,
       questions: activeSection.questions.map((q, qIdx) => ({
         question: {
-          en: q.question.en,
-          ur: q.question.ur
+          en: q.text?.en || (q as any).question?.en || '',
+          ur: q.text?.ur || (q as any).question?.ur || ''
         },
         options: {
-          en: q.options.en,
-          ur: q.options.ur
+          en: q.options?.en || [],
+          ur: q.options?.ur || []
         },
         answerIndex: q.answerIndex,
         explanation: {
-          en: q.explanation.en,
-          ur: q.explanation.ur
+          en: q.explanation?.en || '',
+          ur: q.explanation?.ur || ''
         },
         userAnswerIndex: finalSelectedLog[qIdx] !== undefined ? finalSelectedLog[qIdx] : null,
         isCorrect: finalAnswersLog[qIdx] !== undefined ? finalAnswersLog[qIdx] : false,
@@ -824,7 +823,9 @@ export default function AIArena() {
           </div>
 
           {/* Sound, Reset & Points HUD */}
-          <div className="flex items-center gap-3 self-end sm:self-auto">
+          <div className="flex items-center gap-3 self-end sm:self-auto flex-wrap">
+            <ReadSectionButton sectionId="ai-arena" variant="compact" />
+
             <button
               onClick={() => setSoundEnabled(!soundEnabled)}
               className="p-2.5 bg-white/5 hover:bg-white/10 border border-white/10 rounded-xl transition-colors cursor-pointer"
@@ -1590,11 +1591,11 @@ export default function AIArena() {
                       const filteredSessions = sessionHistory.filter((sess: any) => {
                         if (!historySearchQuery) return true;
                         const query = historySearchQuery.toLowerCase();
-                        const titleMatch = (sess.sectionTitle.en || '').toLowerCase().includes(query) || 
-                                           (sess.sectionTitle.ur || '').toLowerCase().includes(query);
+                        const titleMatch = (sess.sectionTitle?.en || '').toLowerCase().includes(query) || 
+                                           (sess.sectionTitle?.ur || '').toLowerCase().includes(query);
                         const questionMatch = sess.questions?.some((q: any) => {
-                          const qEn = q.question?.en || '';
-                          const qUr = q.question?.ur || '';
+                          const qEn = q.question?.en || q.text?.en || '';
+                          const qUr = q.question?.ur || q.text?.ur || '';
                           const optsEn = (q.options?.en || []).join(' ');
                           const optsUr = (q.options?.ur || []).join(' ');
                           const explEn = q.explanation?.en || '';
@@ -1656,7 +1657,7 @@ export default function AIArena() {
                               </button>
                             </div>
                           ) : (
-                            filteredSessions.map((sess) => {
+                            filteredSessions.map((sess: any) => {
                               const isExpanded = expandedSessionId === sess.id;
                               const dateStr = new Date(sess.timestamp).toLocaleDateString(undefined, {
                                 month: 'short',
@@ -1672,7 +1673,7 @@ export default function AIArena() {
                                     <div className="space-y-1.5 text-left">
                                       <div className="flex flex-wrap items-center gap-2">
                                         <h4 className="font-sans font-black text-sm text-brand-charcoal">
-                                          {lang === 'en' ? sess.sectionTitle.en : sess.sectionTitle.ur}
+                                          {lang === 'en' ? (sess.sectionTitle?.en || 'Quiz Session') : (sess.sectionTitle?.ur || 'Quiz Session')}
                                         </h4>
                                         
                                         {sess.practiceMode ? (
@@ -1701,7 +1702,7 @@ export default function AIArena() {
                                     <div className="flex items-center gap-3.5 self-end sm:self-auto shrink-0">
                                       {/* Compact check circles timeline visualization */}
                                       <div className="flex gap-1.5 items-center">
-                                        {sess.questions.map((q: any, idx: number) => (
+                                        {sess.questions?.map((q: any, idx: number) => (
                                           <div 
                                             key={idx} 
                                             className={`w-2.5 h-2.5 rounded-full ${
@@ -1731,7 +1732,7 @@ export default function AIArena() {
                                   {/* Expanded Questions Breakdown */}
                                   {isExpanded && (
                                     <div className="p-4 md:p-6 space-y-6 bg-brand-sand/5 text-left divide-y divide-brand-slate/10">
-                                      {sess.questions.map((q: any, qIdx: number) => (
+                                      {sess.questions?.map((q: any, qIdx: number) => (
                                         <div key={qIdx} className={`pt-6 first:pt-0 space-y-4`}>
                                           <div className="flex items-start gap-2.5">
                                             <span className={`p-1 rounded-lg shrink-0 mt-0.5 text-white ${
@@ -1748,14 +1749,14 @@ export default function AIArena() {
                                                 {lang === 'en' ? `QUESTION ${qIdx + 1}` : `SAWAAL ${qIdx + 1}`}
                                               </span>
                                               <h5 className="font-sans font-bold text-sm text-brand-charcoal leading-relaxed">
-                                                {lang === 'en' ? q.question.en : q.question.ur}
+                                                {lang === 'en' ? (q.question?.en || q.text?.en || '') : (q.question?.ur || q.text?.ur || '')}
                                               </h5>
                                             </div>
                                           </div>
 
                                           {/* Options list */}
                                           <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5 pl-7">
-                                            {q.options[lang === 'en' ? 'en' : 'ur']?.map((opt: string, oIdx: number) => {
+                                            {(q.options?.[lang === 'en' ? 'en' : 'ur'] || q.options?.en || []).map((opt: string, oIdx: number) => {
                                               const isSelectedByUser = q.userAnswerIndex === oIdx;
                                               const isRightIndex = q.answerIndex === oIdx;
                                               
@@ -1792,7 +1793,7 @@ export default function AIArena() {
                                                 {lang === 'en' ? "EXPLANATION / WAZAHAT" : "WAZAHAT / EXPLANATION"}
                                               </span>
                                               <p className="text-xs text-brand-muted leading-relaxed">
-                                                {lang === 'en' ? q.explanation.en : q.explanation.ur}
+                                                {lang === 'en' ? (q.explanation?.en || '') : (q.explanation?.ur || '')}
                                               </p>
                                             </div>
                                           </div>
@@ -2229,10 +2230,10 @@ export default function AIArena() {
                       {lang === 'en' ? "ACHIEVEMENT UNLOCKED!" : "NAYI KAMYABI HASIL!"}
                     </span>
                     <h3 className="font-display text-xl md:text-2xl font-extrabold text-brand-charcoal tracking-tight">
-                      {lang === 'en' ? newlyUnlockedAchievement.name.en : newlyUnlockedAchievement.name.ur}
+                      {lang === 'en' ? (newlyUnlockedAchievement.title?.en || newlyUnlockedAchievement.name?.en || '') : (newlyUnlockedAchievement.title?.ur || newlyUnlockedAchievement.name?.ur || '')}
                     </h3>
                     <p className="text-xs text-brand-muted max-w-sm mx-auto leading-relaxed">
-                      {lang === 'en' ? newlyUnlockedAchievement.desc.en : newlyUnlockedAchievement.desc.ur}
+                      {lang === 'en' ? (newlyUnlockedAchievement.desc?.en || '') : (newlyUnlockedAchievement.desc?.ur || '')}
                     </p>
                   </div>
 

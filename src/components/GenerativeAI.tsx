@@ -1,8 +1,11 @@
 import { useState } from 'react';
 import { motion } from 'motion/react';
-import { Pencil, Image as ImageIcon, Music, Cpu, MessageSquare, Sparkles } from 'lucide-react';
+import { Pencil, Image as ImageIcon, Music, Cpu, MessageSquare, Sparkles, Code2, Terminal } from 'lucide-react';
 import TechTooltip from './TechTooltip';
 import { useLanguage } from '../hooks/useLanguage';
+import ReadSectionButton from './ReadSectionButton';
+import CopyCodeButton from './CopyCodeButton';
+import CodeSnippetBlock from './CodeSnippetBlock';
 
 export default function GenerativeAI() {
   const { lang, t } = useLanguage();
@@ -65,9 +68,12 @@ export default function GenerativeAI() {
             <div className="absolute top-0 right-0 w-32 h-32 bg-brand-amber/5 rounded-full blur-2xl pointer-events-none" />
             
             <div>
-              {/* 3D-style Tactile Icon Tile */}
-              <div className="relative w-12 h-12 rounded-2xl bg-gradient-to-br from-white to-[#F4EFE6] border border-t-white border-l-white border-b-4 border-r border-brand-amber/20 shadow-[0_6px_12px_-3px_rgba(211,98,64,0.12),0_10px_20px_-5px_rgba(211,98,64,0.06),inset_0_2px_4px_rgba(255,255,255,0.95)] flex items-center justify-center shrink-0 mb-5 text-brand-amber">
-                <Sparkles className="w-5 h-5 drop-shadow-[0_1.5px_2px_rgba(211,98,64,0.15)]" />
+              {/* Top row with Icon and Read Aloud button */}
+              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-5">
+                <div className="relative w-12 h-12 rounded-2xl bg-gradient-to-br from-white to-[#F4EFE6] border border-t-white border-l-white border-b-4 border-r border-brand-amber/20 shadow-[0_6px_12px_-3px_rgba(211,98,64,0.12),0_10px_20px_-5px_rgba(211,98,64,0.06),inset_0_2px_4px_rgba(255,255,255,0.95)] flex items-center justify-center shrink-0 text-brand-amber">
+                  <Sparkles className="w-5 h-5 drop-shadow-[0_1.5px_2px_rgba(211,98,64,0.15)]" />
+                </div>
+                <ReadSectionButton sectionId="generative-ai" />
               </div>
 
               <span className="text-xs font-bold uppercase tracking-wider text-brand-amber font-mono block mb-2">
@@ -134,32 +140,49 @@ export default function GenerativeAI() {
                 </div>
               </div>
 
-              {/* Prompt Preview */}
-              <div className="bg-white border border-brand-slate/10 p-4 rounded-xl mb-4 relative shadow-sm">
-                <span className="absolute -top-2 left-3 bg-white px-2 border border-brand-slate/10 rounded text-[9px] font-mono font-bold text-brand-muted uppercase">
-                  {lang === 'en' ? "Prompt Input" : "Aapka Prompt"}
-                </span>
+              {/* Prompt Preview with Copy Button */}
+              <div className="bg-white border border-brand-slate/10 p-4 rounded-xl mb-4 relative shadow-sm text-left">
+                <div className="flex items-center justify-between mb-1.5">
+                  <span className="bg-brand-sand/70 px-2 py-0.5 border border-brand-slate/10 rounded text-[9px] font-mono font-bold text-brand-slate uppercase">
+                    {lang === 'en' ? "Prompt Input" : "Aapka Prompt"}
+                  </span>
+                  <CopyCodeButton
+                    text={genExamples.find(e => e.id === activeOutput)?.preview || ''}
+                    label={lang === 'en' ? "Copy Prompt" : "Prompt Copy"}
+                    variant="compact"
+                  />
+                </div>
                 <p className="text-[11px] font-semibold text-brand-charcoal leading-relaxed mt-1">
                   "{genExamples.find(e => e.id === activeOutput)?.preview}"
                 </p>
               </div>
 
-              {/* Generated Output */}
+              {/* Generated Output with Copy Button */}
               <motion.div
                 key={activeOutput}
                 initial={{ opacity: 0, y: 10 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.3 }}
-                className="bg-brand-charcoal border border-brand-charcoal/30 text-brand-cream font-mono p-4 rounded-xl min-h-[120px] flex flex-col justify-between relative shadow-inner overflow-hidden"
+                className="bg-brand-charcoal border border-brand-charcoal/30 text-brand-cream font-mono p-4 rounded-xl min-h-[120px] flex flex-col justify-between relative shadow-inner overflow-hidden text-left"
               >
                 <div className="absolute top-0 right-0 w-24 h-24 bg-brand-amber/5 rounded-full blur-xl pointer-events-none" />
+                <div className="flex items-center justify-between mb-2 z-10 border-b border-white/10 pb-1.5">
+                  <span className="text-[9px] font-mono text-brand-amber uppercase font-bold tracking-wider">
+                    {genExamples.find(e => e.id === activeOutput)?.title}
+                  </span>
+                  <CopyCodeButton
+                    text={genExamples.find(e => e.id === activeOutput)?.output || ''}
+                    label={lang === 'en' ? "Copy Output" : "Output Copy"}
+                    variant="dark"
+                  />
+                </div>
                 <p className="whitespace-pre-line leading-relaxed z-10 text-[10px]">
                   {genExamples.find(e => e.id === activeOutput)?.output}
                 </p>
-                <span className="text-[9px] text-brand-amber font-bold uppercase tracking-wider block mt-4 z-10">
+                <span className="text-[9px] text-brand-amber/80 font-bold uppercase tracking-wider block mt-4 z-10">
                   {lang === 'en'
-                    ? `✨ Successfully generated by ${genExamples.find(e => e.id === activeOutput)?.title}`
-                    : `✨ ${genExamples.find(e => e.id === activeOutput)?.title} ne dhang se bana diya!`
+                    ? `✨ Successfully synthesized output`
+                    : `✨ Model ne dhang se generate kar diya!`
                   }
                 </span>
               </motion.div>
@@ -233,6 +256,98 @@ export default function GenerativeAI() {
               </div>
             </div>
 
+          </div>
+        </motion.div>
+
+        {/* Developer Code Snippets: Calling LLMs via TypeScript & Python */}
+        <motion.div
+          initial={{ opacity: 0, y: 30 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.6 }}
+          className="mt-8 p-6 sm:p-8 bg-white border border-brand-slate/10 rounded-3xl skeuo-raised text-left"
+        >
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6 border-b border-brand-slate/10 pb-4">
+            <div className="flex items-center gap-3">
+              <div className="w-10 h-10 rounded-2xl bg-brand-amber/10 border border-brand-amber/20 flex items-center justify-center text-brand-amber">
+                <Code2 className="w-5 h-5" />
+              </div>
+              <div>
+                <span className="text-[10px] font-mono font-bold uppercase tracking-wider text-brand-amber block">
+                  {lang === 'en' ? "Developer Code Snippets" : "Developer Code Snippets"}
+                </span>
+                <h3 className="font-display text-lg font-black text-brand-charcoal">
+                  {lang === 'en' ? "Calling LLMs & Multimodal Models" : "LLM Models ko Code se Call Karna"}
+                </h3>
+              </div>
+            </div>
+            <span className="text-xs font-mono text-brand-muted bg-brand-sand px-3 py-1 rounded-full border border-brand-slate/10 self-start sm:self-auto">
+              {lang === 'en' ? "TypeScript & Python SDKs" : "TypeScript & Python SDKs"}
+            </span>
+          </div>
+
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+            {/* Snippet 1: TypeScript SDK */}
+            <div>
+              <span className="text-xs font-bold text-brand-charcoal block mb-1">
+                {lang === 'en' ? "TypeScript / JavaScript (@google/genai)" : "TypeScript / JavaScript (@google/genai)"}
+              </span>
+              <p className="text-[11px] text-brand-muted mb-2">
+                {lang === 'en'
+                  ? "Standard streaming / non-streaming text synthesis in web backends."
+                  : "Web backends mein Gemini model se content generate karne ka clean snippet."
+                }
+              </p>
+              <CodeSnippetBlock
+                language="typescript"
+                filename="generateText.ts"
+                showLineNumbers={true}
+                code={`import { GoogleGenAI } from '@google/genai';
+
+const ai = new GoogleGenAI({});
+
+async function generateExplanation(topic: string) {
+  const response = await ai.models.generateContent({
+    model: 'gemini-2.5-flash',
+    contents: \`Explain \${topic} in simple words with a real-world analogy.\`,
+    config: {
+      temperature: 0.7,
+      maxOutputTokens: 500,
+    }
+  });
+
+  console.log(response.text);
+}`}
+                copyLabel={lang === 'en' ? "Copy TypeScript" : "TypeScript Copy"}
+              />
+            </div>
+
+            {/* Snippet 2: cURL / REST API Payload */}
+            <div>
+              <span className="text-xs font-bold text-brand-charcoal block mb-1">
+                {lang === 'en' ? "cURL / REST API Endpoint" : "cURL / REST API Endpoint"}
+              </span>
+              <p className="text-[11px] text-brand-muted mb-2">
+                {lang === 'en'
+                  ? "Direct HTTP JSON request payload for terminal testing or Postman."
+                  : "Direct terminal ya command line se test karne ke liye cURL command."
+                }
+              </p>
+              <CodeSnippetBlock
+                language="bash"
+                filename="curl_request.sh"
+                showLineNumbers={false}
+                code={`curl "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=$GEMINI_API_KEY" \\
+  -H 'Content-Type: application/json' \\
+  -X POST \\
+  -d '{
+    "contents": [{
+      "parts": [{"text": "Explain the difference between Supervised and Unsupervised Learning"}]
+    }]
+  }'`}
+                copyLabel={lang === 'en' ? "Copy cURL Command" : "cURL Copy"}
+              />
+            </div>
           </div>
         </motion.div>
 

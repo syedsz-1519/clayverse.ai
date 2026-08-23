@@ -102,6 +102,112 @@
   --glass-nav-bg: rgba(255, 245, 245, 0.85);
 }
 
+/* =========================================================
+   HIGH CONTRAST MODE OVERRIDES (ACCESSIBILITY & WCAG AAA)
+   ========================================================= */
+[data-high-contrast="true"],
+[data-high-contrast="true"][data-theme="sand"] {
+  --brand-cream: #FFFFFF;
+  --brand-sand: #F3F4F6;
+  --brand-amber: #92400E; 
+  --brand-amber-dark: #78350F;
+  --brand-amber-light: #FEF3C7;
+  --brand-slate: #1F2937; 
+  --brand-slate-light: #E5E7EB;
+  --brand-charcoal: #000000; 
+  --brand-muted: #111827;
+  
+  --skeuo-bg: #FFFFFF;
+  --skeuo-shadow-1: rgba(0, 0, 0, 0.25);
+  --skeuo-shadow-2: #FFFFFF;
+  
+  --glass-bg: #FFFFFF;
+  --glass-border: #000000;
+  --glass-nav-bg: #FFFFFF;
+}
+
+[data-high-contrast="true"][data-theme="deep-night"] {
+  --brand-cream: #000000;
+  --brand-sand: #111827;
+  --brand-amber: #FCD34D; 
+  --brand-amber-dark: #F59E0B;
+  --brand-amber-light: #262626;
+  --brand-slate: #E5E7EB; 
+  --brand-slate-light: #1F2937;
+  --brand-charcoal: #FFFFFF; 
+  --brand-muted: #F9FAFB;
+  
+  --skeuo-bg: #0A0A0A;
+  --skeuo-shadow-1: #000000;
+  --skeuo-shadow-2: #262626;
+  
+  --glass-bg: #000000;
+  --glass-border: #FFFFFF;
+  --glass-nav-bg: #000000;
+}
+
+[data-high-contrast="true"][data-theme="deep-blue"] {
+  --brand-cream: #020617;
+  --brand-sand: #0F172A;
+  --brand-amber: #60A5FA; 
+  --brand-amber-dark: #3B82F6;
+  --brand-amber-light: #1E293B;
+  --brand-slate: #E2E8F0; 
+  --brand-slate-light: #1E293B;
+  --brand-charcoal: #FFFFFF; 
+  --brand-muted: #F8FAFC;
+  
+  --skeuo-bg: #0B1222;
+  --skeuo-shadow-1: #000000;
+  --skeuo-shadow-2: #1E293B;
+  
+  --glass-bg: #020617;
+  --glass-border: #60A5FA;
+  --glass-nav-bg: #020617;
+}
+
+[data-high-contrast="true"][data-theme="red-light"] {
+  --brand-cream: #FFFFFF;
+  --brand-sand: #FFE4E6;
+  --brand-amber: #9F1239; 
+  --brand-amber-dark: #881337;
+  --brand-amber-light: #FFE4E6;
+  --brand-slate: #4C0519; 
+  --brand-slate-light: #FFF1F2;
+  --brand-charcoal: #000000; 
+  --brand-muted: #3B0211;
+  
+  --skeuo-bg: #FFFFFF;
+  --skeuo-shadow-1: rgba(159, 18, 57, 0.3);
+  --skeuo-shadow-2: #FFFFFF;
+  
+  --glass-bg: #FFFFFF;
+  --glass-border: #9F1239;
+  --glass-nav-bg: #FFFFFF;
+}
+
+/* High Contrast Readability Rules */
+[data-high-contrast="true"] body {
+  -webkit-font-smoothing: antialiased;
+  letter-spacing: 0.01em;
+}
+
+[data-high-contrast="true"] button:focus-visible,
+[data-high-contrast="true"] input:focus-visible,
+[data-high-contrast="true"] select:focus-visible,
+[data-high-contrast="true"] textarea:focus-visible {
+  outline: 3px solid var(--brand-amber) !important;
+  outline-offset: 3px !important;
+}
+
+[data-high-contrast="true"] .glass-panel,
+[data-high-contrast="true"] .glass-nav {
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+  border-color: currentColor !important;
+}
+
+
 @theme {
   --font-sans: "Inter", ui-sans-serif, system-ui, sans-serif;
   --font-display: "Sora", sans-serif;
@@ -183,4 +289,78 @@ body *,
 /* Progress bar fill transition */
 .progress-fill {
   transition: width 0.1s ease-out;
+}
+
+/* =========================================================
+   PRINT-SPECIFIC STYLES FOR CLEAN JOURNAL PRINTING
+   ========================================================= */
+@media print {
+  /* Hide all interactive, floating, navigation, and audio UI */
+  nav,
+  .glass-nav,
+  .no-print,
+  button,
+  [role="dialog"],
+  .fixed,
+  input,
+  select,
+  textarea,
+  iframe,
+  canvas {
+    display: none !important;
+  }
+
+  /* Reset canvas to clean white background with deep contrast */
+  html,
+  body {
+    background-color: #ffffff !important;
+    color: #111827 !important;
+    font-size: 11pt !important;
+    line-height: 1.5 !important;
+    margin: 0 !important;
+    padding: 0 !important;
+  }
+
+  main {
+    max-width: 100% !important;
+    padding: 0 !important;
+    margin: 0 auto !important;
+  }
+
+  /* Strip shadows and heavy backdrops to save toner and prevent blur */
+  .glass-panel,
+  .skeuo-raised,
+  .skeuo-pressed {
+    box-shadow: none !important;
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
+    background: #ffffff !important;
+    border: 1px solid #e5e7eb !important;
+  }
+
+  /* Page break rules for clean reading flow */
+  section,
+  article,
+  .bento-card {
+    break-inside: avoid !important;
+    page-break-inside: avoid !important;
+    margin-bottom: 2rem !important;
+  }
+
+  h1, h2, h3 {
+    break-after: avoid !important;
+    page-break-after: avoid !important;
+    color: #000000 !important;
+  }
+
+  p, li {
+    orphans: 3;
+    widows: 3;
+  }
+
+  /* Clear underline for links */
+  a {
+    color: #000000 !important;
+    text-decoration: underline !important;
+  }
 }

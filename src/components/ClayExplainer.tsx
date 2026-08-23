@@ -3,6 +3,7 @@ import { motion, AnimatePresence } from 'motion/react';
 import { Sparkles, ArrowRight, Volume2, Mic, MicOff } from 'lucide-react';
 import { audioEngine } from '../lib/audioEngine';
 import { useLanguage } from '../hooks/useLanguage';
+import CopyCodeButton from './CopyCodeButton';
 
 export default function ClayExplainer() {
   const { lang, t } = useLanguage();
@@ -186,14 +187,23 @@ export default function ClayExplainer() {
                   {storyShots[activeShot].bubbleText}
                 </p>
 
-                {/* Speaker button to trigger voice reading */}
-                <button
-                  onClick={handleSpeakBubble}
-                  className={`p-2 rounded-xl transition-all border cursor-pointer shrink-0 flex items-center justify-center ${isPlayingVoice ? 'bg-brand-amber/20 border-brand-amber/30 text-brand-amber animate-pulse' : 'bg-white hover:bg-brand-sand text-brand-slate border-brand-slate/10'}`}
-                  title={isPlayingVoice ? 'Pause Speech' : "Listen to Clay's Voice"}
-                >
-                  <Volume2 className="w-4 h-4" />
-                </button>
+                <div className="flex items-center gap-1.5 shrink-0">
+                  <CopyCodeButton
+                    text={storyShots[activeShot].bubbleText}
+                    label={lang === 'en' ? "Copy" : "Copy"}
+                    variant="compact"
+                    showIconOnly={true}
+                    title={lang === 'en' ? "Copy Clay's explanation" : "Clay ki baat copy karo"}
+                  />
+                  {/* Speaker button to trigger voice reading */}
+                  <button
+                    onClick={handleSpeakBubble}
+                    className={`p-2 rounded-xl transition-all border cursor-pointer flex items-center justify-center ${isPlayingVoice ? 'bg-brand-amber/20 border-brand-amber/30 text-brand-amber animate-pulse' : 'bg-white hover:bg-brand-sand text-brand-slate border-brand-slate/10'}`}
+                    title={isPlayingVoice ? 'Pause Speech' : "Listen to Clay's Voice"}
+                  >
+                    <Volume2 className="w-4 h-4" />
+                  </button>
+                </div>
               </motion.div>
             </AnimatePresence>
           </div>

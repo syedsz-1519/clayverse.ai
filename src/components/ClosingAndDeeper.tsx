@@ -20,6 +20,8 @@ import {
 import { roadmapSections, Section, Term } from '../data/roadmapTerms';
 import ClayLogo from './ClayLogo';
 import { useLanguage } from '../hooks/useLanguage';
+import ReadSectionButton from './ReadSectionButton';
+import CopyCodeButton from './CopyCodeButton';
 import { 
   toggleTermCompleted, 
   toggleSectionBookmarked, 
@@ -174,12 +176,15 @@ export default function ClosingAndDeeper() {
           <h2 className="font-display text-4xl sm:text-5xl font-extrabold text-brand-charcoal tracking-tight mb-4 text-center">
             {lang === 'en' ? "85+ AI Terms Explained in Simple Words" : "85+ AI ke Alfaaz Boht Aasan Zubaan mein"}
           </h2>
-          <p className="font-sans text-brand-slate text-base sm:text-lg leading-relaxed max-w-2xl mx-auto text-center">
+          <p className="font-sans text-brand-slate text-base sm:text-lg leading-relaxed max-w-2xl mx-auto text-center mb-5">
             {lang === 'en' 
               ? "A real learning path, not just a random dictionary. Start at the top, work your way down. Each of the 12 sections builds directly on the ones before it."
               : "Ye bilkul ek seedha learning rasta hai miya, koi ainvayi dictionary nai hai. Upar se shuru karo aur seekhte seekhte niche jao. Ek-ek section pehle wale pe bana hua hai."
             }
           </p>
+          <div className="flex justify-center mb-8">
+            <ReadSectionButton sectionId="deeper" />
+          </div>
         </div>
 
         {/* Global Progress Dashboard Widget (Tactile Bento Panel) */}
@@ -442,7 +447,10 @@ export default function ClosingAndDeeper() {
                             {sectionCheckedCount}/{section.terms.length} {lang === 'en' ? 'MASTERED' : 'POORA SEEKHE'}
                           </span>
                           
-                          <div className="flex flex-wrap items-center gap-3 mt-1">
+                          <div className="flex flex-wrap items-center gap-2 mt-1">
+                            {/* Read Subsection Aloud */}
+                            <ReadSectionButton sectionId={section.id} variant="compact" showDuration={false} />
+
                             {/* Bookmark Toggle Button */}
                             <button
                               onClick={() => toggleBookmark(section.id)}
@@ -522,15 +530,25 @@ export default function ClosingAndDeeper() {
                                   {isChecked && <Check className="w-3.5 h-3.5 stroke-[3]" />}
                                 </div>
 
-                                <div className="flex-grow">
-                                  <h4 className="font-display text-xs sm:text-sm font-black text-brand-charcoal group-hover:text-brand-amber transition-colors flex items-center gap-1.5">
-                                    {term.title}
-                                    {isSectionInQuizMode && (
-                                      <span className="text-[8px] font-mono font-bold bg-[#E07A5F]/10 text-[#E07A5F] px-1.5 py-0.5 rounded">
-                                        Q
-                                      </span>
-                                    )}
-                                  </h4>
+                                <div className="flex-grow min-w-0">
+                                  <div className="flex items-center justify-between gap-2">
+                                    <h4 className="font-display text-xs sm:text-sm font-black text-brand-charcoal group-hover:text-brand-amber transition-colors flex items-center gap-1.5 truncate">
+                                      {term.title}
+                                      {isSectionInQuizMode && (
+                                        <span className="text-[8px] font-mono font-bold bg-[#E07A5F]/10 text-[#E07A5F] px-1.5 py-0.5 rounded shrink-0">
+                                          Q
+                                        </span>
+                                      )}
+                                    </h4>
+                                    <CopyCodeButton
+                                      text={`${term.title}: ${term.definition}`}
+                                      label={lang === 'en' ? "Copy" : "Copy"}
+                                      variant="compact"
+                                      showIconOnly={true}
+                                      title={lang === 'en' ? `Copy definition of ${term.title}` : `${term.title} ki definition copy karo`}
+                                      className="opacity-0 group-hover:opacity-100 focus:opacity-100 transition-opacity shrink-0"
+                                    />
+                                  </div>
                                   
                                   {/* Definition or Quiz placeholder */}
                                   <div className="mt-2.5">
@@ -615,18 +633,26 @@ export default function ClosingAndDeeper() {
                                       exit={{ height: 0, opacity: 0, marginTop: 0 }}
                                       className="overflow-hidden border-t border-brand-slate/10 text-left"
                                     >
-                                      <div className="pt-3 flex gap-2.5 items-start">
-                                        <div className="w-5 h-5 rounded-full bg-emerald-500/10 flex items-center justify-center shrink-0 mt-0.5">
-                                          <Check className="w-3 h-3 text-emerald-600 stroke-[3]" />
+                                      <div className="pt-3 flex gap-2.5 items-start justify-between">
+                                        <div className="flex gap-2.5 items-start flex-1 min-w-0">
+                                          <div className="w-5 h-5 rounded-full bg-emerald-500/10 flex items-center justify-center shrink-0 mt-0.5">
+                                            <Check className="w-3 h-3 text-emerald-600 stroke-[3]" />
+                                          </div>
+                                          <div>
+                                            <span className="font-mono text-[9px] font-bold text-emerald-700 uppercase tracking-wider block mb-0.5">
+                                              {lang === 'en' ? "EXPLAINED BY CLAY:" : "CLAY KA JAWAB:"}
+                                            </span>
+                                            <p className="text-xs text-brand-slate leading-relaxed text-left">
+                                              {section.testYourself.answer}
+                                            </p>
+                                          </div>
                                         </div>
-                                        <div>
-                                          <span className="font-mono text-[9px] font-bold text-emerald-700 uppercase tracking-wider block mb-0.5">
-                                            {lang === 'en' ? "EXPLAINED BY CLAY:" : "CLAY KA JAWAB:"}
-                                          </span>
-                                          <p className="text-xs text-brand-slate leading-relaxed text-left">
-                                            {section.testYourself.answer}
-                                          </p>
-                                        </div>
+                                        <CopyCodeButton
+                                          text={`Question: ${section.testYourself.question}\nAnswer: ${section.testYourself.answer}`}
+                                          label={lang === 'en' ? "Copy Answer" : "Jawab Copy"}
+                                          variant="compact"
+                                          className="shrink-0 ml-2"
+                                        />
                                       </div>
                                     </motion.div>
                                   )}

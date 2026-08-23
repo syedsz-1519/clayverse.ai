@@ -33,6 +33,7 @@ import {
 } from '../lib/geminiClient';
 import { useAuth } from '../lib/firebase';
 import ClayLogo from './ClayLogo';
+import CopyCodeButton from './CopyCodeButton';
 
 interface GeminiAssistantHubProps {
   initialTab?: 'chat' | 'veo' | 'voice';
@@ -402,14 +403,23 @@ export default function GeminiAssistantHub({ onClose }: GeminiAssistantHubProps)
                   >
                     {/* Header tags for model reply */}
                     {!isUser && (
-                      <div className="flex items-center gap-2 mb-1.5 pb-1 border-b border-brand-slate/5 text-[9px] font-mono text-brand-muted">
-                        <span className="font-bold text-brand-amber">Clay</span>
-                        {msg.modelUsed && <span>• {msg.modelUsed}</span>}
-                        {msg.thinkingMode && (
-                          <span className="px-1.5 py-0.2 rounded bg-purple-100 text-purple-700 font-bold">
-                            High Thinking
-                          </span>
-                        )}
+                      <div className="flex items-center justify-between gap-2 mb-1.5 pb-1 border-b border-brand-slate/5 text-[9px] font-mono text-brand-muted">
+                        <div className="flex items-center gap-1.5">
+                          <span className="font-bold text-brand-amber">Clay</span>
+                          {msg.modelUsed && <span>• {msg.modelUsed}</span>}
+                          {msg.thinkingMode && (
+                            <span className="px-1.5 py-0.2 rounded bg-purple-100 text-purple-700 font-bold">
+                              High Thinking
+                            </span>
+                          )}
+                        </div>
+                        <CopyCodeButton
+                          text={msg.content}
+                          label={lang === 'en' ? "Copy" : "Copy"}
+                          variant="compact"
+                          showIconOnly={true}
+                          title={lang === 'en' ? "Copy response" : "Jawab copy karo"}
+                        />
                       </div>
                     )}
 

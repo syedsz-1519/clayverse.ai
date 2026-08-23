@@ -15,20 +15,32 @@ import {
   ChevronRight,
   HelpCircle,
   MessageSquare,
-  Bot
+  Bot,
+  Sliders,
+  RotateCcw,
+  Languages,
+  CheckCircle2,
+  Gauge,
+  Info
 } from 'lucide-react';
 import { audioEngine } from '../lib/audioEngine';
 import { useLanguage } from '../hooks/useLanguage';
 import { roadmapSections, Section, Term } from '../data/roadmapTerms';
+import { SECTION_NARRATION_ITEMS, SectionNarrationItem } from '../data/sectionNarrationData';
 import ClayLogo from './ClayLogo';
-import GeminiAssistantHub from './GeminiAssistantHub';
 
 interface SectionContent {
   id: string;
+  lessonNum?: number;
   titleEn: string;
   titleHyd: string;
+  titleTe?: string;
   textEn: string;
   textHyd: string;
+  textTe?: string;
+  readTime: string;
+  sentencesEn: string[];
+  sentencesHyd: string[];
   sectionId?: string; // mapped to actual HTML id if applicable
 }
 
@@ -37,30 +49,129 @@ type SearchResultItem =
   | { type: 'term'; section: Section; term: Term; id: string; title: string; definition: string };
 
 export default function AudioNarrationHub() {
-  const { lang } = useLanguage();
+  const { lang, setLang } = useLanguage();
   const [isOpen, setIsOpen] = useState(false);
-  const [activeTab, setActiveTab] = useState<'audio' | 'search' | 'ai'>('audio');
+  const [activeTab, setActiveTab] = useState<'audio' | 'search'>('audio');
   const [isPlaying, setIsPlaying] = useState(false);
   const [playingSectionId, setPlayingSectionId] = useState<string | null>(null);
   const [searchQuery, setSearchQuery] = useState('');
+  
+  // Text-To-Speech (TTS) Master State
+  const [isTtsEnabled, setIsTtsEnabled] = useState<boolean>(() => {
+    if (typeof window !== 'undefined') {
+      const saved = localStorage.getItem('clay_tts_enabled');
+      return saved !== 'false'; // Enabled by default for accessibility
+    }
+    return true;
+  });
 
-  // Event listener to open AI studio from other components
+  // Speech rate & active sentence state
+  const [speechRate, setSpeechRateState] = useState<number>(() => audioEngine.getSpeechRate() || 0.96);
+  const [activeSentenceText, setActiveSentenceText] = useState<string>('');
+  const [activeSentenceIndex, setActiveSentenceIndex] = useState<number>(0);
+  const [totalSentences, setTotalSentences] = useState<number>(0);
+  const [selectedTtsVoiceLang, setSelectedTtsVoiceLang] = useState<string>(lang);
+
+  // Play subtle feedback sound
+  const playTone = (freq = 440, type: OscillatorType = 'sine', duration = 0.08, vol = 0.05) => {
+    try {
+      const AudioCtx = window.AudioContext || (window as any).webkitAudioContext;
+      if (!AudioCtx) return;
+      const ctx = new AudioCtx();
+      const osc = ctx.createOscillator();
+      const gain = ctx.createGain();
+      osc.type = type;
+      osc.frequency.setValueAtTime(freq, ctx.currentTime);
+      gain.gain.setValueAtTime(vol, ctx.currentTime);
+      gain.gain.exponentialRampToValueAtTime(0.0001, ctx.currentTime + duration);
+      osc.connect(gain);
+      gain.connect(ctx.destination);
+      osc.start();
+      osc.stop(ctx.currentTime + duration);
+    } catch (e) {
+      // Ignore audio context errors
+    }
+  };
+
+  // Sync selected voice language when global language changes
   useEffect(() => {
-    const handleOpenAiStudio = () => {
-      setIsOpen(true);
-      setActiveTab('ai');
+    setSelectedTtsVoiceLang(lang);
+  }, [lang]);
+
+  // Toggle TTS enabled
+  const handleToggleTts = () => {
+    const nextState = !isTtsEnabled;
+    setIsTtsEnabled(nextState);
+    if (typeof window !== 'undefined') {
+      localStorage.setItem('clay_tts_enabled', String(nextState));
+      window.dispatchEvent(new CustomEvent('clay_tts_toggled', { detail: { enabled: nextState } }));
+    }
+    if (!nextState && isPlaying) {
+      audioEngine.stopSpeaking();
+      setIsPlaying(false);
+      setPlayingSectionId(null);
+    }
+    playTone(nextState ? 660 : 330, 'sine', 0.1, 0.06);
+  };
+
+  // Change TTS speech rate (speed)
+  const handleChangeSpeechRate = (rate: number) => {
+    const clampedRate = Math.max(0.5, Math.min(2.0, rate));
+    setSpeechRateState(clampedRate);
+    audioEngine.setSpeechRate(clampedRate);
+    playTone(520, 'triangle', 0.04, 0.03);
+  };
+
+  // Listen for narration state changes from audioEngine
+  useEffect(() => {
+    const handleNarrationEvent = (e: any) => {
+      const detail = e.detail;
+      if (!detail) return;
+      if (detail.status === 'playing') {
+        setIsPlaying(true);
+        if (detail.sectionId) setPlayingSectionId(detail.sectionId);
+        if (detail.sentenceText) setActiveSentenceText(detail.sentenceText);
+        if (typeof detail.sentenceIndex === 'number') setActiveSentenceIndex(detail.sentenceIndex);
+        if (typeof detail.totalSentences === 'number') setTotalSentences(detail.totalSentences);
+      } else if (detail.status === 'stopped' || detail.status === 'paused') {
+        if (detail.status === 'stopped') {
+          setIsPlaying(false);
+          setPlayingSectionId(null);
+          setActiveSentenceText('');
+        } else {
+          setIsPlaying(false);
+        }
+      }
     };
-    window.addEventListener('clay_open_ai_studio', handleOpenAiStudio);
-    return () => window.removeEventListener('clay_open_ai_studio', handleOpenAiStudio);
+
+    window.addEventListener('clay_narration_state_changed', handleNarrationEvent);
+    return () => window.removeEventListener('clay_narration_state_changed', handleNarrationEvent);
   }, []);
+
+  // Event listener to open narration hub from other components
+  useEffect(() => {
+    const handleOpenNarration = (e: any) => {
+      setIsOpen(true);
+      setActiveTab('audio');
+      if (e?.detail?.sectionId) {
+        const target = sections.find(s => s.id === e.detail.sectionId || s.sectionId === e.detail.sectionId);
+        if (target && isTtsEnabled) {
+          toggleSectionPlay(target);
+        }
+      }
+    };
+    window.addEventListener('clay_open_narration_hub', handleOpenNarration);
+    return () => window.removeEventListener('clay_open_narration_hub', handleOpenNarration);
+  }, [isTtsEnabled]);
 
   // Sync state with global speech synthesis status
   useEffect(() => {
     const checkState = setInterval(() => {
       const activeSpeaking = audioEngine.isCurrentlySpeaking();
       setIsPlaying(activeSpeaking);
-      if (!activeSpeaking) {
+      if (!activeSpeaking && playingSectionId) {
         setPlayingSectionId(null);
+        setActiveSentenceText('');
       }
     }, 500);
 
@@ -68,60 +179,62 @@ export default function AudioNarrationHub() {
       setIsPlaying(speaking);
       if (!speaking) {
         setPlayingSectionId(null);
+        setActiveSentenceText('');
       }
     });
 
     return () => clearInterval(checkState);
-  }, []);
+  }, [playingSectionId]);
 
-  const sections: SectionContent[] = [
-    {
-      id: 'all',
-      titleEn: 'Full Website Audio Guide',
-      titleHyd: 'Poori Website ka Audio Guide',
-      textEn: "Welcome! I'm Clay, your tactile explainer. Let me guide you through everything on this website. Artificial Intelligence is the broad concept of teaching machines to learn from examples. Inside it, we find Machine Learning, which uses mathematical algorithms to recognize patterns. Nested even deeper is Deep Learning, utilizing layered neural networks inspired by human brains. At the very center lies Generative AI, creating brand new content, powered by Large Language Models like Gemini. We can use these tools via clever prompts and Retrieval-Augmented Generation to get precise, factual answers.",
-      textHyd: "Arey salaam yaaron! Main hoon Clay, tumhara apna tactile explainer. Main tumhein is website ki poori sair karaata hoon. Artificial Intelligence bole to computer'aa ko dimaag dena — aisi machines jo patterns se seekhte hain. Iske andar Machine Learning rehta jo mathematics ke zariye data mein patterns dhoondta. Aur uske bhi andar Deep Learning rehta jo insani dimaag ke jaisa layers wale neural networks use karta hai. Aur is khandaan ke bilkul dil mein Generative AI baithta hai, jo naye photo'aan, videos aur text bana sakta hai Gemini jaise bade language models ke zariye! Hum isko sahi prompts aur RAG ke zariye bilkul sacha jawaab dene ke kabil banate hain."
-    },
-    {
-      id: 'basics',
-      titleEn: '1. What is AI?',
-      titleHyd: '1. AI kya hai?',
-      textEn: "Artificial Intelligence means designing computers that can learn and solve problems by recognizing patterns, rather than just executing manual rules written by programmers. In the traditional programming era, developers had to write step-by-step logic. Now, with AI, we feed the system thousands of examples, allowing it to calculate its own pathways to predict, classify, and create.",
-      textHyd: "Arey yaaron, Artificial Intelligence ka matlab computer ko rules likh ke dene ke bajaye use hazaaro examples dekar khud seekhne dena hai. Pehle hum ek ek line code ki likhte the. Ab hum hazaaro photos ya data de dete, computer apna rasta aur logic khud banaata hai taaki pehchan sake ya naya content bana sake!",
-      sectionId: 'section-basics'
-    },
-    {
-      id: 'family-tree',
-      titleEn: '2. The AI Family Tree',
-      titleHyd: '2. AI ka Khandaan',
-      textEn: "To understand AI, we can picture nested Russian dolls. The outermost doll is Artificial Intelligence, the overall field. Inside is Machine Learning, which trains on data to make decisions. Nesting further is Deep Learning, which models multi-layered neural networks. Finally, at the core is Generative AI, which specializes in synthesizing new text, images, and creative media from instructions.",
-      textHyd: "AI ke khandaan ko samajhne ke waaste nested Russian dolls ke jaisa dabba-in-dabba samjho. Sabse bada dabba AI hai. Uske andar Machine Learning baithta hai jo data se seekhta hai. Uske bhi andar Deep Learning hai jo deep neural networks chalata hai. Aur sabse chota par sabse dhasu dabba Generative AI hai jo naya text aur photos banata hai!",
-      sectionId: 'section-family-tree'
-    },
-    {
-      id: 'gen-ai',
-      titleEn: '3. Generative AI & LLMs',
-      titleHyd: '3. Generative AI aur LLMs',
-      textEn: "Generative AI can create original content. It is powered by Large Language Models which are trained on vast oceans of text. These models break language into small tokens, calculating which word or phrase is most likely to come next. It's a continuous, mathematical prediction loop of incredible scale.",
-      textHyd: "Generative AI bole to naye photos, texts aur code paida karne wala AI. Iske peeche bade models rehte jise Large Language Models kehte hain. Ye poori duniya ke likhe so kitaabon ko padh ke, agla word kya hona chahiye uski probability check karte rehte!",
-      sectionId: 'section-generative-ai'
-    },
-    {
-      id: 'prompting',
-      titleEn: '4. Prompting & RAG',
-      titleHyd: '4. Prompting aur RAG',
-      textEn: "We interact with LLMs using prompts. Prompting is a craft: giving context, roles, and instructions. To make answers highly accurate and prevent hallucinations, we use Retrieval-Augmented Generation, or RAG. It fetches fresh, reliable documents from a secure database and appends them to your prompt, so the AI reads the correct reference before drafting its reply.",
-      textHyd: "Hum AI se baat karne ke waaste prompts use karte hain. Sahi sawaal puchna ek fun hai yaaron. Lekin AI kabhi kabhi fekte rehta hai (hallucination). Uske waaste hum RAG use karte. RAG pehle safe database se pakka sach dhoond ke lata, aur AI ko bolta ki isi ke mutabiq sach-sach bolo!",
-      sectionId: 'section-prompting-rag'
-    },
-    {
-      id: 'glossary',
-      titleEn: '5. Technical Glossary',
-      titleHyd: '5. Glossary (Mushkil Alfaaz)',
-      textEn: "Our interactive glossary breaks down core terms simply. Neural networks are layers of nodes that filter signals to recognize features. Hallucinations are confident but incorrect predictions made by models due to pattern gaps. Tokens are word fragments representing numerical semantic values.",
-      textHyd: "Humari glossary mein saare mushkil words ekdam asaan zabaan mein milenge yaaron. Neural networks bole to dimaag ke cells ke jaise layers, hallucinations bole to AI ki phekne wali aadat, aur tokens bole to words ke chote chote tukde!"
-    }
-  ];
+  // Comprehensive Curriculum Sections for Audio Narration
+  const sections: SectionContent[] = useMemo(() => {
+    const defaultList: SectionContent[] = [
+      {
+        id: 'all',
+        titleEn: 'Full Curriculum Audio Walkthrough',
+        titleHyd: 'Mukammal Course ka Audio Guide',
+        titleTe: 'పూర్తి కోర్సు ఆడియో గైడ్',
+        textEn: "Welcome to Clayverse AI! Let me guide you through the foundations of Artificial Intelligence, Machine Learning, Deep Neural Networks, Generative AI, Transformers, and Retrieval-Augmented Generation.",
+        textHyd: "Clayverse AI me aapka khush amdeed hai! Main aapko Artificial Intelligence, Machine Learning, Deep Neural Networks, Generative AI aur RAG ki poori sair asaan zabaan me karaata hoon.",
+        textTe: "క్లేవర్స్ AI కి స్వాగతం! కృత్రిమ మేధస్సు, మెషిన్ లెర్నింగ్ మరియు జనరేటివ్ AI గురించి సులభంగా తెలుసుకోండి.",
+        readTime: '1.5 min',
+        sentencesEn: [
+          "Welcome to Clayverse AI, your sensory-friendly guide to demystifying artificial intelligence.",
+          "Artificial Intelligence is the broad concept of teaching computer systems to learn from massive amounts of data.",
+          "Nested within AI is Machine Learning, which extracts recurring patterns through statistical algorithms.",
+          "Deep Learning stacks artificial neural networks inspired by the human brain to understand images, audio, and language.",
+          "At the core is Generative AI, synthesizing brand new text, code, and artwork using Large Language Models like Gemini."
+        ],
+        sentencesHyd: [
+          "Clayverse AI me aapka khush amdeed hai, jahan hum AI ko bilkul asaan misalon se samjhate hain.",
+          "Artificial Intelligence ka matlab aisi computer machines banana hai jo data dekh kar khud seekhein.",
+          "Iske andar Machine Learning baithti hai jo statistical formulas se patterns pehchanti hai.",
+          "Deep Learning insani dimaag ki tarah neural networks ki layers chala kar tasveerein aur zabaan samajhti hai.",
+          "Aur sabse aage Generative AI hai, jo Gemini jaise models ke zariye naya text aur tasveerein banati hai."
+        ]
+      }
+    ];
+
+    // Map all items from SECTION_NARRATION_ITEMS into rich lesson objects
+    SECTION_NARRATION_ITEMS.forEach((item, index) => {
+      defaultList.push({
+        id: item.id,
+        lessonNum: index + 1,
+        titleEn: item.titleEn,
+        titleHyd: item.titleHyd,
+        titleTe: item.titleEn,
+        textEn: item.sentencesEn[0] || item.takeawayEn,
+        textHyd: item.sentencesHyd[0] || item.takeawayHyd,
+        textTe: item.sentencesEn[0] || item.takeawayEn,
+        readTime: `~${item.durationSeconds}s`,
+        sentencesEn: item.sentencesEn,
+        sentencesHyd: item.sentencesHyd,
+        sectionId: item.targetElementId
+      });
+    });
+
+    return defaultList;
+  }, []);
 
   // Search filter logic for the Ask Clay search tab
   const filteredSearchResults = useMemo(() => {
@@ -131,7 +244,6 @@ export default function AudioNarrationHub() {
     const results: SearchResultItem[] = [];
 
     roadmapSections.forEach(section => {
-      // Check section title and subtitle
       if (section.title.toLowerCase().includes(cleanQuery) || section.subtitle.toLowerCase().includes(cleanQuery) || section.number.includes(cleanQuery)) {
         results.push({
           type: 'section',
@@ -142,7 +254,6 @@ export default function AudioNarrationHub() {
         });
       }
 
-      // Check glossary terms
       section.terms.forEach(term => {
         if (term.title.toLowerCase().includes(cleanQuery) || term.definition.toLowerCase().includes(cleanQuery)) {
           results.push({
@@ -160,20 +271,46 @@ export default function AudioNarrationHub() {
     return results;
   }, [searchQuery]);
 
+  // Toggle play/pause for a section via Text-to-Speech
   const toggleSectionPlay = (section: SectionContent) => {
+    // If TTS is disabled, automatically enable it
+    if (!isTtsEnabled) {
+      setIsTtsEnabled(true);
+      localStorage.setItem('clay_tts_enabled', 'true');
+    }
+
     if (playingSectionId === section.id && isPlaying) {
       audioEngine.stopSpeaking();
       setIsPlaying(false);
       setPlayingSectionId(null);
+      setActiveSentenceText('');
     } else {
       audioEngine.stopSpeaking();
-      const textToSpeak = lang === 'en' ? section.textEn : section.textHyd;
-      audioEngine.speak(textToSpeak, lang, () => {
-        setIsPlaying(false);
-        setPlayingSectionId(null);
-      });
-      setIsPlaying(true);
+      const currentLangCode = selectedTtsVoiceLang || lang || 'en';
+      const sentences = (currentLangCode === 'hyd' || currentLangCode === 'ur' || currentLangCode === 'hi') 
+        ? section.sentencesHyd 
+        : section.sentencesEn;
+
       setPlayingSectionId(section.id);
+      setIsPlaying(true);
+      setActiveSentenceIndex(0);
+      setTotalSentences(sentences.length);
+      setActiveSentenceText(sentences[0] || '');
+
+      audioEngine.speakSectionSentences(
+        section.id,
+        sentences,
+        currentLangCode,
+        (idx) => {
+          setActiveSentenceIndex(idx);
+          setActiveSentenceText(sentences[idx] || '');
+        },
+        () => {
+          setIsPlaying(false);
+          setPlayingSectionId(null);
+          setActiveSentenceText('');
+        }
+      );
     }
   };
 
@@ -181,6 +318,7 @@ export default function AudioNarrationHub() {
     audioEngine.stopSpeaking();
     setIsPlaying(false);
     setPlayingSectionId(null);
+    setActiveSentenceText('');
   };
 
   const handleSelectSearchResult = (item: SearchResultItem) => {
@@ -199,7 +337,6 @@ export default function AudioNarrationHub() {
   const handlePanelKeyDown = (e: React.KeyboardEvent<HTMLDivElement>) => {
     if (!panelRef.current) return;
 
-    // Get all focusable elements inside the panel that are currently visible/interactable
     const focusables = (Array.from(
       panelRef.current.querySelectorAll(
         'button, input[type="text"], [tabindex="0"]'
@@ -219,24 +356,6 @@ export default function AudioNarrationHub() {
       e.preventDefault();
       const prevIdx = activeIdx - 1 >= 0 ? activeIdx - 1 : focusables.length - 1;
       focusables[prevIdx]?.focus();
-    } else if (e.key === 'ArrowRight') {
-      if (activeEl && activeEl.getAttribute('data-tab') === 'audio') {
-        e.preventDefault();
-        setActiveTab('search');
-        setTimeout(() => {
-          const searchTab = panelRef.current?.querySelector('[data-tab="search"]') as HTMLElement;
-          searchTab?.focus();
-        }, 30);
-      }
-    } else if (e.key === 'ArrowLeft') {
-      if (activeEl && activeEl.getAttribute('data-tab') === 'search') {
-        e.preventDefault();
-        setActiveTab('audio');
-        setTimeout(() => {
-          const audioTab = panelRef.current?.querySelector('[data-tab="audio"]') as HTMLElement;
-          audioTab?.focus();
-        }, 30);
-      }
     }
   };
 
@@ -265,37 +384,38 @@ export default function AudioNarrationHub() {
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, y: 20, scale: 0.95 }}
             transition={{ duration: 0.25, ease: [0.16, 1, 0.3, 1] }}
-            className={`glass-panel rounded-3xl p-5 border-brand-amber/25 shadow-2xl mb-4.5 flex flex-col gap-4.5 relative overflow-hidden border-2 bg-white/95 backdrop-blur-xl focus:ring-2 focus:ring-brand-amber/40 focus:outline-none transition-all duration-300 ${
-              activeTab === 'ai' ? 'w-[92vw] sm:w-[480px] md:w-[560px] max-h-[82vh]' : 'w-85 sm:w-96'
+            className={`glass-panel rounded-3xl p-5 border-brand-amber/25 shadow-2xl mb-4.5 flex flex-col gap-4 relative overflow-hidden border-2 bg-white/95 backdrop-blur-xl focus:ring-2 focus:ring-brand-amber/40 focus:outline-none transition-all duration-300 ${
+              activeTab === 'ai' ? 'w-[92vw] sm:w-[480px] md:w-[560px] max-h-[82vh]' : 'w-85 sm:w-105'
             }`}
           >
             {/* Ambient clay texture overlay */}
             <div className="absolute inset-0 opacity-[0.01] bg-[radial-gradient(#000_1px,transparent_1px)] [background-size:12px_12px] pointer-events-none" />
 
             {/* Header with Close and Identity */}
-            <div className="flex items-center justify-between border-b border-brand-slate/5 pb-3 shrink-0">
+            <div className="flex items-center justify-between border-b border-brand-slate/10 pb-3 shrink-0">
               <div className="flex items-center gap-2.5">
                 <ClayLogo size={32} />
                 <div>
                   <h3 className="font-display text-sm font-black text-brand-charcoal flex items-center gap-1.5 uppercase tracking-wide">
-                    {lang === 'en' ? "Clay's Assistant Hub" : "Clay ka Hub"}
+                    {lang === 'en' ? "Audio Narration Hub" : "Audio Narration Hub"}
                     {isPlaying && <span className="inline-block w-2 h-2 rounded-full bg-brand-amber animate-ping" />}
                   </h3>
                   <p className="text-[10px] text-brand-slate">
-                    {lang === 'en' ? "Voice Guide, Search & Gemini AI" : "AI seekhne ka asaan zariya"}
+                    {lang === 'en' ? "Text-to-Speech Voice & Quick Navigator" : "Awaaz me sabaq suno aur seekho"}
                   </p>
                 </div>
               </div>
               <button 
                 onClick={() => setIsOpen(false)}
                 className="p-1.5 rounded-full hover:bg-brand-sand text-brand-slate hover:text-brand-charcoal transition-colors cursor-pointer"
+                title="Close Hub"
               >
                 <X className="w-4 h-4" />
               </button>
             </div>
 
-            {/* Modern 3-Way Tab Control */}
-            <div className="flex bg-brand-sand/50 p-1 rounded-2xl border border-brand-slate/5 shrink-0 gap-1">
+            {/* Modern 2-Way Tab Control */}
+            <div className="flex bg-brand-sand/50 p-1 rounded-2xl border border-brand-slate/10 shrink-0 gap-1">
               <button
                 data-tab="audio"
                 onClick={() => setActiveTab('audio')}
@@ -306,7 +426,7 @@ export default function AudioNarrationHub() {
                 }`}
               >
                 <Headphones className="w-3.5 h-3.5 text-brand-amber" />
-                <span className="truncate">{lang === 'en' ? "Voice" : "Awaaz"}</span>
+                <span className="truncate">{lang === 'en' ? "Read Aloud (TTS)" : "Awaaz (TTS)"}</span>
               </button>
               <button
                 data-tab="search"
@@ -318,125 +438,273 @@ export default function AudioNarrationHub() {
                 }`}
               >
                 <Search className="w-3.5 h-3.5 text-brand-amber" />
-                <span className="truncate">{lang === 'en' ? "Search" : "Dhoondo"}</span>
-              </button>
-              <button
-                data-tab="ai"
-                onClick={() => setActiveTab('ai')}
-                className={`flex-1 py-1.5 text-xs font-black rounded-xl transition-all cursor-pointer select-none flex items-center justify-center gap-1.5 focus:outline-none ${
-                  activeTab === 'ai'
-                    ? 'bg-brand-amber text-white shadow-sm'
-                    : 'text-brand-slate hover:text-brand-charcoal'
-                }`}
-              >
-                <Bot className="w-3.5 h-3.5" />
-                <span className="truncate">{lang === 'en' ? "Gemini AI" : "AI Studio"}</span>
+                <span className="truncate">{lang === 'en' ? "Search & Index" : "Dhoondo"}</span>
               </button>
             </div>
 
-            {/* TAB CONTENT: 0. GEMINI AI STUDIO (CHAT, VOICE, VEO, SEARCH GROUNDING, THINKING) */}
-            {activeTab === 'ai' && (
-              <div className="flex-1 min-h-[420px] max-h-[500px] flex flex-col">
-                <GeminiAssistantHub onClose={() => setIsOpen(false)} />
-              </div>
-            )}
-
-            {/* TAB CONTENT: 1. AUDIO GUIDE SECTION LIST */}
+            {/* TAB CONTENT: 1. TEXT-TO-SPEECH (TTS) NARRATION HUB */}
             {activeTab === 'audio' && (
-              <div className="flex flex-col gap-3 max-h-[350px] overflow-y-auto pr-1 scrollbar-thin">
+              <div className="flex flex-col gap-3.5 max-h-[390px] overflow-y-auto pr-1 scrollbar-thin">
                 
-                {/* Clay Speaking Status Banner */}
-                <div className={`p-3 rounded-2xl border transition-all duration-300 flex items-center gap-3 ${
-                  isPlaying 
-                    ? "bg-brand-amber/5 border-brand-amber/20 shadow-inner" 
-                    : "bg-brand-sand/20 border-brand-slate/5"
+                {/* 1. TEXT-TO-SPEECH MASTER TOGGLE CARD */}
+                <div className={`p-3.5 rounded-2xl border transition-all duration-300 ${
+                  isTtsEnabled
+                    ? "bg-gradient-to-br from-brand-amber/10 via-brand-sand/30 to-brand-sand/60 border-brand-amber/35 shadow-xs"
+                    : "bg-brand-sand/30 border-brand-slate/15 opacity-90"
                 }`}>
-                  <div className="w-10 h-10 rounded-xl bg-white flex items-center justify-center shrink-0 border border-brand-slate/5 shadow-sm relative overflow-hidden">
-                    <ClayLogo size={28} className={isPlaying ? "animate-bounce" : ""} />
-                    {isPlaying && (
-                      <div className="absolute bottom-0.5 flex gap-0.5 items-end justify-center w-full">
-                        <span className="w-0.5 h-2 bg-brand-amber rounded-full animate-pulse" />
-                        <span className="w-0.5 h-3.5 bg-brand-amber rounded-full animate-pulse delay-75" />
-                        <span className="w-0.5 h-1.5 bg-brand-amber rounded-full animate-pulse delay-150" />
+                  <div className="flex items-center justify-between gap-3">
+                    <div className="flex items-center gap-2.5 min-w-0">
+                      <div className={`w-9 h-9 rounded-xl flex items-center justify-center shrink-0 border transition-all ${
+                        isTtsEnabled 
+                          ? "bg-brand-amber text-white border-brand-amber/30 shadow-xs" 
+                          : "bg-brand-sand text-brand-slate border-brand-slate/20"
+                      }`}>
+                        {isTtsEnabled ? <Volume2 className="w-4 h-4" /> : <VolumeX className="w-4 h-4" />}
                       </div>
-                    )}
-                  </div>
-                  <div className="min-w-0 flex-1">
-                    <span className="text-[11px] font-extrabold text-brand-charcoal block truncate">
-                      {isPlaying 
-                        ? (lang === 'en' ? "Currently playing narration" : "Narration chalra hai yaaron") 
-                        : (lang === 'en' ? "Choose a section to play" : "Neeche se ek hissa chunein")
-                      }
-                    </span>
-                    <span className="text-[9.5px] text-brand-slate block truncate leading-tight mt-0.5">
-                      {isPlaying 
-                        ? (lang === 'en' ? "Voice optimized for young learners." : "Asaan zabaan mein parha ja raha hai.") 
-                        : (lang === 'en' ? "Tap any section row to start/pause Clay." : "Kahin bhi dabao aur asani se suno.")
-                      }
-                    </span>
-                  </div>
-                  {isPlaying && (
+                      <div className="min-w-0">
+                        <div className="flex items-center gap-1.5">
+                          <h4 className="font-display font-bold text-xs text-brand-charcoal">
+                            {lang === 'en' ? "Text-to-Speech Narration" : "Text-to-Speech (Likhai Suno)"}
+                          </h4>
+                          <span className={`text-[8px] font-mono font-bold px-1.5 py-0.2 rounded-full border ${
+                            isTtsEnabled
+                              ? "bg-emerald-500/15 text-emerald-700 border-emerald-500/30"
+                              : "bg-brand-slate/10 text-brand-slate border-brand-slate/20"
+                          }`}>
+                            {isTtsEnabled ? "ACTIVE" : "MUTED"}
+                          </span>
+                        </div>
+                        <p className="text-[10px] text-brand-slate leading-tight truncate mt-0.5">
+                          {lang === 'en'
+                            ? "Reads lessons aloud with clear pronunciation for non-native learners."
+                            : "Ghair-angrezi seekhne walon ke liye sabaq aawaz me parha jata hai."}
+                        </p>
+                      </div>
+                    </div>
+
+                    {/* Prominent Master Toggle Switch */}
                     <button
-                      onClick={handleStopAll}
-                      className="p-1.5 bg-brand-sand/60 hover:bg-brand-amber-light text-brand-charcoal hover:text-white rounded-lg border border-brand-slate/10 transition-all cursor-pointer"
-                      title="Stop Speech"
+                      type="button"
+                      role="switch"
+                      aria-checked={isTtsEnabled}
+                      onClick={handleToggleTts}
+                      className={`w-11 h-6 rounded-full transition-colors relative shrink-0 cursor-pointer focus:outline-none focus:ring-2 focus:ring-brand-amber/50 ${
+                        isTtsEnabled ? 'bg-brand-amber' : 'bg-brand-slate/30'
+                      }`}
+                      title={isTtsEnabled ? "Disable Text-to-Speech" : "Enable Text-to-Speech"}
                     >
-                      <Square className="w-3 h-3 fill-current" />
+                      <span
+                        className={`absolute top-1 left-1 bg-white w-4 h-4 rounded-full shadow-xs transition-transform ${
+                          isTtsEnabled ? 'translate-x-5' : 'translate-x-0'
+                        }`}
+                      />
                     </button>
+                  </div>
+
+                  {/* Accessible Voice Pacing Slider & Dialect Controls */}
+                  {isTtsEnabled && (
+                    <motion.div
+                      initial={{ opacity: 0, height: 0 }}
+                      animate={{ opacity: 1, height: 'auto' }}
+                      exit={{ opacity: 0, height: 0 }}
+                      className="mt-3 pt-3 border-t border-brand-amber/20 space-y-2.5 text-[10px]"
+                    >
+                      {/* Interactive Continuous Speed Control Slider */}
+                      <div className="space-y-1.5 bg-white/70 p-2.5 rounded-xl border border-brand-slate/10 shadow-2xs">
+                        <div className="flex items-center justify-between">
+                          <span className="font-mono text-brand-charcoal font-bold flex items-center gap-1.5">
+                            <Gauge className="w-3.5 h-3.5 text-brand-amber" />
+                            {lang === 'en' ? "Playback Speed Rate" : "Awaaz ki Raftaar"}:
+                          </span>
+                          <span className="font-mono font-black text-brand-amber bg-brand-sand/60 border border-brand-amber/20 px-2 py-0.5 rounded-md shadow-2xs">
+                            {speechRate.toFixed(2)}x {speechRate <= 0.8 ? '(Slow)' : speechRate >= 1.3 ? '(Fast)' : '(Normal)'}
+                          </span>
+                        </div>
+                        
+                        <input
+                          type="range"
+                          min="0.5"
+                          max="2.0"
+                          step="0.05"
+                          value={speechRate}
+                          onChange={(e) => handleChangeSpeechRate(parseFloat(e.target.value))}
+                          className="w-full h-2 bg-brand-slate/20 rounded-lg appearance-none cursor-pointer accent-brand-amber"
+                          aria-label="Speech playback speed slider"
+                        />
+                        
+                        <div className="flex justify-between text-[8px] font-mono text-brand-muted px-0.5">
+                          <span>0.5x Slow</span>
+                          <span>1.0x Normal</span>
+                          <span>1.5x Brisk</span>
+                          <span>2.0x Fast</span>
+                        </div>
+
+                        {/* Quick Speed Preset Chips */}
+                        <div className="flex items-center gap-1 pt-1">
+                          <span className="font-mono text-brand-muted text-[9px] mr-1">Presets:</span>
+                          {[
+                            { label: '0.75x', val: 0.75 },
+                            { label: '0.95x', val: 0.95 },
+                            { label: '1.25x', val: 1.25 },
+                            { label: '1.50x', val: 1.50 }
+                          ].map((spd) => (
+                            <button
+                              key={spd.val}
+                              onClick={() => handleChangeSpeechRate(spd.val)}
+                              className={`px-1.5 py-0.5 rounded font-mono text-[9px] font-bold transition-all cursor-pointer ${
+                                Math.abs(speechRate - spd.val) < 0.04
+                                  ? 'bg-brand-charcoal text-white'
+                                  : 'bg-white hover:bg-brand-sand text-brand-slate border border-brand-slate/15'
+                              }`}
+                            >
+                              {spd.label}
+                            </button>
+                          ))}
+                        </div>
+                      </div>
+
+                      {/* Dialect Voice Selector */}
+                      <div className="flex items-center justify-between gap-2 pt-0.5">
+                        <span className="font-mono text-brand-slate font-bold flex items-center gap-1">
+                          <Languages className="w-3 h-3 text-brand-amber" />
+                          {lang === 'en' ? "Audio Dialect" : "Sabaq ki Zaban"}:
+                        </span>
+                        <select
+                          value={selectedTtsVoiceLang}
+                          onChange={(e) => {
+                            setSelectedTtsVoiceLang(e.target.value);
+                            playTone(480, 'sine', 0.05, 0.04);
+                          }}
+                          className="bg-white text-brand-charcoal font-bold text-[10px] rounded-lg border border-brand-slate/20 px-2 py-1 outline-none cursor-pointer"
+                        >
+                          <option value="en">English (US/UK)</option>
+                          <option value="hyd">Urdu / Hyderabadi</option>
+                          <option value="hi">Hindi (हिंदी)</option>
+                          <option value="te">Telugu (తెలుగు)</option>
+                        </select>
+                      </div>
+                    </motion.div>
                   )}
                 </div>
 
-                {/* Vertical Interactive Section List */}
-                <div className="flex flex-col gap-2">
-                  <span className="text-[10px] font-mono font-bold text-brand-muted uppercase tracking-wider block mb-1">
-                    {lang === 'en' ? "Available Sections" : "Sabak ki Fihrist"}
-                  </span>
-                  
-                  {sections.map((section) => {
-                    const isCurrentPlaying = playingSectionId === section.id && isPlaying;
-                    return (
+                {/* 2. ACTIVE LIVE READING CAPTIONS STRIP (When TTS is speaking) */}
+                {isPlaying && (
+                  <motion.div
+                    initial={{ opacity: 0, scale: 0.98 }}
+                    animate={{ opacity: 1, scale: 1 }}
+                    className="p-3 rounded-2xl bg-brand-charcoal text-white shadow-md border border-brand-amber/40 space-y-2 relative overflow-hidden"
+                  >
+                    <div className="flex items-center justify-between gap-2">
+                      <div className="flex items-center gap-2 min-w-0">
+                        <div className="flex gap-0.5 items-end h-3 shrink-0">
+                          <span className="w-0.5 h-3 bg-brand-amber rounded-full animate-pulse" />
+                          <span className="w-0.5 h-2 bg-brand-amber rounded-full animate-pulse delay-75" />
+                          <span className="w-0.5 h-3.5 bg-brand-amber rounded-full animate-pulse delay-150" />
+                        </div>
+                        <span className="text-[10px] font-mono font-bold text-brand-amber uppercase tracking-wider truncate">
+                          {lang === 'en' ? "Reading Aloud Sentence" : "Jumla Parha Ja Raha Hai"} ({activeSentenceIndex + 1}/{totalSentences || 1})
+                        </span>
+                      </div>
                       <button
-                        key={section.id}
-                        onClick={() => toggleSectionPlay(section)}
-                        className={`w-full p-3 rounded-2xl border transition-all text-left flex items-center justify-between gap-3 group cursor-pointer focus:outline-none focus:ring-2 focus:ring-brand-amber/50 ${
-                          isCurrentPlaying
-                            ? "bg-brand-amber/10 border-brand-amber/35 shadow-sm"
-                            : "bg-white hover:bg-brand-sand/30 border-brand-slate/5"
-                        }`}
+                        onClick={handleStopAll}
+                        className="px-2 py-0.5 rounded-md bg-white/15 hover:bg-red-500 text-white font-mono text-[9px] font-bold transition-colors cursor-pointer flex items-center gap-1"
+                        title="Stop Narration"
                       >
-                        <div className="flex items-center gap-3 min-w-0">
-                          <div className={`w-8 h-8 rounded-lg flex items-center justify-center shrink-0 border transition-all ${
-                            isCurrentPlaying
-                              ? "bg-brand-amber text-white border-brand-amber/15"
-                              : "bg-brand-sand/40 text-brand-slate border-brand-slate/5 group-hover:bg-brand-amber/10 group-hover:text-brand-amber group-hover:border-brand-amber/20"
-                          }`}>
-                            <Headphones className="w-4 h-4" />
-                          </div>
-                          <div className="min-w-0">
-                            <h4 className="text-xs font-black text-brand-charcoal truncate">
-                              {lang === 'en' ? section.titleEn : section.titleHyd}
-                            </h4>
-                            <p className="text-[10px] text-brand-slate truncate leading-snug mt-0.5">
-                              {lang === 'en' ? section.textEn : section.textHyd}
-                            </p>
-                          </div>
-                        </div>
-
-                        <div className="shrink-0 ml-1">
-                          {isCurrentPlaying ? (
-                            <div className="p-1.5 rounded-full bg-brand-amber text-white shadow-md">
-                              <Pause className="w-3.5 h-3.5 fill-current" />
-                            </div>
-                          ) : (
-                            <div className="p-1.5 rounded-full bg-brand-sand/80 hover:bg-brand-amber/20 hover:text-brand-amber text-brand-slate group-hover:scale-105 transition-transform">
-                              <Play className="w-3.5 h-3.5 fill-current ml-0.5" />
-                            </div>
-                          )}
-                        </div>
+                        <Square className="w-2.5 h-2.5 fill-current" />
+                        <span>Stop</span>
                       </button>
-                    );
-                  })}
+                    </div>
+
+                    <p className="text-xs text-white/95 font-medium leading-relaxed bg-white/10 p-2.5 rounded-xl border border-white/10">
+                      "{activeSentenceText}"
+                    </p>
+
+                    {totalSentences > 1 && (
+                      <div className="w-full bg-white/20 h-1 rounded-full overflow-hidden">
+                        <div 
+                          className="bg-brand-amber h-full transition-all duration-300"
+                          style={{ width: `${Math.min(100, ((activeSentenceIndex + 1) / totalSentences) * 100)}%` }}
+                        />
+                      </div>
+                    )}
+                  </motion.div>
+                )}
+
+                {/* 3. CURRICULUM LESSON AUDIO LIST */}
+                <div className="space-y-2">
+                  <div className="flex items-center justify-between">
+                    <span className="text-[10px] font-mono font-bold text-brand-muted uppercase tracking-wider">
+                      {lang === 'en' ? "Lesson Narration Library" : "Sabaq ki Audio Library"}
+                    </span>
+                    <span className="text-[9px] font-mono text-brand-slate">
+                      {sections.length} {lang === 'en' ? "Narrated Modules" : "Audio Sabaq"}
+                    </span>
+                  </div>
+
+                  <div className="space-y-2">
+                    {sections.map((section) => {
+                      const isCurrentPlaying = playingSectionId === section.id && isPlaying;
+                      return (
+                        <div
+                          key={section.id}
+                          className={`p-3 rounded-2xl border transition-all text-left flex flex-col gap-2 ${
+                            isCurrentPlaying
+                              ? "bg-brand-amber/10 border-brand-amber/40 shadow-xs"
+                              : "bg-white hover:bg-brand-sand/30 border-brand-slate/10"
+                          }`}
+                        >
+                          <div className="flex items-center justify-between gap-3">
+                            <div className="flex items-center gap-2.5 min-w-0">
+                              <div className={`w-7 h-7 rounded-xl flex items-center justify-center shrink-0 border transition-all font-mono font-bold text-[10px] ${
+                                isCurrentPlaying
+                                  ? "bg-brand-amber text-white border-brand-amber/20"
+                                  : "bg-brand-sand/60 text-brand-slate border-brand-slate/10"
+                              }`}>
+                                {section.lessonNum ? `0${section.lessonNum}` : "ALL"}
+                              </div>
+                              <div className="min-w-0">
+                                <h4 className="text-xs font-black text-brand-charcoal truncate">
+                                  {lang === 'en' ? section.titleEn : (lang === 'te' && section.titleTe ? section.titleTe : section.titleHyd)}
+                                </h4>
+                                <span className="text-[9px] font-mono text-brand-amber-dark font-bold block">
+                                  ⏱️ {section.readTime}
+                                </span>
+                              </div>
+                            </div>
+
+                            {/* Play / Pause Toggle Button */}
+                            <button
+                              onClick={() => toggleSectionPlay(section)}
+                              className={`p-2 rounded-xl transition-all cursor-pointer shrink-0 flex items-center gap-1.5 text-xs font-bold ${
+                                isCurrentPlaying
+                                  ? "bg-brand-amber text-white shadow-xs"
+                                  : "bg-brand-sand/60 hover:bg-brand-amber/15 text-brand-charcoal border border-brand-slate/10 hover:border-brand-amber/30"
+                              }`}
+                              title={isCurrentPlaying ? "Pause Audio" : "Read this lesson aloud"}
+                            >
+                              {isCurrentPlaying ? (
+                                <>
+                                  <Pause className="w-3.5 h-3.5 fill-current" />
+                                  <span className="text-[10px] font-mono">Pause</span>
+                                </>
+                              ) : (
+                                <>
+                                  <Play className="w-3.5 h-3.5 fill-current" />
+                                  <span className="text-[10px] font-mono">Read Aloud</span>
+                                </>
+                              )}
+                            </button>
+                          </div>
+
+                          <p className="text-[10px] text-brand-slate line-clamp-2 leading-relaxed bg-brand-sand/20 p-2 rounded-xl border border-brand-slate/5">
+                            {lang === 'en' ? section.textEn : (lang === 'te' && section.textTe ? section.textTe : section.textHyd)}
+                          </p>
+                        </div>
+                      );
+                    })}
+                  </div>
                 </div>
+
               </div>
             )}
 
@@ -475,7 +743,7 @@ export default function AudioNarrationHub() {
                     <div className="py-8 text-center text-brand-muted flex flex-col items-center gap-2">
                       <MessageSquare className="w-8 h-8 text-brand-slate/30 animate-pulse" />
                       <p className="text-xs font-bold">
-                        {lang === 'en' ? "Type to search 12 interactive lessons!" : "Lafz likh kar 12 sabak mein dhoondo!"}
+                        {lang === 'en' ? "Type to search all interactive lessons!" : "Lafz likh kar sabak mein dhoondo!"}
                       </p>
                       <span className="text-[10px] opacity-70">
                         {lang === 'en' ? "Try: RAG, Transformer, or Neural" : "Jaise ke: RAG, Neural network"}
@@ -516,13 +784,13 @@ export default function AudioNarrationHub() {
               </div>
             )}
 
-            {/* Footer with Claymorphic Tip */}
-            <div className="p-3 bg-brand-sand/40 border border-brand-slate/5 rounded-2xl text-[10px] text-brand-muted shrink-0 flex items-center gap-2">
-              <span className="text-sm">💡</span>
+            {/* Accessibility Tip Footer */}
+            <div className="p-3 bg-brand-sand/40 border border-brand-slate/10 rounded-2xl text-[10px] text-brand-muted shrink-0 flex items-center gap-2">
+              <span className="text-sm">🎧</span>
               <p className="leading-snug">
                 {lang === 'en' 
-                  ? "RAG helps models talk with 100% accuracy by reading reliable reference files!" 
-                  : "Miya RAG use karne se model bina feke bilkul pakka sacha jawaab deta hai!"}
+                  ? "Accessibility Tip: You can adjust the reading pace (0.8x) to easily absorb technical vocabulary." 
+                  : "Asani ke liye: Agar alfaz tez lagein toh 0.8x Speed chun kar aaram se sunein."}
               </p>
             </div>
 
@@ -532,7 +800,6 @@ export default function AudioNarrationHub() {
 
       {/* Floating Launcher Trigger Button */}
       <div className="relative flex items-center justify-end">
-        {/* Circular Claymorphic Trigger Button */}
         <motion.button
           onClick={() => setIsOpen(!isOpen)}
           whileHover={{ scale: 1.08, rotate: isOpen ? -90 : -4 }}
@@ -542,7 +809,7 @@ export default function AudioNarrationHub() {
               ? "bg-[#FDFBF7] border-brand-amber text-brand-amber shadow-brand-amber/25"
               : "bg-[#FDFBF7] hover:bg-[#F6F2EA] border-brand-amber/30 text-brand-charcoal"
           }`}
-          title={lang === 'en' ? "Clay's Assistant Hub" : "Clay se Poochho aur Suno"}
+          title={lang === 'en' ? "Clay's Audio & AI Hub" : "Clay se Poochho aur Suno"}
         >
           {/* Main Logo */}
           <div className="group-hover:scale-110 transition-transform duration-300">
@@ -553,7 +820,7 @@ export default function AudioNarrationHub() {
           <span className={`absolute -top-1 -right-1 p-0.5 rounded-full border border-white shadow-sm text-white ${
             isPlaying ? "bg-brand-amber animate-pulse" : "bg-brand-amber"
           }`}>
-            <HelpCircle className="w-3 h-3 stroke-[2.5]" />
+            {isTtsEnabled ? <Volume2 className="w-3 h-3 stroke-[2.5]" /> : <HelpCircle className="w-3 h-3 stroke-[2.5]" />}
           </span>
 
           {/* Glowing pulse indicator when reading */}

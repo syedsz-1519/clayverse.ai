@@ -1,9 +1,10 @@
 import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
-import { HelpCircle, CheckCircle2, AlertTriangle, Sparkles, Award } from 'lucide-react';
+import { HelpCircle, CheckCircle2, AlertTriangle, Sparkles, Award, BrainCircuit, ChevronDown, ChevronUp } from 'lucide-react';
 import { useLanguage } from '../hooks/useLanguage';
 import { syncQuizProgressToCloud } from '../lib/firebase';
 import ClayLogo from './ClayLogo';
+import KnowledgeGapDiagnosticQuiz from './KnowledgeGapDiagnosticQuiz';
 
 interface CheckYourKnowledgeProps {
   sectionId: 'basics' | 'family-tree' | 'prompting-rag' | 'deeper';
@@ -341,17 +342,34 @@ export default function CheckYourKnowledge({ sectionId }: CheckYourKnowledgeProp
                 </p>
 
                 {!isCorrect && (
-                  <button
-                    onClick={handleReset}
-                    className="mt-2 text-[10px] font-mono font-bold uppercase text-brand-amber hover:underline tracking-wider cursor-pointer"
-                  >
-                    {lang === 'en' ? "🔄 TRY OPTION AGAIN" : "🔄 DUBARA TRY KAREIN"}
-                  </button>
+                  <div className="flex flex-wrap items-center gap-3 pt-2">
+                    <button
+                      onClick={handleReset}
+                      className="text-[10px] font-mono font-bold uppercase text-brand-amber hover:underline tracking-wider cursor-pointer"
+                    >
+                      {lang === 'en' ? "🔄 TRY OPTION AGAIN" : "🔄 DUBARA TRY KAREIN"}
+                    </button>
+                    <span className="text-xs text-brand-slate/40">•</span>
+                    <span className="text-[10px] font-mono font-bold text-amber-600">
+                      {lang === 'en' ? "👇 Diagnostic Quiz Activated Below" : "👇 Diagnostic Quiz Neeche Dekhein"}
+                    </span>
+                  </div>
                 )}
               </div>
             </motion.div>
           )}
         </AnimatePresence>
+
+        {/* Knowledge Gaps Diagnostic Quiz (Appears after CheckYourKnowledge) */}
+        {hasChecked && (
+          <KnowledgeGapDiagnosticQuiz 
+            sectionId={sectionId} 
+            onResolved={() => {
+              // trigger points refresh
+              window.dispatchEvent(new Event('clay_auth_state_changed'));
+            }} 
+          />
+        )}
       </div>
     </div>
   );

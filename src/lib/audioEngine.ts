@@ -409,7 +409,111 @@ class AudioEngine {
   }
 
   // --- TEXT TO SPEECH NARRATION ---
-  speak(text: string, langCode: 'en' | 'hyd' = 'en', onEnd?: () => void) {
+  private activeSectionQueue: {
+    sectionId: string;
+    sentences: string[];
+    currentIndex: number;
+    langCode: string;
+    onSentenceChange?: (index: number) => void;
+    onEnd?: () => void;
+  } | null = null;
+
+  pauseSpeaking() {
+    if (typeof window !== 'undefined' && window.speechSynthesis) {
+      window.speechSynthesis.pause();
+      if (this.onSpeakStateChange) this.onSpeakStateChange(false);
+      window.dispatchEvent(new CustomEvent('clay_narration_state_changed', {
+        detail: { status: 'paused', sectionId: this.activeSectionQueue?.sectionId }
+      }));
+    }
+  }
+
+  resumeSpeaking() {
+    if (typeof window !== 'undefined' && window.speechSynthesis) {
+      window.speechSynthesis.resume();
+      if (this.onSpeakStateChange) this.onSpeakStateChange(true);
+      window.dispatchEvent(new CustomEvent('clay_narration_state_changed', {
+        detail: { status: 'playing', sectionId: this.activeSectionQueue?.sectionId }
+      }));
+    }
+  }
+
+  isPaused(): boolean {
+    if (typeof window !== 'undefined' && window.speechSynthesis) {
+      return window.speechSynthesis.paused;
+    }
+    return false;
+  }
+
+  getCurrentSectionId(): string | null {
+    return this.activeSectionQueue?.sectionId || null;
+  }
+
+  speakSectionSentences(
+    sectionId: string,
+    sentences: string[],
+    langCode: string = 'en',
+    onSentenceChange?: (index: number) => void,
+    onEnd?: () => void
+  ) {
+    if (typeof window === 'undefined' || !window.speechSynthesis) return;
+
+    this.stopSpeaking();
+
+    if (!sentences || sentences.length === 0) return;
+
+    this.activeSectionQueue = {
+      sectionId,
+      sentences,
+      currentIndex: 0,
+      langCode,
+      onSentenceChange,
+      onEnd
+    };
+
+    this.playNextSentence();
+  }
+
+  private playNextSentence() {
+    if (!this.activeSectionQueue) return;
+
+    const { sectionId, sentences, currentIndex, langCode, onSentenceChange, onEnd } = this.activeSectionQueue;
+
+    if (currentIndex >= sentences.length) {
+      this.activeSectionQueue = null;
+      if (this.onSpeakStateChange) this.onSpeakStateChange(false);
+      window.dispatchEvent(new CustomEvent('clay_narration_state_changed', {
+        detail: { status: 'stopped', sectionId }
+      }));
+      if (onEnd) onEnd();
+      return;
+    }
+
+    const currentSentence = sentences[currentIndex];
+    if (onSentenceChange) onSentenceChange(currentIndex);
+
+    window.dispatchEvent(new CustomEvent('clay_narration_state_changed', {
+      detail: {
+        status: 'playing',
+        sectionId,
+        sentenceIndex: currentIndex,
+        totalSentences: sentences.length,
+        sentenceText: currentSentence
+      }
+    }));
+
+    this.speak(currentSentence, langCode, () => {
+      if (this.activeSectionQueue && this.activeSectionQueue.sectionId === sectionId) {
+        this.activeSectionQueue.currentIndex += 1;
+        // Small pleasant pause between sentences
+        setTimeout(() => {
+          this.playNextSentence();
+        }, 180);
+      }
+    });
+  }
+
+  speak(text: string, langCode: string = 'en', onEnd?: () => void) {
     if (typeof window === 'undefined' || !window.speechSynthesis) return;
 
     window.speechSynthesis.cancel(); // Cancel any active speech
@@ -424,7 +528,7 @@ class AudioEngine {
     
     // Choose voice
     const voices = window.speechSynthesis.getVoices();
-    let preferredVoice = null;
+    let preferredVoice: SpeechSynthesisVoice | null = null;
 
     // Helper to find premium / natural / neural voices
     const findBestVoice = (lang: string, fallbackPrefixes: string[]): SpeechSynthesisVoice | null => {
@@ -445,10 +549,13 @@ class AudioEngine {
       // Tier 2: Specific matching voice names
       found = voices.find(v => 
         v.lang.toLowerCase().replace('_', '-').startsWith(lowerLang) && (
-          v.name.toLowerCase().includes('david') ||
-          v.name.toLowerCase().includes('ravi') ||
-          v.name.toLowerCase().includes('heera') ||
-          v.name.toLowerCase().includes('harsh')
+          v.name.toLowerCase().includes('david') || 
+          v.name.toLowerCase().includes('ravi') || 
+          v.name.toLowerCase().includes('heera') || 
+          v.name.toLowerCase().includes('harsh') ||
+          v.name.toLowerCase().includes('neerja') ||
+          v.name.toLowerCase().includes('geeta') ||
+          v.name.toLowerCase().includes('swapna')
         )
       );
       if (found) return found;
@@ -475,15 +582,33 @@ class AudioEngine {
       return null;
     };
 
-    if (langCode === 'hyd') {
-      // For Hyderabadi: ur-IN or hi-IN, fallback en-IN
+    if (langCode === 'te') {
+      preferredVoice = findBestVoice('te-in', ['te', 'hi-in', 'en-in']);
+    } else if (langCode === 'hi') {
+      preferredVoice = findBestVoice('hi-in', ['hi', 'ur-in', 'en-in']);
+    } else if (langCode === 'ur' || langCode === 'hyd') {
+      // For Urdu & Hyderabadi: ur-IN or hi-IN, fallback en-IN
       preferredVoice = findBestVoice('ur-in', ['ur', 'hi-in', 'hi', 'en-in']);
       if (!preferredVoice) {
         preferredVoice = findBestVoice('hi', ['ur', 'en-in']);
       }
+    } else if (langCode === 'ta') {
+      preferredVoice = findBestVoice('ta-in', ['ta', 'en-in']);
+    } else if (langCode === 'kn') {
+      preferredVoice = findBestVoice('kn-in', ['kn', 'en-in']);
+    } else if (langCode === 'ml') {
+      preferredVoice = findBestVoice('ml-in', ['ml', 'en-in']);
+    } else if (langCode === 'bn') {
+      preferredVoice = findBestVoice('bn-in', ['bn', 'hi-in', 'en-in']);
+    } else if (langCode === 'mr') {
+      preferredVoice = findBestVoice('mr-in', ['mr', 'hi-in', 'en-in']);
+    } else if (langCode === 'gu') {
+      preferredVoice = findBestVoice('gu-in', ['gu', 'hi-in', 'en-in']);
+    } else if (langCode === 'pa') {
+      preferredVoice = findBestVoice('pa-in', ['pa', 'hi-in', 'en-in']);
     } else {
-      // English
-      preferredVoice = findBestVoice('en-us', ['en', 'en-gb']);
+      // English default
+      preferredVoice = findBestVoice('en-us', ['en', 'en-gb', 'en-in']);
     }
 
     if (preferredVoice) {
@@ -491,12 +616,13 @@ class AudioEngine {
     }
 
     // Set properties for a soft, precise, and highly listenable narrator voice
-    if (langCode === 'hyd') {
-      this.activeUtterance.pitch = 1.05; // Warm, friendly regional tone
-      this.activeUtterance.rate = 0.94;  // Slower, clear pacing for regional dialect readability
+    const rateFactor = (this.userSpeechRate || 1.0);
+    if (langCode === 'hyd' || langCode === 'ur' || langCode === 'hi' || langCode === 'te') {
+      this.activeUtterance.pitch = this.userPitch || 1.05; // Warm, friendly regional tone
+      this.activeUtterance.rate = 0.94 * rateFactor;  // Slower, clear pacing for regional dialect readability
     } else {
-      this.activeUtterance.pitch = 1.1;  // Crisp, engaging youthful English voice
-      this.activeUtterance.rate = 0.96;  // Paced beautifully for easy listening
+      this.activeUtterance.pitch = this.userPitch || 1.1;  // Crisp, engaging youthful English voice
+      this.activeUtterance.rate = 0.96 * rateFactor;  // Paced beautifully for easy listening
     }
     this.activeUtterance.volume = Math.max(0, Math.min(1, this.userVolume / 100)); // Comfortable volume level
 
@@ -518,9 +644,13 @@ class AudioEngine {
   }
 
   stopSpeaking() {
+    this.activeSectionQueue = null;
     if (typeof window !== 'undefined' && window.speechSynthesis) {
       window.speechSynthesis.cancel();
       if (this.onSpeakStateChange) this.onSpeakStateChange(false);
+      window.dispatchEvent(new CustomEvent('clay_narration_state_changed', {
+        detail: { status: 'stopped' }
+      }));
     }
   }
 
@@ -529,6 +659,97 @@ class AudioEngine {
       return window.speechSynthesis.speaking;
     }
     return false;
+  }
+
+  playLoFiChord() {
+    try {
+      this.initContext();
+      if (!this.ctx) return;
+      const ctx = this.ctx;
+      const now = ctx.currentTime;
+      // Synthesize a soft warm chime chord for tactile feedback
+      [523.25, 659.25, 783.99, 1046.5].forEach((freq, i) => {
+        const osc = ctx.createOscillator();
+        const gain = ctx.createGain();
+        osc.type = 'sine';
+        osc.frequency.setValueAtTime(freq, now + i * 0.04);
+        gain.gain.setValueAtTime(0.04, now + i * 0.04);
+        gain.gain.exponentialRampToValueAtTime(0.0001, now + 1.2);
+        osc.connect(gain);
+        gain.connect(ctx.destination);
+        osc.start(now + i * 0.04);
+        osc.stop(now + 1.3);
+      });
+    } catch (e) {
+      console.warn("Audio playback error:", e);
+    }
+  }
+
+  playPop() {
+    try {
+      this.initContext();
+      if (!this.ctx) return;
+      const ctx = this.ctx;
+      const now = ctx.currentTime;
+      const osc = ctx.createOscillator();
+      const gain = ctx.createGain();
+      osc.type = 'sine';
+      osc.frequency.setValueAtTime(600, now);
+      osc.frequency.exponentialRampToValueAtTime(1200, now + 0.06);
+      gain.gain.setValueAtTime(0.03, now);
+      gain.gain.exponentialRampToValueAtTime(0.0001, now + 0.08);
+      osc.connect(gain);
+      gain.connect(ctx.destination);
+      osc.start(now);
+      osc.stop(now + 0.09);
+    } catch (e) {
+      // Ignore audio synthesis errors on strict autoplay environments
+    }
+  }
+
+  playClick() {
+    try {
+      this.initContext();
+      if (!this.ctx) return;
+      const ctx = this.ctx;
+      const now = ctx.currentTime;
+      const osc = ctx.createOscillator();
+      const gain = ctx.createGain();
+      osc.type = 'triangle';
+      osc.frequency.setValueAtTime(880, now);
+      osc.frequency.exponentialRampToValueAtTime(440, now + 0.04);
+      gain.gain.setValueAtTime(0.02, now);
+      gain.gain.exponentialRampToValueAtTime(0.0001, now + 0.05);
+      osc.connect(gain);
+      gain.connect(ctx.destination);
+      osc.start(now);
+      osc.stop(now + 0.06);
+    } catch (e) {
+      // Ignore
+    }
+  }
+
+  playChime() {
+    try {
+      this.initContext();
+      if (!this.ctx) return;
+      const ctx = this.ctx;
+      const now = ctx.currentTime;
+      [880, 1174.66].forEach((freq, i) => {
+        const osc = ctx.createOscillator();
+        const gain = ctx.createGain();
+        osc.type = 'sine';
+        osc.frequency.setValueAtTime(freq, now + i * 0.06);
+        gain.gain.setValueAtTime(0.03, now + i * 0.06);
+        gain.gain.exponentialRampToValueAtTime(0.0001, now + 0.6);
+        osc.connect(gain);
+        gain.connect(ctx.destination);
+        osc.start(now + i * 0.06);
+        osc.stop(now + 0.7);
+      });
+    } catch (e) {
+      // Ignore
+    }
   }
 }
 
