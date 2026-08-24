@@ -1,6 +1,6 @@
 # Clayverse AI: An Interactive Multilingual System for Visualizing AI, Machine Learning and Generative AI Architectures
 
-**Tagline**: *AI Learning That Speaks Your Language*
+*AI Learning That Speaks Your Language*
 
 **Subtitle**: *Bringing AI Education to 12+ Indian Languages Through Interactive Storytelling and an Animated Clay Mascot*
 
