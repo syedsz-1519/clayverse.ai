@@ -48,7 +48,11 @@ type SearchResultItem =
   | { type: 'section'; section: Section; id: string; title: string; subtitle: string }
   | { type: 'term'; section: Section; term: Term; id: string; title: string; definition: string };
 
-export default function AudioNarrationHub() {
+interface AudioNarrationHubProps {
+  embeddedInStack?: boolean;
+}
+
+export default function AudioNarrationHub({ embeddedInStack = false }: AudioNarrationHubProps) {
   const { lang, setLang } = useLanguage();
   const [isOpen, setIsOpen] = useState(false);
   const [activeTab, setActiveTab] = useState<'audio' | 'search'>('audio');
@@ -370,7 +374,7 @@ export default function AudioNarrationHub() {
   }, []);
 
   return (
-    <div className="fixed bottom-6 right-6 z-50 flex flex-col items-end">
+    <div className={embeddedInStack ? "pointer-events-auto flex items-center justify-center relative" : "fixed bottom-6 right-6 z-50 flex flex-col items-end"}>
       
       {/* Consolidated Clay Helper Panel */}
       <AnimatePresence>
@@ -380,12 +384,12 @@ export default function AudioNarrationHub() {
             onKeyDown={handlePanelKeyDown}
             tabIndex={0}
             aria-label={lang === 'en' ? "Clay's Assistant Hub, use arrow keys to navigate options" : "کِلے اسسٹنٹ ہب، اختیارات نیویگیٹ کرنے کے لیے تیر کے نشان والے بٹنوں کا استعمال کریں"}
-            initial={{ opacity: 0, y: 20, scale: 0.95 }}
-            animate={{ opacity: 1, y: 0, scale: 1 }}
-            exit={{ opacity: 0, y: 20, scale: 0.95 }}
-            transition={{ duration: 0.25, ease: [0.16, 1, 0.3, 1] }}
-            className={`glass-panel rounded-3xl p-5 border-brand-amber/25 shadow-2xl mb-4.5 flex flex-col gap-4 relative overflow-hidden border-2 bg-white/95 backdrop-blur-xl focus:ring-2 focus:ring-brand-amber/40 focus:outline-none transition-all duration-300 ${
-              activeTab === 'ai' ? 'w-[92vw] sm:w-[480px] md:w-[560px] max-h-[82vh]' : 'w-85 sm:w-105'
+            initial={{ opacity: 0, scale: 0.92, y: 15, x: 10 }}
+            animate={{ opacity: 1, scale: 1, y: 0, x: 0 }}
+            exit={{ opacity: 0, scale: 0.92, y: 15, x: 10 }}
+            transition={{ type: 'spring', damping: 25, stiffness: 300 }}
+            className={`rounded-3xl p-5 border-brand-amber/35 shadow-2xl flex flex-col gap-4 relative overflow-hidden border-2 bg-[#FDFBF7] backdrop-blur-xl focus:ring-2 focus:ring-brand-amber/40 focus:outline-none transition-all duration-300 text-left pointer-events-auto z-50 ${
+              embeddedInStack ? "absolute right-0 sm:right-16 bottom-0 w-[330px] sm:w-[440px] max-h-[82vh]" : "glass-panel mb-4.5 w-85 sm:w-105"
             }`}
           >
             {/* Ambient clay texture overlay */}
@@ -799,21 +803,21 @@ export default function AudioNarrationHub() {
       </AnimatePresence>
 
       {/* Floating Launcher Trigger Button */}
-      <div className="relative flex items-center justify-end">
+      <div className="relative flex items-center justify-center">
         <motion.button
           onClick={() => setIsOpen(!isOpen)}
           whileHover={{ scale: 1.08, rotate: isOpen ? -90 : -4 }}
           whileTap={{ scale: 0.95 }}
-          className={`w-13 h-13 rounded-full flex items-center justify-center shadow-lg transition-all cursor-pointer relative group pointer-events-auto border-2 ${
+          className={`w-12 h-12 rounded-full flex items-center justify-center shadow-lg transition-all cursor-pointer relative group pointer-events-auto border-2 ${
             isOpen || isPlaying
               ? "bg-[#FDFBF7] border-brand-amber text-brand-amber shadow-brand-amber/25"
-              : "bg-[#FDFBF7] hover:bg-[#F6F2EA] border-brand-amber/30 text-brand-charcoal"
+              : "bg-[#FDFBF7] hover:bg-[#F6F2EA] border-brand-amber/40 text-brand-charcoal"
           }`}
-          title={lang === 'en' ? "Clay's Audio & AI Hub" : "Clay se Poochho aur Suno"}
+          title={lang === 'en' ? "Clay's Audio Narration & Guide" : "Clay se Poochho aur Suno"}
         >
           {/* Main Logo */}
           <div className="group-hover:scale-110 transition-transform duration-300">
-            <ClayLogo size={36} />
+            <ClayLogo size={32} />
           </div>
 
           {/* Sparkly Status indicator badge */}

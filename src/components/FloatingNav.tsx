@@ -1082,24 +1082,6 @@ export default function FloatingNav() {
         )}
       </AnimatePresence>
 
-      {/* Floating Glassmorphic Back to Top Button */}
-      <AnimatePresence>
-        {activeSection !== 'hero' && (
-          <motion.button
-            key="back-to-top"
-            initial={{ opacity: 0, scale: 0.8, y: 20 }}
-            animate={{ opacity: 1, scale: 1, y: 0 }}
-            exit={{ opacity: 0, scale: 0.8, y: 20 }}
-            onClick={() => scrollToSection('hero')}
-            className="fixed bottom-22 right-6 z-40 p-3.5 rounded-full bg-white/80 backdrop-blur-md border border-brand-slate/15 shadow-lg hover:shadow-xl text-brand-slate hover:text-white hover:bg-brand-amber hover:border-brand-amber transition-all cursor-pointer group flex items-center justify-center"
-            title="Back to Top"
-            aria-label="Back to Top"
-          >
-            <ArrowUp className="w-4 h-4 transition-transform duration-200 group-hover:-translate-y-0.5 stroke-[2.5]" />
-          </motion.button>
-        )}
-      </AnimatePresence>
-
       {/* Auth Modal for Achievements & Settings */}
       <AnimatePresence>
         {isAuthModalOpen && (

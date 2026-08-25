@@ -9,7 +9,6 @@ import GenerativeAI from './components/GenerativeAI';
 import PromptingAndRAG from './components/PromptingAndRAG';
 import AIToolsList from './components/AIToolsList';
 import ClosingAndDeeper from './components/ClosingAndDeeper';
-import AudioNarrationHub from './components/AudioNarrationHub';
 import FloatingLanguageBubble from './components/FloatingLanguageBubble';
 import CheckYourKnowledge from './components/CheckYourKnowledge';
 import AIArena from './components/AIArena';
@@ -19,7 +18,6 @@ import QuickTakeaway from './components/QuickTakeaway';
 import AIMockInterviewer from './components/AIMockInterviewer';
 import StudentDashboard from './components/StudentDashboard';
 import AuthModal from './components/AuthModal';
-import DidYouKnowNotification from './components/DidYouKnowNotification';
 import HomeCurriculumGrid from './components/HomeCurriculumGrid';
 import IndividualLessonView from './components/IndividualLessonView';
 import LearningHubPage from './components/LearningHubPage';
@@ -121,14 +119,8 @@ export default function App() {
       {/* Global Auth / Profile Modal */}
       <AuthModal isOpen={isAuthModalOpen} onClose={() => setIsAuthModalOpen(false)} />
 
-      {/* Floating Audio Guide for Clay */}
-      {(currentView === 'guide' || currentView === 'learning-hub') && <AudioNarrationHub />}
-
-      {/* Floating Language Change Bubble (Bottom Right) */}
-      <FloatingLanguageBubble />
-
-      {/* Contextual 'Did You Know' Floating AI Trivia Notification (Bottom Left) */}
-      <DidYouKnowNotification currentView={currentView} />
+      {/* Floating Action Controls Stack (Back to Top, Clay Audio Hub, and Language Selector in One Vertical Line) */}
+      <FloatingLanguageBubble showAudioHub={currentView === 'guide' || currentView === 'learning-hub'} />
 
       {/* Main Content Area: Switch between Guide, Learning Hub, Mock Interviewer, and Student Dashboard */}
       {currentView === 'interview' && (

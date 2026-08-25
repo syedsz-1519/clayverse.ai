@@ -58,6 +58,7 @@ import { useLanguage } from '../hooks/useLanguage';
 import { MockInterviewRecord, MockInterviewDraft } from '../types';
 import { UserProfile, setupAuthListener, logoutUserManually } from '../lib/firebase';
 import { audioEngine } from '../lib/audioEngine';
+import CurriculumProgressChart from './CurriculumProgressChart';
 import InterviewPerformanceChart from './InterviewPerformanceChart';
 import InterviewReportModal from './InterviewReportModal';
 import InterviewAudioReplayModal from './InterviewAudioReplayModal';
@@ -528,7 +529,7 @@ export default function StudentDashboard({
         <div className="bg-gradient-to-br from-brand-charcoal via-slate-900 to-brand-charcoal text-white rounded-3xl p-6 sm:p-8 shadow-2xl border border-white/10 relative overflow-hidden">
           <div className="absolute top-0 right-0 w-80 h-80 bg-brand-amber/15 rounded-full blur-3xl pointer-events-none" />
 
-          <div className="relative z-10 flex flex-col md:flex-row items-start md:items-center justify-between gap-6">
+          <div className="relative z-10 flex flex-col lg:flex-row items-start lg:items-center justify-between gap-6">
             
             {/* User Profile Info */}
             <div className="flex items-center gap-4">
@@ -559,16 +560,13 @@ export default function StudentDashboard({
                   {currentUser?.email || (lang === 'en' ? 'Local Student Profile' : 'Student Profile')}
                 </p>
 
-                {/* Badges / Streaks */}
-                <div className="flex items-center gap-3 mt-2 text-[11px] font-mono">
-                  <span className="flex items-center gap-1 text-orange-400 font-bold bg-orange-500/15 px-2.5 py-0.5 rounded-lg">
-                    <Flame className="w-3.5 h-3.5" /> {streakState.currentStreak} Day Streak {streakState.todayCompleted ? '🔥' : '⏳'}
-                  </span>
-                  <span className="flex items-center gap-1 text-emerald-400 font-bold bg-emerald-500/15 px-2.5 py-0.5 rounded-lg">
+                {/* Status Badges */}
+                <div className="flex items-center gap-2.5 mt-2 text-[11px] font-mono">
+                  <span className="flex items-center gap-1 text-emerald-400 font-bold bg-emerald-500/15 px-2.5 py-0.5 rounded-lg border border-emerald-500/20">
                     <ShieldCheck className="w-3.5 h-3.5" /> {interviewHistory.length} Interviews Attempted
                   </span>
-                  <span className={`hidden sm:flex items-center gap-1 font-bold px-2.5 py-0.5 rounded-lg ${
-                    isOnline ? 'text-blue-300 bg-blue-500/15' : 'text-amber-300 bg-amber-500/15'
+                  <span className={`hidden sm:flex items-center gap-1 font-bold px-2.5 py-0.5 rounded-lg border ${
+                    isOnline ? 'text-blue-300 bg-blue-500/15 border-blue-500/20' : 'text-amber-300 bg-amber-500/15 border-amber-500/20'
                   }`}>
                     {isOnline ? <Wifi className="w-3.5 h-3.5" /> : <WifiOff className="w-3.5 h-3.5" />}
                     <span>{isOnline ? 'Online Sync' : 'Offline Cache Ready'}</span>
@@ -926,6 +924,16 @@ export default function StudentDashboard({
             <span className="text-[9px] text-brand-muted mt-0.5 block">Total active practice</span>
           </motion.div>
         </div>
+
+        {/* ========================================================================= */}
+        {/* INTERACTIVE CURRICULUM PROGRESS CHART (RECHARTS) */}
+        {/* ========================================================================= */}
+        <CurriculumProgressChart
+          completedLessonIds={streakState.completedLessonIds || []}
+          masteredConceptIds={masteredConcepts}
+          streakState={streakState}
+          onNavigateSection={onNavigateSection}
+        />
 
         {/* ========================================================================= */}
         {/* 1. DAILY STREAK & CONSISTENCY HABIT TRACKER (FRAMER MOTION BOUNCE & GLOW) */}

@@ -1,6 +1,7 @@
-import React, { useState, useMemo } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import { useLanguage, type Language } from '../hooks/useLanguage';
+import AudioNarrationHub from './AudioNarrationHub';
 import { 
   Languages, 
   X, 
@@ -13,7 +14,8 @@ import {
   Layers, 
   Compass,
   Info,
-  CheckCircle2
+  CheckCircle2,
+  ArrowUp
 } from 'lucide-react';
 
 export interface IndianLanguageItem {
@@ -373,12 +375,37 @@ export const ALL_INDIAN_LANGUAGES: IndianLanguageItem[] = [
   }
 ];
 
-export default function FloatingLanguageBubble() {
+interface FloatingLanguageBubbleProps {
+  showAudioHub?: boolean;
+}
+
+export default function FloatingLanguageBubble({ showAudioHub = true }: FloatingLanguageBubbleProps) {
   const { lang, setLang } = useLanguage();
   const [showMenu, setShowMenu] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
   const [activeCategory, setActiveCategory] = useState<'all' | 'live' | 'southern' | 'northern' | 'classical_tribal'>('all');
   const [notificationToast, setNotificationToast] = useState<string | null>(null);
+  const [showBackToTop, setShowBackToTop] = useState<boolean>(false);
+
+  // Monitor scroll position to display Back to Top button
+  useEffect(() => {
+    const handleScroll = () => {
+      if (window.scrollY > 250) {
+        setShowBackToTop(true);
+      } else {
+        setShowBackToTop(false);
+      }
+    };
+
+    window.addEventListener('scroll', handleScroll, { passive: true });
+    handleScroll();
+
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
+
+  const handleScrollToTop = () => {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
 
   // Filter languages based on search and selected category
   const filteredLanguages = useMemo(() => {
@@ -467,7 +494,35 @@ export default function FloatingLanguageBubble() {
         )}
       </AnimatePresence>
 
-      <div className="fixed bottom-[88px] right-[26px] z-40 flex items-center gap-3 pointer-events-none select-none">
+      <div className="fixed bottom-6 right-6 z-50 flex flex-col items-center gap-2.5 pointer-events-none select-none">
+        
+        {/* 1. Floating Back to Top Button (Top of the vertical stack) */}
+        <AnimatePresence>
+          {showBackToTop && (
+            <motion.button
+              key="floating-back-to-top"
+              initial={{ opacity: 0, scale: 0.7, y: 10 }}
+              animate={{ opacity: 1, scale: 1, y: 0 }}
+              exit={{ opacity: 0, scale: 0.7, y: 10 }}
+              transition={{ duration: 0.2 }}
+              onClick={handleScrollToTop}
+              whileHover={{ scale: 1.08, y: -2 }}
+              whileTap={{ scale: 0.92 }}
+              className="pointer-events-auto w-12 h-12 bg-white/95 hover:bg-brand-amber text-brand-charcoal hover:text-white border-2 border-brand-charcoal/10 hover:border-brand-amber rounded-full flex items-center justify-center shadow-lg hover:shadow-xl transition-all cursor-pointer group backdrop-blur-md"
+              title="Back to Top"
+              aria-label="Back to Top"
+            >
+              <ArrowUp className="w-4.5 h-4.5 stroke-[2.5] transition-transform duration-200 group-hover:-translate-y-0.5" />
+            </motion.button>
+          )}
+        </AnimatePresence>
+
+        {/* 2. Floating Clay Audio Narration Hub (Middle of the vertical stack) */}
+        {showAudioHub && (
+          <AudioNarrationHub embeddedInStack={true} />
+        )}
+
+        {/* 3. Floating Language Change Toggle (Bottom of the vertical stack) */}
         <div className="pointer-events-auto flex items-center gap-3 relative">
           
           {/* Categorized Indian Languages Modal / Dropdown Menu */}
@@ -478,7 +533,7 @@ export default function FloatingLanguageBubble() {
                 animate={{ opacity: 1, scale: 1, y: 0, x: 0 }}
                 exit={{ opacity: 0, scale: 0.92, y: 15, x: 10 }}
                 transition={{ type: 'spring', damping: 25, stiffness: 300 }}
-                className="absolute right-0 sm:right-14 bottom-0 bg-[#FDFBF7] border-2 border-brand-amber/40 rounded-3xl p-4 shadow-2xl w-[330px] sm:w-[440px] max-h-[82vh] flex flex-col pointer-events-auto backdrop-blur-xl text-left"
+                className="absolute right-0 sm:right-16 bottom-0 bg-[#FDFBF7] border-2 border-brand-amber/40 rounded-3xl p-4 shadow-2xl w-[330px] sm:w-[440px] max-h-[82vh] flex flex-col pointer-events-auto backdrop-blur-xl text-left"
               >
                 {/* Header */}
                 <div className="flex items-center justify-between pb-3 border-b border-brand-charcoal/10 shrink-0">
