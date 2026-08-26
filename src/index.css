@@ -3,68 +3,68 @@
 
 :root {
   /* Default Sand Theme */
-  --brand-cream: #F5F2ED;
-  --brand-sand: #EBE7E0;
-  --brand-amber: #d97706; 
-  --brand-amber-dark: #b45309;
-  --brand-amber-light: #fef3c7;
-  --brand-slate: #475569; 
-  --brand-slate-light: #f1f5f9;
-  --brand-charcoal: #2D2D2D; 
-  --brand-muted: #5E5A54;
+  --brand-cream: #F8F7F4;
+  --brand-sand: #EFECE6;
+  --brand-amber: #D97706; 
+  --brand-amber-dark: #B45309;
+  --brand-amber-light: #FEF3C7;
+  --brand-slate: #52525B; 
+  --brand-slate-light: #F4F4F5;
+  --brand-charcoal: #18181B; 
+  --brand-muted: #71717A;
   
-  --skeuo-bg: #F5F2ED;
-  --skeuo-shadow-1: #dcd9d4;
-  --skeuo-shadow-2: #ffffff;
+  --skeuo-bg: #FFFFFF;
+  --skeuo-shadow-1: rgba(0, 0, 0, 0.04);
+  --skeuo-shadow-2: rgba(255, 255, 255, 0.9);
   
-  --glass-bg: rgba(255, 255, 255, 0.45);
-  --glass-border: rgba(255, 255, 255, 0.6);
-  --glass-nav-bg: rgba(245, 242, 237, 0.85);
+  --glass-bg: rgba(255, 255, 255, 0.85);
+  --glass-border: rgba(0, 0, 0, 0.08);
+  --glass-nav-bg: rgba(248, 247, 244, 0.92);
 }
 
 [data-theme="sand"] {
-  --brand-cream: #F5F2ED;
-  --brand-sand: #EBE7E0;
-  --brand-amber: #d97706; 
-  --brand-amber-dark: #b45309;
-  --brand-amber-light: #fef3c7;
-  --brand-slate: #475569; 
-  --brand-slate-light: #f1f5f9;
-  --brand-charcoal: #2D2D2D; 
-  --brand-muted: #5E5A54;
+  --brand-cream: #F8F7F4;
+  --brand-sand: #EFECE6;
+  --brand-amber: #D97706; 
+  --brand-amber-dark: #B45309;
+  --brand-amber-light: #FEF3C7;
+  --brand-slate: #52525B; 
+  --brand-slate-light: #F4F4F5;
+  --brand-charcoal: #18181B; 
+  --brand-muted: #71717A;
   
-  --skeuo-bg: #F5F2ED;
-  --skeuo-shadow-1: #dcd9d4;
-  --skeuo-shadow-2: #ffffff;
+  --skeuo-bg: #FFFFFF;
+  --skeuo-shadow-1: rgba(0, 0, 0, 0.04);
+  --skeuo-shadow-2: rgba(255, 255, 255, 0.9);
   
-  --glass-bg: rgba(255, 255, 255, 0.45);
-  --glass-border: rgba(255, 255, 255, 0.6);
-  --glass-nav-bg: rgba(245, 242, 237, 0.85);
+  --glass-bg: rgba(255, 255, 255, 0.85);
+  --glass-border: rgba(0, 0, 0, 0.08);
+  --glass-nav-bg: rgba(248, 247, 244, 0.92);
 }
 
 [data-theme="deep-blue"] {
-  --brand-cream: #0F172A;
-  --brand-sand: #1E293B;
+  --brand-cream: #0B1120;
+  --brand-sand: #131E32;
   --brand-amber: #3B82F6; 
   --brand-amber-dark: #2563EB;
   --brand-amber-light: #1E3A8A;
   --brand-slate: #94A3B8; 
-  --brand-slate-light: #334155;
+  --brand-slate-light: #1E293B;
   --brand-charcoal: #F8FAFC; 
-  --brand-muted: #94A3B8;
+  --brand-muted: #64748B;
   
-  --skeuo-bg: #1E293B;
-  --skeuo-shadow-1: #090d16;
-  --skeuo-shadow-2: #2e3d52;
+  --skeuo-bg: #131E32;
+  --skeuo-shadow-1: rgba(0, 0, 0, 0.35);
+  --skeuo-shadow-2: rgba(255, 255, 255, 0.03);
   
-  --glass-bg: rgba(30, 41, 59, 0.45);
-  --glass-border: rgba(255, 255, 255, 0.1);
-  --glass-nav-bg: rgba(15, 23, 42, 0.85);
+  --glass-bg: rgba(19, 30, 50, 0.85);
+  --glass-border: rgba(255, 255, 255, 0.08);
+  --glass-nav-bg: rgba(11, 17, 32, 0.92);
 }
 
 [data-theme="deep-night"] {
   --brand-cream: #09090B;
-  --brand-sand: #18181B;
+  --brand-sand: #141417;
   --brand-amber: #F59E0B; 
   --brand-amber-dark: #D97706;
   --brand-amber-light: #2D2210;
@@ -73,33 +73,33 @@
   --brand-charcoal: #FAFAFA; 
   --brand-muted: #71717A;
   
-  --skeuo-bg: #18181B;
-  --skeuo-shadow-1: #030304;
-  --skeuo-shadow-2: #2c2c31;
+  --skeuo-bg: #141417;
+  --skeuo-shadow-1: rgba(0, 0, 0, 0.5);
+  --skeuo-shadow-2: rgba(255, 255, 255, 0.03);
   
-  --glass-bg: rgba(24, 24, 27, 0.45);
+  --glass-bg: rgba(20, 20, 23, 0.85);
   --glass-border: rgba(255, 255, 255, 0.08);
-  --glass-nav-bg: rgba(9, 9, 11, 0.85);
+  --glass-nav-bg: rgba(9, 9, 11, 0.92);
 }
 
 [data-theme="red-light"] {
-  --brand-cream: #FFF5F5;
-  --brand-sand: #FFE4E6;
+  --brand-cream: #FAF7F7;
+  --brand-sand: #F5EDED;
   --brand-amber: #E11D48; 
   --brand-amber-dark: #BE123C;
-  --brand-amber-light: #FFF1F2;
-  --brand-slate: #65A30D; 
+  --brand-amber-light: #FFE4E6;
+  --brand-slate: #4C0519; 
   --brand-slate-light: #FFF1F2;
-  --brand-charcoal: #4C0519; 
+  --brand-charcoal: #1F080F; 
   --brand-muted: #881337;
   
-  --skeuo-bg: #FFE4E6;
-  --skeuo-shadow-1: #e2c9cb;
-  --skeuo-shadow-2: #ffffff;
+  --skeuo-bg: #FFFFFF;
+  --skeuo-shadow-1: rgba(225, 29, 72, 0.06);
+  --skeuo-shadow-2: rgba(255, 255, 255, 0.9);
   
-  --glass-bg: rgba(255, 228, 230, 0.45);
-  --glass-border: rgba(225, 29, 72, 0.15);
-  --glass-nav-bg: rgba(255, 245, 245, 0.85);
+  --glass-bg: rgba(255, 255, 255, 0.88);
+  --glass-border: rgba(225, 29, 72, 0.12);
+  --glass-nav-bg: rgba(250, 247, 247, 0.92);
 }
 
 /* =========================================================
@@ -248,42 +248,42 @@ body *,
   transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-/* Custom Neumorphic Skeuomorphic Styles from Bento Grid */
+/* Modern Tactile & Elevated Card Styles */
 .skeuo-raised {
   background: var(--skeuo-bg);
-  border: 1px solid rgba(255, 255, 255, 0.15);
-  border-radius: 24px;
-  box-shadow: 8px 8px 16px var(--skeuo-shadow-1), -8px -8px 16px var(--skeuo-shadow-2);
-  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1), background-color 400ms cubic-bezier(0.4, 0, 0.2, 1), border-color 400ms cubic-bezier(0.4, 0, 0.2, 1), box-shadow 400ms cubic-bezier(0.4, 0, 0.2, 1);
+  border: 1px solid var(--glass-border);
+  border-radius: 18px;
+  box-shadow: 0 4px 14px var(--skeuo-shadow-1), 0 1px 2px var(--skeuo-shadow-2);
+  transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1), background-color 400ms cubic-bezier(0.4, 0, 0.2, 1), border-color 400ms cubic-bezier(0.4, 0, 0.2, 1), box-shadow 400ms cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .skeuo-raised:hover {
   transform: translateY(-2px);
-  box-shadow: 12px 12px 24px var(--skeuo-shadow-1), -12px -12px 24px var(--skeuo-shadow-2);
+  box-shadow: 0 8px 24px var(--skeuo-shadow-1), 0 2px 4px var(--skeuo-shadow-2);
 }
 
 .skeuo-pressed {
   background: var(--skeuo-bg);
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  border-radius: 16px;
-  box-shadow: inset 4px 4px 8px var(--skeuo-shadow-1), inset -4px -4px 8px var(--skeuo-shadow-2);
+  border: 1px solid var(--glass-border);
+  border-radius: 14px;
+  box-shadow: inset 0 2px 4px var(--skeuo-shadow-1);
   transition: background-color 400ms cubic-bezier(0.4, 0, 0.2, 1), border-color 400ms cubic-bezier(0.4, 0, 0.2, 1), box-shadow 400ms cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-/* Glassmorphic Styles matching the Bento Grid overlay */
+/* Glassmorphic Styles matching Modern Design System */
 .glass-panel {
   background: var(--glass-bg);
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
   border: 1px solid var(--glass-border);
-  box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.04);
+  box-shadow: 0 4px 20px 0 rgba(0, 0, 0, 0.04);
 }
 
 .glass-nav {
   background: var(--glass-nav-bg);
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
-  border-bottom: 1px solid rgba(217, 119, 6, 0.1);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border-bottom: 1px solid var(--glass-border);
 }
 
 /* Progress bar fill transition */

@@ -11,7 +11,27 @@
     <meta name="keywords" content="Clayverse AI, Artificial Intelligence, Machine Learning, Deep Learning, Neural Network, Large Language Model, Generative AI, RAG, Prompt Engineering, AI Agents, AI Timeline, Learn AI Simply, Beginners AI, Clay Explainer" />
     <meta name="author" content="Clayverse AI" />
     <meta name="robots" content="index, follow" />
-    <meta name="theme-color" content="#F4EFE6" />
+    <meta name="theme-color" content="#F8F7F4" />
+
+    <!-- Instant Pre-Hydration Theme Initializer to Prevent Flash on Reload -->
+    <script>
+      (function() {
+        try {
+          var validThemes = ['sand', 'deep-blue', 'deep-night', 'red-light'];
+          var theme = localStorage.getItem('clay_theme') || localStorage.getItem('app_theme') || localStorage.getItem('theme');
+          if (theme && validThemes.indexOf(theme) !== -1) {
+            document.documentElement.setAttribute('data-theme', theme);
+          } else {
+            document.documentElement.setAttribute('data-theme', 'sand');
+          }
+          var hc = localStorage.getItem('clay_high_contrast') || localStorage.getItem('app_high_contrast');
+          if (hc === 'true') {
+            document.documentElement.setAttribute('data-high-contrast', 'true');
+            document.documentElement.classList.add('high-contrast');
+          }
+        } catch (e) {}
+      })();
+    </script>
 
     <!-- Open Graph / Facebook / LinkedIn Meta Tags -->
     <meta property="og:type" content="website" />
