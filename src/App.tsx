@@ -27,18 +27,154 @@ import ValueProps from './components/ValueProps';
 import LanguagesShowcase from './components/LanguagesShowcase';
 import OnboardingModal from './components/OnboardingModal';
 import GuestModeBanner from './components/GuestModeBanner';
-import { Compass, Sparkles, BookOpen, Video, TrendingUp, ArrowLeft, LayoutGrid, List, GraduationCap, MessageSquare } from 'lucide-react';
+import KeyboardShortcutsModal from './components/KeyboardShortcutsModal';
+import OfflineStatusBanner from './components/OfflineStatusBanner';
+import OfflineManagerModal from './components/OfflineManagerModal';
+import { LESSON_MODULES } from './components/HomeCurriculumGrid';
+import { useGlobalKeyboardShortcuts } from './hooks/useGlobalKeyboardShortcuts';
+import { useTheme, type Theme } from './hooks/useTheme';
+import { audioEngine } from './lib/audioEngine';
+import { Compass, Sparkles, BookOpen, Video, TrendingUp, ArrowLeft, LayoutGrid, List, GraduationCap, MessageSquare, Command, Keyboard, WifiOff, HardDriveDownload } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
 import ClayLogo from './components/ClayLogo';
 import { useLanguage } from './hooks/useLanguage';
 
 export default function App() {
   const { lang } = useLanguage();
+  const { theme, setTheme } = useTheme();
   const [currentView, setCurrentView] = useState<'guide' | 'interview' | 'dashboard' | 'learning-hub'>('guide');
   const [currentLessonId, setCurrentLessonId] = useState<string | null>(null);
   const [isContinuousGuide, setIsContinuousGuide] = useState<boolean>(false);
   const [isAuthModalOpen, setIsAuthModalOpen] = useState(false);
   const [isLanguagesModalOpen, setIsLanguagesModalOpen] = useState(false);
+  const [isShortcutsModalOpen, setIsShortcutsModalOpen] = useState(false);
+  const [isOfflineModalOpen, setIsOfflineModalOpen] = useState(false);
+  const [shortcutToast, setShortcutToast] = useState<string | null>(null);
+
+  const showShortcutToast = (msg: string) => {
+    setShortcutToast(msg);
+    setTimeout(() => {
+      setShortcutToast((prev) => (prev === msg ? null : prev));
+    }, 2200);
+  };
+
+  const handleNextLesson = () => {
+    if (!currentLessonId) return;
+    const idx = LESSON_MODULES.findIndex(m => m.id === currentLessonId);
+    if (idx >= 0 && idx < LESSON_MODULES.length - 1) {
+      const nextMod = LESSON_MODULES[idx + 1];
+      setCurrentLessonId(nextMod.id);
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+      showShortcutToast(`Lesson ${nextMod.lessonNum}: ${nextMod.titleEn}`);
+    }
+  };
+
+  const handlePrevLesson = () => {
+    if (!currentLessonId) return;
+    const idx = LESSON_MODULES.findIndex(m => m.id === currentLessonId);
+    if (idx > 0) {
+      const prevMod = LESSON_MODULES[idx - 1];
+      setCurrentLessonId(prevMod.id);
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+      showShortcutToast(`Lesson ${prevMod.lessonNum}: ${prevMod.titleEn}`);
+    }
+  };
+
+  const handleCycleTheme = () => {
+    const themes: Theme[] = ['sand', 'deep-blue', 'deep-night', 'red-light'];
+    const nextIdx = (themes.indexOf(theme) + 1) % themes.length;
+    const nextTheme = themes[nextIdx];
+    setTheme(nextTheme);
+    showShortcutToast(`Theme: ${nextTheme.replace('-', ' ').toUpperCase()}`);
+  };
+
+  const handleToggleAudio = () => {
+    const currentVol = audioEngine.getVolume();
+    if (currentVol > 0) {
+      audioEngine.setVolume(0);
+      showShortcutToast('Audio SFX: Muted');
+    } else {
+      audioEngine.setVolume(0.5);
+      showShortcutToast('Audio SFX: Active');
+    }
+  };
+
+  const handleToggleContinuous = () => {
+    setIsContinuousGuide(prev => {
+      const next = !prev;
+      showShortcutToast(next ? 'Continuous Reading: ON' : 'Modular Overview: ON');
+      return next;
+    });
+  };
+
+  const handleSaveBookmark = () => {
+    const scrollY = window.scrollY;
+    const bookmark = {
+      scrollY: Math.round(scrollY),
+      sectionId: currentLessonId || 'overview',
+      sectionTitle: currentLessonId ? `Lesson: ${currentLessonId}` : 'Overview',
+      timestamp: Date.now()
+    };
+    try {
+      localStorage.setItem('clay_scroll_bookmark', JSON.stringify(bookmark));
+      showShortcutToast('Bookmark Saved at Current Position');
+    } catch {}
+  };
+
+  const handleGoHome = () => {
+    setCurrentView('guide');
+    setCurrentLessonId(null);
+    setIsContinuousGuide(false);
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+    showShortcutToast('Returned to Course Overview (Home)');
+  };
+
+  const handleCloseModals = (): boolean => {
+    if (isOfflineModalOpen) {
+      setIsOfflineModalOpen(false);
+      return true;
+    }
+    if (isShortcutsModalOpen) {
+      setIsShortcutsModalOpen(false);
+      return true;
+    }
+    if (isLanguagesModalOpen) {
+      setIsLanguagesModalOpen(false);
+      return true;
+    }
+    if (isAuthModalOpen) {
+      setIsAuthModalOpen(false);
+      return true;
+    }
+    return false;
+  };
+
+  // Wire global keyboard shortcuts
+  useGlobalKeyboardShortcuts({
+    onCloseModals: handleCloseModals,
+    onGoHome: handleGoHome,
+    onToggleShortcutsModal: () => setIsShortcutsModalOpen(prev => !prev),
+    onOpenSearch: () => window.dispatchEvent(new CustomEvent('clay_open_search')),
+    onOpenLanguages: () => setIsLanguagesModalOpen(true),
+    onOpenOffline: () => setIsOfflineModalOpen(true),
+    onSwitchView: (v) => {
+      setCurrentView(v);
+      if (v === 'guide') setCurrentLessonId(null);
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+      const label = 
+        v === 'guide' ? 'Course Guide & Overview' :
+        v === 'interview' ? 'AI Mock Interviewer' :
+        v === 'dashboard' ? 'Student Dashboard & Analytics' : 'Learning Hub';
+      showShortcutToast(`Switched to: ${label}`);
+    },
+    onCycleTheme: handleCycleTheme,
+    onToggleAudio: handleToggleAudio,
+    onToggleContinuous: handleToggleContinuous,
+    onPrevLesson: handlePrevLesson,
+    onNextLesson: handleNextLesson,
+    onSaveBookmark: handleSaveBookmark,
+    isLessonActive: currentLessonId !== null
+  });
 
   useEffect(() => {
     // Listen to custom navigation events from FloatingNav or subcomponents
@@ -66,9 +202,14 @@ export default function App() {
       setIsLanguagesModalOpen(true);
     };
 
+    const handleOpenOfflineManager = () => {
+      setIsOfflineModalOpen(true);
+    };
+
     window.addEventListener('clay_navigate_view' as any, handleNavigateView);
     window.addEventListener('clay_open_lesson' as any, handleOpenLesson);
     window.addEventListener('clay_open_languages_showcase' as any, handleOpenLanguages);
+    window.addEventListener('clay_open_offline_manager' as any, handleOpenOfflineManager);
 
     // Smoothly handle hash changes
     const handleHashChange = () => {
@@ -77,6 +218,11 @@ export default function App() {
         const targetId = hash.replace('#', '');
         if (targetId === 'languages' || targetId === 'languages-showcase') {
           setIsLanguagesModalOpen(true);
+          return;
+        }
+
+        if (targetId === 'offline' || targetId === 'offline-manager') {
+          setIsOfflineModalOpen(true);
           return;
         }
 
@@ -108,6 +254,7 @@ export default function App() {
       window.removeEventListener('clay_navigate_view' as any, handleNavigateView);
       window.removeEventListener('clay_open_lesson' as any, handleOpenLesson);
       window.removeEventListener('clay_open_languages_showcase' as any, handleOpenLanguages);
+      window.removeEventListener('clay_open_offline_manager' as any, handleOpenOfflineManager);
       window.removeEventListener('hashchange', handleHashChange);
     };
   }, []);
@@ -141,19 +288,63 @@ export default function App() {
       {/* Translucent Navigation Layer */}
       <FloatingNav />
 
-      {/* Guest Mode Status Banner */}
+      {/* Offline Status & Reconnection Banner */}
       <div className="pt-16">
+        <OfflineStatusBanner onOpenOfflineManager={() => setIsOfflineModalOpen(true)} />
         <GuestModeBanner onOpenAuth={() => setIsAuthModalOpen(true)} />
       </div>
 
       {/* First-Visit Multilingual Onboarding Modal */}
       <OnboardingModal />
 
+      {/* Offline Curriculum Storage Manager Modal */}
+      <OfflineManagerModal 
+        isOpen={isOfflineModalOpen}
+        onClose={() => setIsOfflineModalOpen(false)}
+      />
+
       {/* 25+ Indian Languages Interactive Showcase Modal */}
       <LanguagesShowcase 
         isOpen={isLanguagesModalOpen} 
         onClose={() => setIsLanguagesModalOpen(false)} 
       />
+
+      {/* Keyboard Shortcuts Cheatsheet Modal */}
+      <KeyboardShortcutsModal
+        isOpen={isShortcutsModalOpen}
+        onClose={() => setIsShortcutsModalOpen(false)}
+      />
+
+      {/* Floating Keyboard Shortcuts Trigger Badge */}
+      <div className="fixed bottom-4 left-4 z-40 hidden sm:block">
+        <button
+          onClick={() => setIsShortcutsModalOpen(true)}
+          className="flex items-center gap-2 px-3 py-1.5 rounded-xl bg-white/90 dark:bg-zinc-900/90 hover:bg-white dark:hover:bg-zinc-800 border border-black/10 dark:border-white/10 text-brand-slate hover:text-brand-charcoal text-xs font-semibold shadow-md hover:shadow-lg transition-all cursor-pointer backdrop-blur-md group"
+          title="Press '?' on your keyboard to view all navigation shortcuts"
+        >
+          <Keyboard className="w-3.5 h-3.5 text-brand-amber group-hover:scale-110 transition-transform" />
+          <span className="text-[11px] font-medium">Shortcuts</span>
+          <kbd className="px-1.5 py-0.5 font-mono text-[10px] font-bold bg-black/5 dark:bg-white/5 border border-black/10 dark:border-white/10 rounded">
+            ?
+          </kbd>
+        </button>
+      </div>
+
+      {/* Keyboard Action Toast Feedback */}
+      <AnimatePresence>
+        {shortcutToast && (
+          <motion.div
+            initial={{ opacity: 0, y: 20, scale: 0.95 }}
+            animate={{ opacity: 1, y: 0, scale: 1 }}
+            exit={{ opacity: 0, y: 20, scale: 0.95 }}
+            transition={{ duration: 0.2 }}
+            className="fixed bottom-16 left-1/2 -translate-x-1/2 z-50 px-4 py-2 bg-brand-charcoal dark:bg-zinc-800 text-white rounded-full shadow-2xl border border-brand-amber/30 text-xs font-bold flex items-center gap-2 pointer-events-none backdrop-blur-md"
+          >
+            <Sparkles className="w-3.5 h-3.5 text-brand-amber animate-pulse" />
+            <span>{shortcutToast}</span>
+          </motion.div>
+        )}
+      </AnimatePresence>
 
       {/* Global Auth / Profile Modal */}
       <AuthModal isOpen={isAuthModalOpen} onClose={() => setIsAuthModalOpen(false)} />

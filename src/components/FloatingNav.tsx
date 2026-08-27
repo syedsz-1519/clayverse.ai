@@ -29,7 +29,8 @@ import {
   Flame,
   Heart,
   School,
-  Info
+  Info,
+  HardDriveDownload
 } from 'lucide-react';
 import { audioEngine } from '../lib/audioEngine';
 import ClayLogo from './ClayLogo';
@@ -720,8 +721,20 @@ export default function FloatingNav() {
                     </div>
                   </div>
 
-                  {/* 4. Quick Settings Footer Action inside Explore dropdown */}
+                  {/* 4. Quick Settings, Offline & Shortcuts Footer Action inside Explore dropdown */}
                   <div className="pt-2 border-t border-brand-slate/10 flex items-center justify-between px-1">
+                    <button
+                      onClick={() => {
+                        window.dispatchEvent(new CustomEvent('clay_open_offline_manager'));
+                        setIsExploreOpen(false);
+                      }}
+                      className="flex items-center gap-1.5 text-[10.5px] font-bold text-amber-600 dark:text-amber-400 hover:text-brand-amber transition-colors cursor-pointer"
+                      title="Offline Curriculum Cache & Storage"
+                    >
+                      <HardDriveDownload className="w-3 h-3" />
+                      <span>{lang === 'en' ? 'Offline Ready' : 'Offline'}</span>
+                    </button>
+
                     <button
                       onClick={() => {
                         setIsAuthModalOpen(true);
@@ -730,12 +743,20 @@ export default function FloatingNav() {
                       className="flex items-center gap-1.5 text-[10.5px] font-bold text-brand-slate hover:text-brand-amber transition-colors cursor-pointer"
                     >
                       <Settings className="w-3 h-3" />
-                      <span>{lang === 'en' ? 'Language & App Settings' : 'Settings & Zabaan'}</span>
+                      <span>{lang === 'en' ? 'Settings' : 'Settings'}</span>
                     </button>
-                    
-                    <span className="text-[9px] font-mono font-bold text-brand-muted">
-                      v2.0 • CLAYVERSE
-                    </span>
+
+                    <button
+                      onClick={() => {
+                        window.dispatchEvent(new KeyboardEvent('keydown', { key: '?' }));
+                        setIsExploreOpen(false);
+                      }}
+                      className="flex items-center gap-1 text-[10px] font-mono font-bold text-brand-muted hover:text-brand-amber transition-colors cursor-pointer"
+                      title="Keyboard Shortcuts Cheatsheet"
+                    >
+                      <kbd className="px-1 py-0.2 rounded bg-black/5 dark:bg-white/5 border border-black/10 dark:border-white/10 text-[9px]">?</kbd>
+                      <span>Shortcuts</span>
+                    </button>
                   </div>
 
                 </motion.div>
