@@ -30,6 +30,7 @@ import GuestModeBanner from './components/GuestModeBanner';
 import KeyboardShortcutsModal from './components/KeyboardShortcutsModal';
 import OfflineStatusBanner from './components/OfflineStatusBanner';
 import OfflineManagerModal from './components/OfflineManagerModal';
+import FocusLockdownManager from './components/FocusLockdownManager';
 import { LESSON_MODULES } from './components/HomeCurriculumGrid';
 import { useGlobalKeyboardShortcuts } from './hooks/useGlobalKeyboardShortcuts';
 import { useTheme, type Theme } from './hooks/useTheme';
@@ -45,6 +46,7 @@ export default function App() {
   const [currentView, setCurrentView] = useState<'guide' | 'interview' | 'dashboard' | 'learning-hub'>('guide');
   const [currentLessonId, setCurrentLessonId] = useState<string | null>(null);
   const [isContinuousGuide, setIsContinuousGuide] = useState<boolean>(false);
+  const [isFocusMode, setIsFocusMode] = useState<boolean>(false);
   const [isAuthModalOpen, setIsAuthModalOpen] = useState(false);
   const [isLanguagesModalOpen, setIsLanguagesModalOpen] = useState(false);
   const [isShortcutsModalOpen, setIsShortcutsModalOpen] = useState(false);
@@ -56,6 +58,18 @@ export default function App() {
     setTimeout(() => {
       setShortcutToast((prev) => (prev === msg ? null : prev));
     }, 2200);
+  };
+
+  const handleToggleFocusMode = (explicitValue?: boolean) => {
+    setIsFocusMode((prev) => {
+      const next = typeof explicitValue === 'boolean' ? explicitValue : !prev;
+      showShortcutToast(
+        next 
+          ? (lang === 'te' ? 'ఫోకస్ మోడ్: సక్రియం (అంతరాయం లేని పఠనం)' : lang === 'hi' ? 'फोकस मोड: सक्रिय (एकाग्र अध्ययन)' : lang === 'hyd' || lang === 'ur' ? 'Focus Mode: Shuru ho gaya' : 'Focus Mode: Active (Distraction-Free Reading)')
+          : (lang === 'te' ? 'ఫోకస్ మోడ్: నిష్క్రమించారు' : lang === 'hi' ? 'फोकस मोड: बंद किया गया' : lang === 'hyd' || lang === 'ur' ? 'Focus Mode: Band ho gaya' : 'Focus Mode: Deactivated (Full Navigation)')
+      );
+      return next;
+    });
   };
 
   const handleNextLesson = () => {
@@ -157,6 +171,7 @@ export default function App() {
     onOpenSearch: () => window.dispatchEvent(new CustomEvent('clay_open_search')),
     onOpenLanguages: () => setIsLanguagesModalOpen(true),
     onOpenOffline: () => setIsOfflineModalOpen(true),
+    onToggleFocusMode: () => handleToggleFocusMode(),
     onSwitchView: (v) => {
       setCurrentView(v);
       if (v === 'guide') setCurrentLessonId(null);
@@ -173,7 +188,8 @@ export default function App() {
     onPrevLesson: handlePrevLesson,
     onNextLesson: handleNextLesson,
     onSaveBookmark: handleSaveBookmark,
-    isLessonActive: currentLessonId !== null
+    isLessonActive: currentLessonId !== null,
+    isFocusModeActive: isFocusMode
   });
 
   useEffect(() => {
@@ -206,10 +222,19 @@ export default function App() {
       setIsOfflineModalOpen(true);
     };
 
+    const handleToggleFocusEvent = (e: any) => {
+      if (e?.detail && typeof e.detail.active === 'boolean') {
+        handleToggleFocusMode(e.detail.active);
+      } else {
+        handleToggleFocusMode();
+      }
+    };
+
     window.addEventListener('clay_navigate_view' as any, handleNavigateView);
     window.addEventListener('clay_open_lesson' as any, handleOpenLesson);
     window.addEventListener('clay_open_languages_showcase' as any, handleOpenLanguages);
     window.addEventListener('clay_open_offline_manager' as any, handleOpenOfflineManager);
+    window.addEventListener('clay_toggle_focus_mode' as any, handleToggleFocusEvent);
 
     // Smoothly handle hash changes
     const handleHashChange = () => {
@@ -255,6 +280,7 @@ export default function App() {
       window.removeEventListener('clay_open_lesson' as any, handleOpenLesson);
       window.removeEventListener('clay_open_languages_showcase' as any, handleOpenLanguages);
       window.removeEventListener('clay_open_offline_manager' as any, handleOpenOfflineManager);
+      window.removeEventListener('clay_toggle_focus_mode' as any, handleToggleFocusEvent);
       window.removeEventListener('hashchange', handleHashChange);
     };
   }, []);
@@ -285,14 +311,48 @@ export default function App() {
       {/* Persistent Scroll Progress Indicator at the Top of Screen */}
       <ScrollProgressIndicator />
 
-      {/* Translucent Navigation Layer */}
-      <FloatingNav />
+      {/* Fullscreen Focus Lockdown & Anti-Distraction Manager */}
+      <FocusLockdownManager
+        isActive={isFocusMode}
+        onExit={() => handleToggleFocusMode(false)}
+        currentLessonId={currentLessonId || undefined}
+        currentLessonTitle={
+          currentLessonId 
+            ? (LESSON_MODULES.find(m => m.id === currentLessonId)?.titleEn || "Clayverse AI Lesson")
+            : "Clayverse AI Study Session"
+        }
+      />
 
-      {/* Offline Status & Reconnection Banner */}
-      <div className="pt-16">
-        <OfflineStatusBanner onOpenOfflineManager={() => setIsOfflineModalOpen(true)} />
-        <GuestModeBanner onOpenAuth={() => setIsAuthModalOpen(true)} />
-      </div>
+      {/* Translucent Navigation Layer (Hidden in Focus Mode) */}
+      <AnimatePresence>
+        {!isFocusMode && (
+          <motion.div
+            initial={{ opacity: 0, y: -25 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -25 }}
+            transition={{ duration: 0.22 }}
+            className="relative z-50"
+          >
+            <FloatingNav />
+          </motion.div>
+        )}
+      </AnimatePresence>
+
+      {/* Offline Status & Reconnection Banner (Hidden in Focus Mode) */}
+      <AnimatePresence>
+        {!isFocusMode && (
+          <motion.div
+            initial={{ opacity: 0, height: 0 }}
+            animate={{ opacity: 1, height: 'auto' }}
+            exit={{ opacity: 0, height: 0 }}
+            transition={{ duration: 0.22 }}
+            className="pt-16"
+          >
+            <OfflineStatusBanner onOpenOfflineManager={() => setIsOfflineModalOpen(true)} />
+            <GuestModeBanner onOpenAuth={() => setIsAuthModalOpen(true)} />
+          </motion.div>
+        )}
+      </AnimatePresence>
 
       {/* First-Visit Multilingual Onboarding Modal */}
       <OnboardingModal />
@@ -315,20 +375,22 @@ export default function App() {
         onClose={() => setIsShortcutsModalOpen(false)}
       />
 
-      {/* Floating Keyboard Shortcuts Trigger Badge */}
-      <div className="fixed bottom-4 left-4 z-40 hidden sm:block">
-        <button
-          onClick={() => setIsShortcutsModalOpen(true)}
-          className="flex items-center gap-2 px-3 py-1.5 rounded-xl bg-white/90 dark:bg-zinc-900/90 hover:bg-white dark:hover:bg-zinc-800 border border-black/10 dark:border-white/10 text-brand-slate hover:text-brand-charcoal text-xs font-semibold shadow-md hover:shadow-lg transition-all cursor-pointer backdrop-blur-md group"
-          title="Press '?' on your keyboard to view all navigation shortcuts"
-        >
-          <Keyboard className="w-3.5 h-3.5 text-brand-amber group-hover:scale-110 transition-transform" />
-          <span className="text-[11px] font-medium">Shortcuts</span>
-          <kbd className="px-1.5 py-0.5 font-mono text-[10px] font-bold bg-black/5 dark:bg-white/5 border border-black/10 dark:border-white/10 rounded">
-            ?
-          </kbd>
-        </button>
-      </div>
+      {/* Floating Keyboard Shortcuts Trigger Badge (Hidden in Focus Mode) */}
+      {!isFocusMode && (
+        <div className="fixed bottom-4 left-4 z-40 hidden sm:block">
+          <button
+            onClick={() => setIsShortcutsModalOpen(true)}
+            className="flex items-center gap-2 px-3 py-1.5 rounded-xl bg-white/90 dark:bg-zinc-900/90 hover:bg-white dark:hover:bg-zinc-800 border border-black/10 dark:border-white/10 text-brand-slate hover:text-brand-charcoal text-xs font-semibold shadow-md hover:shadow-lg transition-all cursor-pointer backdrop-blur-md group"
+            title="Press '?' on your keyboard to view all navigation shortcuts"
+          >
+            <Keyboard className="w-3.5 h-3.5 text-brand-amber group-hover:scale-110 transition-transform" />
+            <span className="text-[11px] font-medium">Shortcuts</span>
+            <kbd className="px-1.5 py-0.5 font-mono text-[10px] font-bold bg-black/5 dark:bg-white/5 border border-black/10 dark:border-white/10 rounded">
+              ?
+            </kbd>
+          </button>
+        </div>
+      )}
 
       {/* Keyboard Action Toast Feedback */}
       <AnimatePresence>
@@ -349,8 +411,12 @@ export default function App() {
       {/* Global Auth / Profile Modal */}
       <AuthModal isOpen={isAuthModalOpen} onClose={() => setIsAuthModalOpen(false)} />
 
-      {/* Floating Action Controls Stack (Back to Top, Clay Audio Hub, and Language Selector in One Vertical Line) */}
-      <FloatingLanguageBubble showAudioHub={currentView === 'guide' || currentView === 'learning-hub'} />
+      {/* Floating Action Controls Stack (Back to Top, Clay Audio Hub, Focus Mode Toggle, and Language Selector in One Vertical Line) */}
+      <FloatingLanguageBubble 
+        showAudioHub={currentView === 'guide' || currentView === 'learning-hub'}
+        isFocusMode={isFocusMode}
+        onToggleFocusMode={() => handleToggleFocusMode()}
+      />
 
       {/* Main Content Area: Switch between Guide, Learning Hub, Mock Interviewer, and Student Dashboard */}
       {currentView === 'interview' && (
@@ -424,6 +490,8 @@ export default function App() {
                 setCurrentLessonId(newId);
                 window.scrollTo({ top: 0, behavior: 'smooth' });
               }}
+              isFocusMode={isFocusMode}
+              onToggleFocusMode={() => handleToggleFocusMode()}
             />
           ) : isContinuousGuide ? (
             /* 2. Full Continuous Guide Mode */
@@ -567,113 +635,123 @@ export default function App() {
         </>
       )}
 
-      {/* Editorial Journal Styled Footer */}
-      <footer className="bg-brand-sand/50 border-t border-brand-slate/10 py-16 relative z-10 text-left">
-        <div className="max-w-5xl mx-auto px-6 grid grid-cols-1 md:grid-cols-12 gap-8 items-start">
-          <div className="md:col-span-5 flex flex-col gap-3 text-left">
-            <div className="flex items-center gap-2 font-display text-lg font-bold text-brand-charcoal justify-start">
-              <ClayLogo size={28} />
-              <span>CLAYVERSE <span className="text-brand-amber font-extrabold">AI</span></span>
-            </div>
-            <p className="text-xs text-brand-muted leading-relaxed max-w-sm text-left">
-              {lang === 'en' 
-                ? "An interactive, beginner-safe editorial journal dedicated to demystifying modern artificial intelligence, machine learning structures, and generative algorithms through clean visual logic."
-                : lang === 'te'
-                ? "కృత్రిమ మేధస్సు (AI), మెషిన్ లెర్నింగ్, మరియు జనరేటివ్ అల్గారిథమ్‌లను గణితం మరియు కష్టమైన పదాలు లేకుండా దృశ్య రూపంలో సులభంగా వివరించే సరళమైన ఇంటరాక్టివ్ గైడ్."
-                : "Miya, ye ek interactive aur boht aasan editorial journal hai jo modern AI, machine learning, aur generative systems ko boht saaf aur asaan zubaan mein samjhati hai."
-              }
-            </p>
-          </div>
+      {/* Editorial Journal Styled Footer (Hidden in Focus Mode) */}
+      <AnimatePresence>
+        {!isFocusMode && (
+          <motion.footer 
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: 20 }}
+            transition={{ duration: 0.2 }}
+            className="bg-brand-sand/50 border-t border-brand-slate/10 py-16 relative z-10 text-left"
+          >
+            <div className="max-w-5xl mx-auto px-6 grid grid-cols-1 md:grid-cols-12 gap-8 items-start">
+              <div className="md:col-span-5 flex flex-col gap-3 text-left">
+                <div className="flex items-center gap-2 font-display text-lg font-bold text-brand-charcoal justify-start">
+                  <ClayLogo size={28} />
+                  <span>CLAYVERSE <span className="text-brand-amber font-extrabold">AI</span></span>
+                </div>
+                <p className="text-xs text-brand-muted leading-relaxed max-w-sm text-left">
+                  {lang === 'en' 
+                    ? "An interactive, beginner-safe editorial journal dedicated to demystifying modern artificial intelligence, machine learning structures, and generative algorithms through clean visual logic."
+                    : lang === 'te'
+                    ? "కృత్రిమ మేధస్సు (AI), మెషిన్ లెర్నింగ్, మరియు జనరేటివ్ అల్గారిథమ్‌లను గణితం మరియు కష్టమైన పదాలు లేకుండా దృశ్య రూపంలో సులభంగా వివరించే సరళమైన ఇంటరాక్టివ్ గైడ్."
+                    : "Miya, ye ek interactive aur boht aasan editorial journal hai jo modern AI, machine learning, aur generative systems ko boht saaf aur asaan zubaan mein samjhati hai."
+                  }
+                </p>
+              </div>
 
-          <div className="md:col-span-7 grid grid-cols-2 sm:grid-cols-3 gap-6 text-left">
-            <div>
-              <h5 className="font-mono text-[10px] font-bold text-brand-amber uppercase tracking-wider mb-3">
-                {lang === 'en' ? "Individual Lessons" : lang === 'te' ? "పాఠ్యాంశాలు" : "AI Asbaaq"}
-              </h5>
-              <ul className="flex flex-col gap-2 text-xs font-medium text-brand-muted text-left">
-                <li>
-                  <button onClick={() => { setCurrentView('guide'); setCurrentLessonId('what-is-ai'); window.scrollTo({ top: 0, behavior: 'smooth' }); }} className="hover:text-brand-amber transition-colors text-left cursor-pointer">
-                    {lang === 'en' ? "1. What is AI?" : "1. Shuruati Baatein"}
-                  </button>
-                </li>
-                <li>
-                  <button onClick={() => { setCurrentView('guide'); setCurrentLessonId('family-tree'); window.scrollTo({ top: 0, behavior: 'smooth' }); }} className="hover:text-brand-amber transition-colors text-left cursor-pointer">
-                    {lang === 'en' ? "2. The Family Tree" : "2. Khandan ka Tree"}
-                  </button>
-                </li>
-                <li>
-                  <button onClick={() => { setCurrentView('guide'); setCurrentLessonId('prompting-rag'); window.scrollTo({ top: 0, behavior: 'smooth' }); }} className="hover:text-brand-amber transition-colors text-left cursor-pointer">
-                    {lang === 'en' ? "3. Prompting & RAG" : "3. Prompting aur RAG"}
-                  </button>
-                </li>
-                <li>
-                  <button onClick={() => { setCurrentView('guide'); setCurrentLessonId('deeper'); window.scrollTo({ top: 0, behavior: 'smooth' }); }} className="hover:text-brand-amber transition-colors text-left cursor-pointer">
-                    {lang === 'en' ? "4. 12 Core Concepts" : "4. Gehra Glossary"}
-                  </button>
-                </li>
-              </ul>
-            </div>
+              <div className="md:col-span-7 grid grid-cols-2 sm:grid-cols-3 gap-6 text-left">
+                <div>
+                  <h5 className="font-mono text-[10px] font-bold text-brand-amber uppercase tracking-wider mb-3">
+                    {lang === 'en' ? "Individual Lessons" : lang === 'te' ? "పాఠ్యాంశాలు" : "AI Asbaaq"}
+                  </h5>
+                  <ul className="flex flex-col gap-2 text-xs font-medium text-brand-muted text-left">
+                    <li>
+                      <button onClick={() => { setCurrentView('guide'); setCurrentLessonId('what-is-ai'); window.scrollTo({ top: 0, behavior: 'smooth' }); }} className="hover:text-brand-amber transition-colors text-left cursor-pointer">
+                        {lang === 'en' ? "1. What is AI?" : "1. Shuruati Baatein"}
+                      </button>
+                    </li>
+                    <li>
+                      <button onClick={() => { setCurrentView('guide'); setCurrentLessonId('family-tree'); window.scrollTo({ top: 0, behavior: 'smooth' }); }} className="hover:text-brand-amber transition-colors text-left cursor-pointer">
+                        {lang === 'en' ? "2. The Family Tree" : "2. Khandan ka Tree"}
+                      </button>
+                    </li>
+                    <li>
+                      <button onClick={() => { setCurrentView('guide'); setCurrentLessonId('prompting-rag'); window.scrollTo({ top: 0, behavior: 'smooth' }); }} className="hover:text-brand-amber transition-colors text-left cursor-pointer">
+                        {lang === 'en' ? "3. Prompting & RAG" : "3. Prompting aur RAG"}
+                      </button>
+                    </li>
+                    <li>
+                      <button onClick={() => { setCurrentView('guide'); setCurrentLessonId('deeper'); window.scrollTo({ top: 0, behavior: 'smooth' }); }} className="hover:text-brand-amber transition-colors text-left cursor-pointer">
+                        {lang === 'en' ? "4. 12 Core Concepts" : "4. Gehra Glossary"}
+                      </button>
+                    </li>
+                  </ul>
+                </div>
 
-            <div>
-              <h5 className="font-mono text-[10px] font-bold text-brand-amber uppercase tracking-wider mb-3">
-                {lang === 'en' ? "Interactive Hub" : lang === 'te' ? "ముఖ్య అంశాలు" : "Interactive Apps"}
-              </h5>
-              <ul className="flex flex-col gap-2 text-xs font-medium text-brand-muted text-left">
-                <li>
-                  <button onClick={() => { setCurrentView('learning-hub'); window.scrollTo({ top: 0, behavior: 'smooth' }); }} className="hover:text-brand-amber transition-colors text-left cursor-pointer font-bold text-brand-charcoal flex items-center gap-1">
-                    <GraduationCap className="w-3.5 h-3.5 text-brand-amber" />
-                    <span>Learning Hub (All 9)</span>
-                  </button>
-                </li>
-                <li>
-                  <button onClick={() => { setCurrentView('guide'); setCurrentLessonId('flashcards'); window.scrollTo({ top: 0, behavior: 'smooth' }); }} className="hover:text-brand-amber transition-colors text-left cursor-pointer">
-                    Memory Flashcards
-                  </button>
-                </li>
-                <li>
-                  <button onClick={() => { setCurrentView('guide'); setCurrentLessonId('classroom-hub'); window.scrollTo({ top: 0, behavior: 'smooth' }); }} className="hover:text-brand-amber transition-colors text-left cursor-pointer">
-                    Classroom Hub
-                  </button>
-                </li>
-                <li>
-                  <button onClick={() => { setCurrentView('guide'); setCurrentLessonId('arena'); window.scrollTo({ top: 0, behavior: 'smooth' }); }} className="hover:text-brand-amber transition-colors text-left cursor-pointer">
-                    AI Arena & Quizzes
-                  </button>
-                </li>
-                <li>
-                  <button onClick={() => { setCurrentView('interview'); window.scrollTo({ top: 0, behavior: 'smooth' }); }} className="hover:text-brand-amber transition-colors text-left cursor-pointer">
-                    AI Mock Interviewer
-                  </button>
-                </li>
-              </ul>
-            </div>
+                <div>
+                  <h5 className="font-mono text-[10px] font-bold text-brand-amber uppercase tracking-wider mb-3">
+                    {lang === 'en' ? "Interactive Hub" : lang === 'te' ? "ముఖ్య అంశాలు" : "Interactive Apps"}
+                  </h5>
+                  <ul className="flex flex-col gap-2 text-xs font-medium text-brand-muted text-left">
+                    <li>
+                      <button onClick={() => { setCurrentView('learning-hub'); window.scrollTo({ top: 0, behavior: 'smooth' }); }} className="hover:text-brand-amber transition-colors text-left cursor-pointer font-bold text-brand-charcoal flex items-center gap-1">
+                        <GraduationCap className="w-3.5 h-3.5 text-brand-amber" />
+                        <span>Learning Hub (All 9)</span>
+                      </button>
+                    </li>
+                    <li>
+                      <button onClick={() => { setCurrentView('guide'); setCurrentLessonId('flashcards'); window.scrollTo({ top: 0, behavior: 'smooth' }); }} className="hover:text-brand-amber transition-colors text-left cursor-pointer">
+                        Memory Flashcards
+                      </button>
+                    </li>
+                    <li>
+                      <button onClick={() => { setCurrentView('guide'); setCurrentLessonId('classroom-hub'); window.scrollTo({ top: 0, behavior: 'smooth' }); }} className="hover:text-brand-amber transition-colors text-left cursor-pointer">
+                        Classroom Hub
+                      </button>
+                    </li>
+                    <li>
+                      <button onClick={() => { setCurrentView('guide'); setCurrentLessonId('arena'); window.scrollTo({ top: 0, behavior: 'smooth' }); }} className="hover:text-brand-amber transition-colors text-left cursor-pointer">
+                        AI Arena & Quizzes
+                      </button>
+                    </li>
+                    <li>
+                      <button onClick={() => { setCurrentView('interview'); window.scrollTo({ top: 0, behavior: 'smooth' }); }} className="hover:text-brand-amber transition-colors text-left cursor-pointer">
+                        AI Mock Interviewer
+                      </button>
+                    </li>
+                  </ul>
+                </div>
 
-            <div className="col-span-2 sm:col-span-1 text-left">
-              <h5 className="font-mono text-[10px] font-bold text-brand-amber uppercase tracking-wider mb-3">
-                {lang === 'en' ? "Journal Ethos" : lang === 'te' ? "విశేషాలు" : "Khaas Baatein"}
-              </h5>
-              <div className="flex flex-col gap-2 text-xs text-brand-muted text-left">
-                <span className="flex items-center gap-1 justify-start">
-                  <Sparkles className="w-3 h-3 text-brand-amber shrink-0" />
-                  <span>Tactile HUD v1.0</span>
-                </span>
-                <span className="flex items-center gap-1 justify-start">
-                  <BookOpen className="w-3 h-3 text-brand-slate shrink-0" />
-                  <span>{lang === 'en' ? "100% Beginner-Safe" : lang === 'te' ? "ప్రారంభకులకు 100% అనుకూలం" : "Naye Seekhne Walo ke liye"}</span>
-                </span>
+                <div className="col-span-2 sm:col-span-1 text-left">
+                  <h5 className="font-mono text-[10px] font-bold text-brand-amber uppercase tracking-wider mb-3">
+                    {lang === 'en' ? "Journal Ethos" : lang === 'te' ? "విశేషాలు" : "Khaas Baatein"}
+                  </h5>
+                  <div className="flex flex-col gap-2 text-xs text-brand-muted text-left">
+                    <span className="flex items-center gap-1 justify-start">
+                      <Sparkles className="w-3.5 h-3.5 text-brand-amber shrink-0" />
+                      <span>Tactile HUD v1.0</span>
+                    </span>
+                    <span className="flex items-center gap-1 justify-start">
+                      <BookOpen className="w-3.5 h-3.5 text-brand-slate shrink-0" />
+                      <span>{lang === 'en' ? "100% Beginner-Safe" : lang === 'te' ? "ప్రారంభకులకు 100% అనుకూలం" : "Naye Seekhne Walo ke liye"}</span>
+                    </span>
+                  </div>
+                </div>
               </div>
             </div>
-          </div>
-        </div>
 
-        <div className="max-w-5xl mx-auto px-6 mt-12 pt-6 border-t border-brand-slate/5 flex flex-col sm:flex-row justify-between items-center gap-4 text-[11px] text-brand-muted">
-          <span>© 2026 Clayverse AI. By Syed Shahnawaz.</span>
-          <div className="flex gap-4">
-            <span className="hover:text-brand-amber transition-colors cursor-pointer">{lang === 'en' ? "Editorial Policies" : lang === 'te' ? "విధానాలు" : "Khaas Policies"}</span>
-            <span className="hover:text-brand-amber transition-colors cursor-pointer">{lang === 'en' ? "Privacy Principles" : lang === 'te' ? "గోప్యతా సూత్రాలు" : "Privacy ke Rules"}</span>
-          </div>
-        </div>
-      </footer>
+            <div className="max-w-5xl mx-auto px-6 mt-12 pt-6 border-t border-brand-slate/5 flex flex-col sm:flex-row justify-between items-center gap-4 text-[11px] text-brand-muted">
+              <span>© 2026 Clayverse AI. By Syed Shahnawaz.</span>
+              <div className="flex gap-4">
+                <span className="hover:text-brand-amber transition-colors cursor-pointer">{lang === 'en' ? "Editorial Policies" : lang === 'te' ? "విధానాలు" : "Khaas Policies"}</span>
+                <span className="hover:text-brand-amber transition-colors cursor-pointer">{lang === 'en' ? "Privacy Principles" : lang === 'te' ? "గోప్యతా సూత్రాలు" : "Privacy ke Rules"}</span>
+              </div>
+            </div>
+          </motion.footer>
+        )}
+      </AnimatePresence>
     </div>
   );
 }

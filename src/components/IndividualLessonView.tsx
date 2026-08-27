@@ -23,7 +23,9 @@ import {
   Download,
   FileText,
   Trophy,
-  PartyPopper
+  PartyPopper,
+  Focus,
+  Minimize2
 } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
 import { useLanguage } from '../hooks/useLanguage';
@@ -115,12 +117,16 @@ interface IndividualLessonViewProps {
   lessonId: string;
   onBackToHome: () => void;
   onSelectLesson: (id: string) => void;
+  isFocusMode?: boolean;
+  onToggleFocusMode?: () => void;
 }
 
 export default function IndividualLessonView({
   lessonId,
   onBackToHome,
-  onSelectLesson
+  onSelectLesson,
+  isFocusMode = false,
+  onToggleFocusMode
 }: IndividualLessonViewProps) {
   const { lang } = useLanguage();
 
@@ -216,12 +222,20 @@ export default function IndividualLessonView({
   const activeIndex = Math.max(0, subTopics.findIndex(t => t.id === activeSubTopicId));
   const activeSubTopic = subTopics[activeIndex] || subTopics[0];
 
+  const handleFocusModeClick = () => {
+    if (onToggleFocusMode) {
+      onToggleFocusMode();
+    } else {
+      window.dispatchEvent(new CustomEvent('clay_toggle_focus_mode'));
+    }
+  };
+
   return (
-    <div className="min-h-screen pt-16 pb-20 text-left">
+    <div className={`min-h-screen ${isFocusMode ? 'pt-3' : 'pt-16'} pb-20 text-left transition-all`}>
       {/* 1. Sticky Sub-Topic Progress Navigation Bar */}
       <nav 
         aria-label="Sub-topic navigation"
-        className="sticky top-14 sm:top-16 z-30 bg-white/90 backdrop-blur-md border-b border-brand-slate/15 shadow-xs transition-all"
+        className={`sticky ${isFocusMode ? 'top-0' : 'top-14 sm:top-16'} z-30 bg-white/90 backdrop-blur-md border-b border-brand-slate/15 shadow-xs transition-all`}
       >
         <div className="max-w-7xl mx-auto px-4 sm:px-6 py-2.5 flex items-center justify-between gap-3">
           {/* Left: Current Lesson & Subtopic Indicator */}
@@ -257,7 +271,7 @@ export default function IndividualLessonView({
             </div>
           </div>
 
-          {/* Center / Right: Subtopic Pills & Mobile Drawer Trigger */}
+          {/* Center / Right: Subtopic Pills, Focus Mode & Mobile Drawer Trigger */}
           <div className="flex items-center gap-2 shrink-0">
             {/* Desktop Horizontal Sub-Topic Pills */}
             <div className="hidden lg:flex items-center gap-1">
@@ -339,8 +353,22 @@ export default function IndividualLessonView({
               </AnimatePresence>
             </div>
 
-            {/* Quick Next/Prev Subtopic Buttons */}
-            <div className="flex items-center gap-0.5 border-l border-brand-slate/15 pl-2">
+            {/* Quick Focus Mode & Next/Prev Subtopic Buttons */}
+            <div className="flex items-center gap-1 border-l border-brand-slate/15 pl-2">
+              <button
+                onClick={handleFocusModeClick}
+                className={`p-1.5 rounded-lg text-xs font-bold transition-all cursor-pointer flex items-center gap-1 ${
+                  isFocusMode
+                    ? 'bg-amber-500 text-white shadow-xs'
+                    : 'text-brand-slate hover:text-brand-charcoal hover:bg-brand-sand'
+                }`}
+                title={isFocusMode ? "Exit Focus Mode (F or Esc)" : "Enter Focus Mode (F)"}
+                aria-label="Toggle Focus Mode"
+              >
+                {isFocusMode ? <Minimize2 className="w-3.5 h-3.5" /> : <Focus className="w-3.5 h-3.5" />}
+                <span className="hidden sm:inline text-[11px] font-mono">{isFocusMode ? 'Focus ON' : 'Focus'}</span>
+              </button>
+
               <button
                 disabled={activeIndex === 0}
                 onClick={() => scrollToSubTopic(subTopics[activeIndex - 1].id)}

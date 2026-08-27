@@ -7,6 +7,7 @@ interface KeyboardShortcutOptions {
   onOpenSearch?: () => void;
   onOpenLanguages?: () => void;
   onOpenOffline?: () => void;
+  onToggleFocusMode?: () => void;
   onSwitchView?: (view: 'guide' | 'interview' | 'dashboard' | 'learning-hub') => void;
   onCycleTheme?: () => void;
   onToggleAudio?: () => void;
@@ -15,6 +16,7 @@ interface KeyboardShortcutOptions {
   onNextLesson?: () => void;
   onSaveBookmark?: () => void;
   isLessonActive?: boolean;
+  isFocusModeActive?: boolean;
 }
 
 export function useGlobalKeyboardShortcuts({
@@ -24,6 +26,7 @@ export function useGlobalKeyboardShortcuts({
   onOpenSearch,
   onOpenLanguages,
   onOpenOffline,
+  onToggleFocusMode,
   onSwitchView,
   onCycleTheme,
   onToggleAudio,
@@ -31,7 +34,8 @@ export function useGlobalKeyboardShortcuts({
   onPrevLesson,
   onNextLesson,
   onSaveBookmark,
-  isLessonActive
+  isLessonActive,
+  isFocusModeActive
 }: KeyboardShortcutOptions) {
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
@@ -52,6 +56,12 @@ export function useGlobalKeyboardShortcuts({
         const closed = onCloseModals?.();
         if (closed) {
           e.preventDefault();
+          return;
+        }
+        // If focus mode is active, exit focus mode on escape
+        if (isFocusModeActive && onToggleFocusMode) {
+          e.preventDefault();
+          onToggleFocusMode();
           return;
         }
         // If no modal was closed and we are in a lesson, return to home
@@ -153,6 +163,13 @@ export function useGlobalKeyboardShortcuts({
         return;
       }
 
+      // 10b. Focus Mode Toggle ('f' / 'F')
+      if (e.key.toLowerCase() === 'f') {
+        e.preventDefault();
+        onToggleFocusMode?.();
+        return;
+      }
+
       // 11. Bookmark ('b' / 'B')
       if (e.key.toLowerCase() === 'b') {
         e.preventDefault();
@@ -184,6 +201,7 @@ export function useGlobalKeyboardShortcuts({
     onOpenSearch,
     onOpenLanguages,
     onOpenOffline,
+    onToggleFocusMode,
     onSwitchView,
     onCycleTheme,
     onToggleAudio,
@@ -191,6 +209,7 @@ export function useGlobalKeyboardShortcuts({
     onPrevLesson,
     onNextLesson,
     onSaveBookmark,
-    isLessonActive
+    isLessonActive,
+    isFocusModeActive
   ]);
 }

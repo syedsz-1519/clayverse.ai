@@ -15,7 +15,10 @@ import {
   Compass,
   Info,
   CheckCircle2,
-  ArrowUp
+  ArrowUp,
+  Focus,
+  Minimize2,
+  Maximize2
 } from 'lucide-react';
 
 export interface IndianLanguageItem {
@@ -377,15 +380,29 @@ export const ALL_INDIAN_LANGUAGES: IndianLanguageItem[] = [
 
 interface FloatingLanguageBubbleProps {
   showAudioHub?: boolean;
+  isFocusMode?: boolean;
+  onToggleFocusMode?: () => void;
 }
 
-export default function FloatingLanguageBubble({ showAudioHub = true }: FloatingLanguageBubbleProps) {
+export default function FloatingLanguageBubble({ 
+  showAudioHub = true,
+  isFocusMode = false,
+  onToggleFocusMode
+}: FloatingLanguageBubbleProps) {
   const { lang, setLang } = useLanguage();
   const [showMenu, setShowMenu] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
   const [activeCategory, setActiveCategory] = useState<'all' | 'live' | 'southern' | 'northern' | 'classical_tribal'>('all');
   const [notificationToast, setNotificationToast] = useState<string | null>(null);
   const [showBackToTop, setShowBackToTop] = useState<boolean>(false);
+
+  const handleFocusClick = () => {
+    if (onToggleFocusMode) {
+      onToggleFocusMode();
+    } else {
+      window.dispatchEvent(new CustomEvent('clay_toggle_focus_mode'));
+    }
+  };
 
   // Monitor scroll position to display Back to Top button
   useEffect(() => {
@@ -522,7 +539,40 @@ export default function FloatingLanguageBubble({ showAudioHub = true }: Floating
           <AudioNarrationHub embeddedInStack={true} />
         )}
 
-        {/* 3. Floating Language Change Toggle (Bottom of the vertical stack) */}
+        {/* 3. Floating Focus Mode Toggle (Vertically directly above the Language Change Toggle) */}
+        <motion.button
+          onClick={handleFocusClick}
+          whileHover={{ scale: 1.08, y: -2 }}
+          whileTap={{ scale: 0.94 }}
+          className={`pointer-events-auto w-12 h-12 rounded-full flex items-center justify-center shadow-lg transition-all cursor-pointer relative group backdrop-blur-md ${
+            isFocusMode
+              ? 'bg-amber-500 hover:bg-amber-600 text-white border-2 border-white ring-4 ring-amber-500/25 shadow-amber-500/30'
+              : 'bg-white hover:bg-brand-sand/50 text-brand-charcoal hover:text-brand-amber border-2 border-brand-charcoal/15'
+          }`}
+          title={
+            isFocusMode
+              ? (lang === 'te' ? 'ఫోకస్ మోడ్ నుండి నిష్క్రమించు (F లేదా Esc నొక్కండి)' : lang === 'hi' ? 'फोकस मोड से बाहर निकलें (F या Esc दबाएं)' : lang === 'hyd' || lang === 'ur' ? 'Focus Mode se bahar ayein (F ya Esc dabayein)' : 'Exit Focus Mode (Press F or Esc)')
+              : (lang === 'te' ? 'ఫోకస్ మోడ్: నావిగేషన్ & ఫుటర్ దాచండి (F నొక్కండి)' : lang === 'hi' ? 'फोकस मोड: नेविगेशन और फुटर छुपाएं (F दबाएं)' : lang === 'hyd' || lang === 'ur' ? 'Focus Mode: Navigation aur footer chupayein (F dabayein)' : 'Focus Mode: Hide navigation & footer for distraction-free reading (Press F)')
+          }
+          aria-label={isFocusMode ? "Exit Focus Mode" : "Enter Focus Mode"}
+        >
+          {isFocusMode ? (
+            <Minimize2 className="w-5 h-5 animate-pulse" />
+          ) : (
+            <Focus className="w-5 h-5 group-hover:rotate-45 transition-transform duration-300" />
+          )}
+
+          {/* Quick Tag Badge */}
+          <span className={`absolute -top-1.5 -right-1.5 text-[8px] font-extrabold px-1.5 py-0.5 rounded-full border shadow-xs font-mono uppercase tracking-tighter transition-all ${
+            isFocusMode 
+              ? 'bg-emerald-600 text-white border-white' 
+              : 'bg-brand-charcoal text-white border-white/80'
+          }`}>
+            {isFocusMode ? 'ON' : 'ZEN'}
+          </span>
+        </motion.button>
+
+        {/* 4. Floating Language Change Toggle (Bottom of the vertical stack) */}
         <div className="pointer-events-auto flex items-center gap-3 relative">
           
           {/* Categorized Indian Languages Modal / Dropdown Menu */}

@@ -98,6 +98,12 @@ const SHORTCUTS: ShortcutItem[] = [
     category: 'actions'
   },
   {
+    keys: ['F'],
+    descriptionEn: 'Toggle Focus Mode (Distraction-Free Reading)',
+    descriptionHyd: 'Focus Mode chalu ya band karein (Pur-sukoon mutalaa)',
+    category: 'actions'
+  },
+  {
     keys: ['T'],
     descriptionEn: 'Cycle Theme Palette (Sand / Deep Blue / Deep Night / Red Light)',
     descriptionHyd: 'Themes tabdeel karein (Sand, Deep Blue, Deep Night, Red Light)',
