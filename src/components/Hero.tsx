@@ -201,6 +201,44 @@ export default function Hero() {
           </div>
         </motion.div>
 
+        {/* Clear Action CTA Hierarchy */}
+        <motion.div
+          initial={{ opacity: 0, y: 12 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.65, duration: 0.5 }}
+          className="flex flex-wrap items-center justify-center gap-3 mb-8"
+        >
+          <button
+            onClick={() => {
+              const el = document.getElementById('curriculum-grid') || document.getElementById('what-is-ai');
+              if (el) el.scrollIntoView({ behavior: 'smooth' });
+              else window.dispatchEvent(new CustomEvent('clay_open_lesson', { detail: 'what-is-ai' }));
+            }}
+            className="px-6 py-3 rounded-xl bg-brand-amber hover:bg-brand-amber-dark text-white font-bold text-sm shadow-md hover:shadow-lg transition-all flex items-center gap-2 hover:scale-[1.02] cursor-pointer"
+          >
+            <span>{lang === 'te' ? 'ఉచిత ప్రయాణం ప్రారంభించండి' : lang === 'hi' ? 'सीखना शुरू करें (100% Free)' : 'Begin Journey (Free)'}</span>
+            <ArrowDown className="w-4 h-4" />
+          </button>
+
+          <button
+            onClick={() => {
+              window.dispatchEvent(new CustomEvent('clay_open_languages_showcase'));
+            }}
+            className="px-5 py-3 rounded-xl bg-white dark:bg-zinc-800 hover:bg-brand-sand/40 border border-black/10 dark:border-white/10 text-brand-charcoal font-semibold text-sm shadow-xs hover:border-brand-amber/40 transition-all flex items-center gap-2 cursor-pointer"
+          >
+            <span>{lang === 'te' ? '25+ భారతీయ భాషలు' : lang === 'hi' ? '25+ भारतीय भाषाएं' : '25+ Indian Languages'}</span>
+          </button>
+
+          <button
+            onClick={() => {
+              window.dispatchEvent(new CustomEvent('clay_open_lesson', { detail: 'prompting-rag' }));
+            }}
+            className="px-5 py-3 rounded-xl bg-white/70 dark:bg-zinc-800/70 hover:bg-white dark:hover:bg-zinc-800 border border-black/[0.08] dark:border-white/[0.08] text-brand-slate font-medium text-sm transition-all hover:text-brand-amber cursor-pointer"
+          >
+            <span>{lang === 'te' ? 'లైవ్ శాండ్‌బాక్స్' : lang === 'hi' ? 'लाइव सैंडबॉक्स' : 'Interactive Sandboxes'}</span>
+          </button>
+        </motion.div>
+
         {/* Scroll Indicator */}
         <motion.button
           onClick={() => {

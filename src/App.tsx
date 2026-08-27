@@ -22,6 +22,11 @@ import HomeCurriculumGrid from './components/HomeCurriculumGrid';
 import IndividualLessonView from './components/IndividualLessonView';
 import LearningHubPage from './components/LearningHubPage';
 import SocialShareSection from './components/SocialShareSection';
+import TrustSignals from './components/TrustSignals';
+import ValueProps from './components/ValueProps';
+import LanguagesShowcase from './components/LanguagesShowcase';
+import OnboardingModal from './components/OnboardingModal';
+import GuestModeBanner from './components/GuestModeBanner';
 import { Compass, Sparkles, BookOpen, Video, TrendingUp, ArrowLeft, LayoutGrid, List, GraduationCap, MessageSquare } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
 import ClayLogo from './components/ClayLogo';
@@ -33,6 +38,7 @@ export default function App() {
   const [currentLessonId, setCurrentLessonId] = useState<string | null>(null);
   const [isContinuousGuide, setIsContinuousGuide] = useState<boolean>(false);
   const [isAuthModalOpen, setIsAuthModalOpen] = useState(false);
+  const [isLanguagesModalOpen, setIsLanguagesModalOpen] = useState(false);
 
   useEffect(() => {
     // Listen to custom navigation events from FloatingNav or subcomponents
@@ -56,14 +62,24 @@ export default function App() {
       }
     };
 
+    const handleOpenLanguages = () => {
+      setIsLanguagesModalOpen(true);
+    };
+
     window.addEventListener('clay_navigate_view' as any, handleNavigateView);
     window.addEventListener('clay_open_lesson' as any, handleOpenLesson);
+    window.addEventListener('clay_open_languages_showcase' as any, handleOpenLanguages);
 
     // Smoothly handle hash changes
     const handleHashChange = () => {
       const hash = window.location.hash;
       if (hash) {
         const targetId = hash.replace('#', '');
+        if (targetId === 'languages' || targetId === 'languages-showcase') {
+          setIsLanguagesModalOpen(true);
+          return;
+        }
+
         if (targetId === 'learning-hub' || targetId === 'hub') {
           setCurrentView('learning-hub');
           window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -91,6 +107,7 @@ export default function App() {
     return () => {
       window.removeEventListener('clay_navigate_view' as any, handleNavigateView);
       window.removeEventListener('clay_open_lesson' as any, handleOpenLesson);
+      window.removeEventListener('clay_open_languages_showcase' as any, handleOpenLanguages);
       window.removeEventListener('hashchange', handleHashChange);
     };
   }, []);
@@ -110,11 +127,33 @@ export default function App() {
 
   return (
     <div className="min-h-screen bg-brand-cream text-brand-charcoal selection:bg-brand-amber/10 selection:text-brand-amber font-sans antialiased overflow-x-hidden">
+      {/* Accessible Skip to Main Content Link */}
+      <a 
+        href="#main-content" 
+        className="sr-only focus:not-sr-only focus:fixed focus:top-3 focus:left-3 focus:z-50 focus:px-4 focus:py-2 focus:bg-brand-amber focus:text-white focus:font-bold focus:rounded-xl focus:shadow-xl"
+      >
+        Skip to main content
+      </a>
+
       {/* Persistent Scroll Progress Indicator at the Top of Screen */}
       <ScrollProgressIndicator />
 
       {/* Translucent Navigation Layer */}
       <FloatingNav />
+
+      {/* Guest Mode Status Banner */}
+      <div className="pt-16">
+        <GuestModeBanner onOpenAuth={() => setIsAuthModalOpen(true)} />
+      </div>
+
+      {/* First-Visit Multilingual Onboarding Modal */}
+      <OnboardingModal />
+
+      {/* 25+ Indian Languages Interactive Showcase Modal */}
+      <LanguagesShowcase 
+        isOpen={isLanguagesModalOpen} 
+        onClose={() => setIsLanguagesModalOpen(false)} 
+      />
 
       {/* Global Auth / Profile Modal */}
       <AuthModal isOpen={isAuthModalOpen} onClose={() => setIsAuthModalOpen(false)} />
@@ -197,7 +236,7 @@ export default function App() {
             />
           ) : isContinuousGuide ? (
             /* 2. Full Continuous Guide Mode */
-            <main className="relative z-10 flex flex-col gap-6 pt-16">
+            <main id="main-content" className="relative z-10 flex flex-col gap-6 pt-16">
               {/* Continuous Mode Banner */}
               <div className="max-w-5xl mx-auto px-6 w-full pt-4 flex items-center justify-between">
                 <button
@@ -218,6 +257,11 @@ export default function App() {
                 <Hero />
               </motion.div>
 
+              {/* Trust Signals: Core Mission Pillars */}
+              <motion.div initial="hidden" whileInView="visible" viewport={{ once: true, margin: "-100px" }} variants={sectionAnimation}>
+                <TrustSignals onOpenLanguages={() => setIsLanguagesModalOpen(true)} />
+              </motion.div>
+
               {/* Layer 2: Foundations */}
               <motion.div initial="hidden" whileInView="visible" viewport={{ once: true, margin: "-100px" }} variants={sectionAnimation}>
                 <WhatIsAI />
@@ -228,6 +272,11 @@ export default function App() {
               {/* Interactive Host: Clay, the AI Explainer Bot */}
               <motion.div initial="hidden" whileInView="visible" viewport={{ once: true, margin: "-100px" }} variants={sectionAnimation}>
                 <ClayExplainer />
+              </motion.div>
+
+              {/* Educational Value Proposition Comparison */}
+              <motion.div initial="hidden" whileInView="visible" viewport={{ once: true, margin: "-100px" }} variants={sectionAnimation}>
+                <ValueProps onOpenLanguages={() => setIsLanguagesModalOpen(true)} />
               </motion.div>
 
               {/* Layer 3: The Family Tree */}
@@ -283,10 +332,15 @@ export default function App() {
             </main>
           ) : (
             /* 3. Streamlined, Highly Professional Modular Home Page */
-            <main className="relative z-10 flex flex-col gap-6">
+            <main id="main-content" className="relative z-10 flex flex-col gap-6">
               {/* Hero: What is Clayverse AI, Ethos & Sensory Tactile Mission */}
               <motion.div initial="hidden" whileInView="visible" viewport={{ once: true, margin: "-100px" }} variants={sectionAnimation}>
                 <Hero />
+              </motion.div>
+
+              {/* Trust Signals: Pillars of Clayverse AI */}
+              <motion.div initial="hidden" whileInView="visible" viewport={{ once: true, margin: "-100px" }} variants={sectionAnimation}>
+                <TrustSignals onOpenLanguages={() => setIsLanguagesModalOpen(true)} />
               </motion.div>
 
               {/* Foundations: What is AI? Intro, Mental Models & 3 Horizons */}
@@ -294,6 +348,11 @@ export default function App() {
                 <WhatIsAI />
                 <QuickTakeaway sectionId="what-is-ai" />
                 <ClayExplainer />
+              </motion.div>
+
+              {/* Value Props: Zero-Math Visual Approach */}
+              <motion.div initial="hidden" whileInView="visible" viewport={{ once: true, margin: "-100px" }} variants={sectionAnimation}>
+                <ValueProps onOpenLanguages={() => setIsLanguagesModalOpen(true)} />
               </motion.div>
 
               {/* Dedicated Curriculum Course Modules Hub */}

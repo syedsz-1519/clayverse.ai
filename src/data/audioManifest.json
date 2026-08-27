@@ -1,0 +1,60 @@
+{
+  "version": "1.0",
+  "generatedAt": "2026-08-26",
+  "languages": {
+    "en": {
+      "name": "English",
+      "voiceLocale": "en-IN",
+      "prompts": {
+        "welcome": "Welcome to Clayverse AI! Let's understand artificial intelligence with zero math and zero jargon.",
+        "what_is_ai": "AI is not magic. It's pattern matching at massive scale.",
+        "streak_cheer": "Awesome job! You've logged your daily learning streak."
+      }
+    },
+    "te": {
+      "name": "Telugu",
+      "voiceLocale": "te-IN",
+      "prompts": {
+        "welcome": "క్లేవర్స్ ఏఐ కి స్వాగతం! ఎటువంటి గణితం లేకుండా సులభంగా ఏఐ నేర్చుకోండి.",
+        "what_is_ai": "ఏఐ అంటే మాయ కాదు. ఇది భారీ స్థాయిలో ప్యాటర్న్ మ్యాచింగ్ మాత్రమే.",
+        "streak_cheer": "అద్భుతం! మీ రోజువారీ అభ్యాస స్ట్రీక్ నమోదైంది."
+      }
+    },
+    "hi": {
+      "name": "Hindi",
+      "voiceLocale": "hi-IN",
+      "prompts": {
+        "welcome": "क्लेवर्स एआई में आपका स्वागत है! बिना किसी गणित के एआई सीखें।",
+        "what_is_ai": "एआई कोई जादू नहीं है। यह बड़े पैमाने पर पैटर्न मिलान है।",
+        "streak_cheer": "बहुत बढ़िया! आपकी दैनिक सीखने की स्ट्रीक सुरक्षित हो गई।"
+      }
+    },
+    "ta": {
+      "name": "Tamil",
+      "voiceLocale": "ta-IN",
+      "prompts": {
+        "welcome": "கிளேவர்ஸ் ஏஐக்கு நல்வரவு! கடினமான கணிதம் இல்லாமல் ஏஐ கற்றுக் கொள்ளுங்கள்.",
+        "what_is_ai": "ஏஐ என்பது மாயாஜாலம் அல்ல. இது பெரிய அளவிலான பேட்டர்ன் பொருத்தம்.",
+        "streak_cheer": "அருமை! இன்றைய கற்றல் ஸ்ட்ரீக் பதிவாகிவிட்டது."
+      }
+    },
+    "bn": {
+      "name": "Bengali",
+      "voiceLocale": "bn-IN",
+      "prompts": {
+        "welcome": "ক্লেভার্স এআই-তে স্বাগতম! কোনো জটিল গণিত ছাড়াই কৃত্রিম বুদ্ধিমত্তা বুঝুন।",
+        "what_is_ai": "এআই কোনো জাদু নয়। এটি বিশাল স্কেলে প্যাটার্ন ম্যাচিং।",
+        "streak_cheer": "দারুণ! আপনার দৈনিক শেখার ধারাবাহিকতা সম্পন্ন হয়েছে।"
+      }
+    },
+    "ur": {
+      "name": "Urdu",
+      "voiceLocale": "ur-IN",
+      "prompts": {
+        "welcome": "کلیورس اے آئی میں خوش آمدید! بغیر کسی مشکل حساب کے مصنوعی ذہانت سیکھیں۔",
+        "what_is_ai": "مصنوعی ذہانت کوئی جادو نہیں ہے۔ یہ وسیع پیمانے پر پیٹرن میچنگ ہے۔",
+        "streak_cheer": "بہترین! آج کی پڑھائی کا سلسلہ محفوظ ہو گیا۔"
+      }
+    }
+  }
+}
