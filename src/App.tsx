@@ -31,11 +31,12 @@ import KeyboardShortcutsModal from './components/KeyboardShortcutsModal';
 import OfflineStatusBanner from './components/OfflineStatusBanner';
 import OfflineManagerModal from './components/OfflineManagerModal';
 import FocusLockdownManager from './components/FocusLockdownManager';
+import TTSReaderModal from './components/TTSReaderModal';
 import { LESSON_MODULES } from './components/HomeCurriculumGrid';
 import { useGlobalKeyboardShortcuts } from './hooks/useGlobalKeyboardShortcuts';
 import { useTheme, type Theme } from './hooks/useTheme';
 import { audioEngine } from './lib/audioEngine';
-import { Compass, Sparkles, BookOpen, Video, TrendingUp, ArrowLeft, LayoutGrid, List, GraduationCap, MessageSquare, Command, Keyboard, WifiOff, HardDriveDownload } from 'lucide-react';
+import { Compass, Sparkles, BookOpen, Video, TrendingUp, ArrowLeft, LayoutGrid, List, GraduationCap, MessageSquare, Command, Keyboard, WifiOff, HardDriveDownload, Volume2 } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
 import ClayLogo from './components/ClayLogo';
 import { useLanguage } from './hooks/useLanguage';
@@ -51,6 +52,9 @@ export default function App() {
   const [isLanguagesModalOpen, setIsLanguagesModalOpen] = useState(false);
   const [isShortcutsModalOpen, setIsShortcutsModalOpen] = useState(false);
   const [isOfflineModalOpen, setIsOfflineModalOpen] = useState(false);
+  const [isTTSReaderOpen, setIsTTSReaderOpen] = useState(false);
+  const [ttsReaderText, setTtsReaderText] = useState<string | undefined>(undefined);
+  const [ttsReaderTitle, setTtsReaderTitle] = useState<string | undefined>(undefined);
   const [shortcutToast, setShortcutToast] = useState<string | null>(null);
 
   const showShortcutToast = (msg: string) => {
@@ -144,6 +148,10 @@ export default function App() {
   };
 
   const handleCloseModals = (): boolean => {
+    if (isTTSReaderOpen) {
+      setIsTTSReaderOpen(false);
+      return true;
+    }
     if (isOfflineModalOpen) {
       setIsOfflineModalOpen(false);
       return true;
@@ -171,6 +179,7 @@ export default function App() {
     onOpenSearch: () => window.dispatchEvent(new CustomEvent('clay_open_search')),
     onOpenLanguages: () => setIsLanguagesModalOpen(true),
     onOpenOffline: () => setIsOfflineModalOpen(true),
+    onOpenTTSReader: () => setIsTTSReaderOpen(true),
     onToggleFocusMode: () => handleToggleFocusMode(),
     onSwitchView: (v) => {
       setCurrentView(v);
@@ -222,6 +231,14 @@ export default function App() {
       setIsOfflineModalOpen(true);
     };
 
+    const handleOpenTTSReaderEvent = (e: CustomEvent<{ text?: string; title?: string }>) => {
+      if (e?.detail) {
+        if (e.detail.text) setTtsReaderText(e.detail.text);
+        if (e.detail.title) setTtsReaderTitle(e.detail.title);
+      }
+      setIsTTSReaderOpen(true);
+    };
+
     const handleToggleFocusEvent = (e: any) => {
       if (e?.detail && typeof e.detail.active === 'boolean') {
         handleToggleFocusMode(e.detail.active);
@@ -234,6 +251,7 @@ export default function App() {
     window.addEventListener('clay_open_lesson' as any, handleOpenLesson);
     window.addEventListener('clay_open_languages_showcase' as any, handleOpenLanguages);
     window.addEventListener('clay_open_offline_manager' as any, handleOpenOfflineManager);
+    window.addEventListener('clay_open_tts_reader' as any, handleOpenTTSReaderEvent);
     window.addEventListener('clay_toggle_focus_mode' as any, handleToggleFocusEvent);
 
     // Smoothly handle hash changes
@@ -373,6 +391,14 @@ export default function App() {
       <KeyboardShortcutsModal
         isOpen={isShortcutsModalOpen}
         onClose={() => setIsShortcutsModalOpen(false)}
+      />
+
+      {/* Web Speech API Editorial Text-to-Speech Reader Modal */}
+      <TTSReaderModal
+        isOpen={isTTSReaderOpen}
+        onClose={() => setIsTTSReaderOpen(false)}
+        initialText={ttsReaderText}
+        initialTitle={ttsReaderTitle}
       />
 
       {/* Floating Keyboard Shortcuts Trigger Badge (Hidden in Focus Mode) */}

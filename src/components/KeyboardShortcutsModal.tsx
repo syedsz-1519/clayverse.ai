@@ -98,6 +98,12 @@ const SHORTCUTS: ShortcutItem[] = [
     category: 'actions'
   },
   {
+    keys: ['V'],
+    descriptionEn: 'Open Web Speech TTS Reader (Listen to anything)',
+    descriptionHyd: 'Web Speech TTS Reader kholein (Kisi bhi matan ko sunein)',
+    category: 'actions'
+  },
+  {
     keys: ['F'],
     descriptionEn: 'Toggle Focus Mode (Distraction-Free Reading)',
     descriptionHyd: 'Focus Mode chalu ya band karein (Pur-sukoon mutalaa)',

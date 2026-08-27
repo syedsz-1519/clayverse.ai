@@ -12,6 +12,7 @@ interface KeyboardShortcutOptions {
   onCycleTheme?: () => void;
   onToggleAudio?: () => void;
   onToggleContinuous?: () => void;
+  onOpenTTSReader?: () => void;
   onPrevLesson?: () => void;
   onNextLesson?: () => void;
   onSaveBookmark?: () => void;
@@ -31,6 +32,7 @@ export function useGlobalKeyboardShortcuts({
   onCycleTheme,
   onToggleAudio,
   onToggleContinuous,
+  onOpenTTSReader,
   onPrevLesson,
   onNextLesson,
   onSaveBookmark,
@@ -167,6 +169,13 @@ export function useGlobalKeyboardShortcuts({
       if (e.key.toLowerCase() === 'f') {
         e.preventDefault();
         onToggleFocusMode?.();
+        return;
+      }
+
+      // 10c. TTS Reader ('v' / 'V' for Voice / TTS Reader)
+      if (e.key.toLowerCase() === 'v') {
+        e.preventDefault();
+        onOpenTTSReader?.();
         return;
       }
 

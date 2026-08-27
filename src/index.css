@@ -364,3 +364,18 @@ body *,
     text-decoration: underline !important;
   }
 }
+
+/* =========================================================
+   TTS READER TYPOGRAPHY CLASSES
+   ========================================================= */
+.font-instrument {
+  font-family: 'Instrument Serif', Georgia, serif;
+}
+
+.font-plex-mono {
+  font-family: 'IBM Plex Mono', ui-monospace, SFMono-Regular, monospace;
+}
+
+.font-lato {
+  font-family: 'Lato', system-ui, -apple-system, sans-serif;
+}

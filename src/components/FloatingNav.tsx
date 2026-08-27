@@ -30,7 +30,8 @@ import {
   Heart,
   School,
   Info,
-  HardDriveDownload
+  HardDriveDownload,
+  Headphones
 } from 'lucide-react';
 import { audioEngine } from '../lib/audioEngine';
 import ClayLogo from './ClayLogo';

@@ -27,12 +27,16 @@ import {
   Timer,
   Check,
   RefreshCw,
-  BarChart3
+  BarChart3,
+  BellRing,
+  Headphones,
+  ArrowRight
 } from 'lucide-react';
 import { useLanguage } from '../hooks/useLanguage';
 import FocusMetricsSidebar from './FocusMetricsSidebar';
 import VisualRestModal from './VisualRestModal';
 import { focusMetrics } from '../lib/focusMetricsManager';
+import { focusSoundEngine, type SoundscapeType } from '../lib/focusSoundEngine';
 
 export interface FocusSessionStats {
   secondsFocused: number;
@@ -74,23 +78,29 @@ export default function FocusLockdownManager({
 
   // 30-Minute Reading Visual Break Reminder (5-min Eye Rest)
   const BREAK_INTERVAL_SECONDS = 30 * 60; // Prompt every 30 minutes (1800s)
+  const [showOneMinuteWarning, setShowOneMinuteWarning] = useState<boolean>(false);
+  const [oneMinuteCountdown, setOneMinuteCountdown] = useState<number>(60);
   const [showVisualBreakPrompt, setShowVisualBreakPrompt] = useState<boolean>(false);
   const [isVisualRestModalOpen, setIsVisualRestModalOpen] = useState<boolean>(false);
 
-  // Ambient Sound Generator (Web Audio API)
-  const [soundType, setSoundType] = useState<'off' | 'binaural' | 'brownNoise' | 'rain'>('off');
-  const [soundVolume, setSoundVolume] = useState<number>(0.25);
-  const audioCtxRef = useRef<AudioContext | null>(null);
-  const soundNodesRef = useRef<{ [key: string]: any }>({});
+  // Soundscape State synchronized via focusSoundEngine
+  const [soundType, setSoundType] = useState<SoundscapeType>(focusSoundEngine.getSoundType());
 
   // Fullscreen state
   const [isFullscreen, setIsFullscreen] = useState<boolean>(false);
-  const [isHudCollapsed, setIsHudCollapsed] = useState<boolean>(false);
+
+  // Subscribe to Sound Engine
+  useEffect(() => {
+    const unsub = focusSoundEngine.subscribe((type) => {
+      setSoundType(type);
+    });
+    return () => unsub();
+  }, []);
 
   // Initialize or handle Fullscreen on active
   useEffect(() => {
     if (!isActive) {
-      stopAmbientSound();
+      focusSoundEngine.stop();
       if (document.fullscreenElement) {
         document.exitFullscreen().catch(() => {});
       }
@@ -120,138 +130,99 @@ export default function FocusLockdownManager({
   useEffect(() => {
     if (!isActive) return;
 
-    const handleBeforeUnload = (e: BeforeUnloadEvent) => {
-      e.preventDefault();
-      e.returnValue = 'Focus Lockdown active! Leaving will end your focus streak.';
-      return e.returnValue;
-    };
-
-    window.addEventListener('beforeunload', handleBeforeUnload);
-    return () => {
-      window.removeEventListener('beforeunload', handleBeforeUnload);
-    };
-  }, [isActive]);
-
-  // Intercept and block all external navigation (target='_blank', external URLs, window.open)
-  useEffect(() => {
-    if (!isActive) return;
-
+    // 1. Intercept link clicks with target="_blank" or external URLs
     const handleDocumentClick = (e: MouseEvent) => {
-      const target = e.target as HTMLElement | null;
-      if (!target) return;
-
+      const target = e.target as HTMLElement;
       const anchor = target.closest('a');
-      if (!anchor) return;
-
-      const href = anchor.getAttribute('href') || '';
-      const targetAttr = anchor.getAttribute('target');
-
-      // Check if it opens in a new tab/window or points to an external destination
-      const isTargetBlank = targetAttr === '_blank' || targetAttr === '_new';
-      const isExternalScheme = 
-        href.startsWith('http://') || 
-        href.startsWith('https://') || 
-        href.startsWith('//') || 
-        href.startsWith('mailto:') ||
-        href.startsWith('tel:');
-      
-      let isExternalDestination = false;
-      if (isExternalScheme && !href.startsWith('mailto:') && !href.startsWith('tel:')) {
-        try {
-          const urlObj = new URL(href, window.location.href);
-          if (urlObj.origin !== window.location.origin) {
-            isExternalDestination = true;
-          }
-        } catch (err) {
-          isExternalDestination = true;
+      if (anchor) {
+        const href = anchor.getAttribute('href');
+        // Check if it's an external link or target="_blank"
+        if (href && (href.startsWith('http://') || href.startsWith('https://') || anchor.target === '_blank')) {
+          e.preventDefault();
+          e.stopPropagation();
+          setBlockedNavUrl(href);
+          setShowBlockedNavModal(true);
+          return false;
         }
       }
-
-      if (isTargetBlank || isExternalDestination) {
-        // Block external navigation entirely
-        e.preventDefault();
-        e.stopPropagation();
-        e.stopImmediatePropagation();
-
-        const readableUrl = href || (anchor.innerText ? `Link: "${anchor.innerText.trim()}"` : 'External Website');
-        setBlockedNavUrl(readableUrl);
-        setShowBlockedNavModal(true);
-
-        // Play warning cue sound
-        try {
-          const ctx = new (window.AudioContext || (window as any).webkitAudioContext)();
-          const osc = ctx.createOscillator();
-          const gain = ctx.createGain();
-          osc.type = 'triangle';
-          osc.frequency.setValueAtTime(320, ctx.currentTime);
-          osc.frequency.exponentialRampToValueAtTime(160, ctx.currentTime + 0.25);
-          gain.gain.setValueAtTime(0.12, ctx.currentTime);
-          gain.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + 0.25);
-          osc.connect(gain);
-          gain.connect(ctx.destination);
-          osc.start();
-          osc.stop(ctx.currentTime + 0.28);
-        } catch (err) {}
-      }
     };
 
-    // Override window.open to prevent scripts from launching external tabs/apps
-    const originalWindowOpen = window.open;
-    (window as any).open = function(url?: string | URL, target?: string, features?: string) {
-      const urlStr = url ? url.toString() : 'External Application';
-      setBlockedNavUrl(urlStr);
-      setShowBlockedNavModal(true);
+    // 2. Intercept window.open calls
+    const originalOpen = window.open;
+    window.open = function(url?: string | URL, target?: string, features?: string) {
+      if (url) {
+        setBlockedNavUrl(url.toString());
+        setShowBlockedNavModal(true);
+      }
       return null;
     };
 
-    // Capture phase intercepts all clicks before child components or browser defaults fire
-    document.addEventListener('click', handleDocumentClick, true);
-
-    return () => {
-      document.removeEventListener('click', handleDocumentClick, true);
-      window.open = originalWindowOpen;
+    // 3. Prevent accidental tab close or page reload during lockdown
+    const handleBeforeUnload = (e: BeforeUnloadEvent) => {
+      e.preventDefault();
+      e.returnValue = 'Focus Lockdown is active. Are you sure you want to abandon your deep work streak?';
+      return e.returnValue;
     };
-  }, [isActive]);
 
-  // Anti-Distraction & Tab/App Switch Detection
-  useEffect(() => {
-    if (!isActive) return;
-
-    const triggerDistractionAlert = () => {
-      setDistractionCount(prev => prev + 1);
-      setShowDistractionWarning(true);
-      const timeStr = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit' });
-      setLastDistractionTime(timeStr);
-      focusMetrics.recordDistraction();
-
-      // Play soft alert beep
-      try {
-        const ctx = new (window.AudioContext || (window as any).webkitAudioContext)();
-        const osc = ctx.createOscillator();
-        const gain = ctx.createGain();
-        osc.type = 'sine';
-        osc.frequency.setValueAtTime(440, ctx.currentTime);
-        osc.frequency.exponentialRampToValueAtTime(220, ctx.currentTime + 0.3);
-        gain.gain.setValueAtTime(0.15, ctx.currentTime);
-        gain.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + 0.3);
-        osc.connect(gain);
-        gain.connect(ctx.destination);
-        osc.start();
-        osc.stop(ctx.currentTime + 0.35);
-      } catch (err) {
-        // AudioContext may be restricted
+    // 4. Keyboard Shortcuts inside Lockdown
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'Escape' || (e.key.toLowerCase() === 'f' && e.altKey)) {
+        onExit();
       }
     };
 
+    document.addEventListener('click', handleDocumentClick, true);
+    window.addEventListener('beforeunload', handleBeforeUnload);
+    window.addEventListener('keydown', handleKeyDown);
+
+    return () => {
+      document.removeEventListener('click', handleDocumentClick, true);
+      window.open = originalOpen;
+      window.removeEventListener('beforeunload', handleBeforeUnload);
+      window.removeEventListener('keydown', handleKeyDown);
+    };
+  }, [isActive, onExit]);
+
+  // Detect Tab / App Switching (Anti-Distraction Shield)
+  useEffect(() => {
+    if (!isActive) return;
+
     const handleVisibilityChange = () => {
-      if (document.visibilityState === 'hidden') {
-        triggerDistractionAlert();
+      if (document.hidden) {
+        setDistractionCount(prev => prev + 1);
+        setShowDistractionWarning(true);
+        const timeStr = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit' });
+        setLastDistractionTime(timeStr);
+        focusMetrics.recordDistraction();
+
+        // Play soft alert beep
+        try {
+          const AudioCtx = window.AudioContext || (window as any).webkitAudioContext;
+          const ctx = new AudioCtx();
+          const osc = ctx.createOscillator();
+          const gain = ctx.createGain();
+          osc.type = 'sine';
+          osc.frequency.setValueAtTime(440, ctx.currentTime);
+          osc.frequency.exponentialRampToValueAtTime(220, ctx.currentTime + 0.3);
+          gain.gain.setValueAtTime(0.1, ctx.currentTime);
+          gain.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + 0.3);
+          osc.connect(gain);
+          gain.connect(ctx.destination);
+          osc.start();
+          osc.stop(ctx.currentTime + 0.3);
+        } catch (e) {}
       }
     };
 
     const handleWindowBlur = () => {
-      // Blur indicates switching to another application or window
-      triggerDistractionAlert();
+      if (!document.hidden) {
+        // App switch or DevTools opened
+        setDistractionCount(prev => prev + 1);
+        setShowDistractionWarning(true);
+        const timeStr = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit' });
+        setLastDistractionTime(timeStr);
+        focusMetrics.recordDistraction();
+      }
     };
 
     document.addEventListener('visibilitychange', handleVisibilityChange);
@@ -264,15 +235,19 @@ export default function FocusLockdownManager({
   }, [isActive]);
 
   // Play soft gentle chime (pleasant harmonic chord)
-  const playGentleChime = (type: 'breakReminder' | 'breakComplete' | 'breakStart') => {
+  const playGentleChime = (type: 'breakReminder' | 'breakComplete' | 'breakStart' | 'oneMinuteWarning') => {
     try {
       const AudioCtx = window.AudioContext || (window as any).webkitAudioContext;
       const ctx = new AudioCtx();
-      const freqs = type === 'breakReminder' 
-        ? [523.25, 659.25, 783.99] // C5, E5, G5 major triad
-        : type === 'breakComplete'
-        ? [523.25, 659.25, 783.99, 1046.50] // C5, E5, G5, C6 triumphant chord
-        : [440.00, 554.37, 659.25]; // A4, C#5, E5 serene chord
+      
+      let freqs = [523.25, 659.25, 783.99]; // default triad
+      if (type === 'oneMinuteWarning') {
+        freqs = [523.25, 659.25]; // C5, E5 gentle warm warning bell
+      } else if (type === 'breakComplete') {
+        freqs = [523.25, 659.25, 783.99, 1046.50]; // C5, E5, G5, C6 triumphant chord
+      } else if (type === 'breakStart') {
+        freqs = [440.00, 554.37, 659.25]; // A4, C#5, E5 serene chord
+      }
 
       freqs.forEach((freq, i) => {
         const osc = ctx.createOscillator();
@@ -280,7 +255,7 @@ export default function FocusLockdownManager({
         osc.type = 'sine';
         osc.frequency.setValueAtTime(freq, ctx.currentTime + (i * 0.08));
         gain.gain.setValueAtTime(0, ctx.currentTime);
-        gain.gain.linearRampToValueAtTime(0.08, ctx.currentTime + (i * 0.08) + 0.05);
+        gain.gain.linearRampToValueAtTime(0.07, ctx.currentTime + (i * 0.08) + 0.05);
         gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + (i * 0.08) + 1.2);
         osc.connect(gain);
         gain.connect(ctx.destination);
@@ -290,19 +265,37 @@ export default function FocusLockdownManager({
     } catch (e) {}
   };
 
-  // Timer Tick Interval for Active Reading & 30-Minute Visual Break Detection
+  // Timer Tick Interval for Active Reading, 1-Min Warning & 30-Minute Visual Break Detection
   useEffect(() => {
     if (!isActive || !isTimerRunning || isCompleted) return;
 
     const interval = setInterval(() => {
       setSecondsElapsed(prev => {
         const next = prev + 1;
-        // Check if 30-minute interval is reached (1800s, 3600s, etc.)
+
+        // 1. Check if 1-minute early warning is reached (e.g. 1740s, 3540s, etc.)
+        if (next > 0 && (next + 60) % BREAK_INTERVAL_SECONDS === 0 && !isVisualRestModalOpen) {
+          setShowOneMinuteWarning(true);
+          setOneMinuteCountdown(60);
+          playGentleChime('oneMinuteWarning');
+        }
+
+        // 2. Check if 30-minute interval is reached (1800s, 3600s, etc.)
         if (next > 0 && next % BREAK_INTERVAL_SECONDS === 0 && !isVisualRestModalOpen) {
+          setShowOneMinuteWarning(false);
           setShowVisualBreakPrompt(true);
           playGentleChime('breakReminder');
         }
+
         return next;
+      });
+
+      // Update 1-minute countdown if active
+      setShowOneMinuteWarning(active => {
+        if (active) {
+          setOneMinuteCountdown(c => (c > 1 ? c - 1 : 0));
+        }
+        return active;
       });
 
       if (timerMode === 'pomodoro') {
@@ -322,6 +315,7 @@ export default function FocusLockdownManager({
   }, [isActive, isTimerRunning, timerMode, isCompleted, isVisualRestModalOpen]);
 
   const handleStartVisualBreak = () => {
+    setShowOneMinuteWarning(false);
     setShowVisualBreakPrompt(false);
     setIsVisualRestModalOpen(true);
     playGentleChime('breakStart');
@@ -329,102 +323,6 @@ export default function FocusLockdownManager({
 
   const handleSnoozeVisualBreak = () => {
     setShowVisualBreakPrompt(false);
-  };
-
-  // Ambient Sound Generator Engine (Native Web Audio)
-  const stopAmbientSound = () => {
-    try {
-      if (soundNodesRef.current) {
-        Object.values(soundNodesRef.current).forEach((node: any) => {
-          if (node && typeof node.stop === 'function') node.stop();
-          if (node && typeof node.disconnect === 'function') node.disconnect();
-        });
-        soundNodesRef.current = {};
-      }
-      if (audioCtxRef.current && audioCtxRef.current.state !== 'closed') {
-        audioCtxRef.current.close().catch(() => {});
-        audioCtxRef.current = null;
-      }
-    } catch (e) {}
-  };
-
-  const startAmbientSound = (type: 'binaural' | 'brownNoise' | 'rain') => {
-    stopAmbientSound();
-    try {
-      const AudioCtx = window.AudioContext || (window as any).webkitAudioContext;
-      const ctx = new AudioCtx();
-      audioCtxRef.current = ctx;
-
-      const masterGain = ctx.createGain();
-      masterGain.gain.setValueAtTime(soundVolume, ctx.currentTime);
-      masterGain.connect(ctx.destination);
-
-      if (type === 'binaural') {
-        // 40Hz Gamma Focus Frequency (Left: 200Hz, Right: 240Hz)
-        const oscL = ctx.createOscillator();
-        const oscR = ctx.createOscillator();
-        const panL = ctx.createStereoPanner ? ctx.createStereoPanner() : null;
-        const panR = ctx.createStereoPanner ? ctx.createStereoPanner() : null;
-
-        oscL.type = 'sine';
-        oscL.frequency.setValueAtTime(200, ctx.currentTime);
-        oscR.type = 'sine';
-        oscR.frequency.setValueAtTime(240, ctx.currentTime);
-
-        if (panL && panR) {
-          panL.pan.setValueAtTime(-1, ctx.currentTime);
-          panR.pan.setValueAtTime(1, ctx.currentTime);
-          oscL.connect(panL);
-          panL.connect(masterGain);
-          oscR.connect(panR);
-          panR.connect(masterGain);
-        } else {
-          oscL.connect(masterGain);
-          oscR.connect(masterGain);
-        }
-
-        oscL.start();
-        oscR.start();
-        soundNodesRef.current = { oscL, oscR, masterGain };
-      } else if (type === 'brownNoise' || type === 'rain') {
-        // Brown noise / soothing static
-        const bufferSize = 2 * ctx.sampleRate;
-        const noiseBuffer = ctx.createBuffer(1, bufferSize, ctx.sampleRate);
-        const output = noiseBuffer.getChannelData(0);
-        let lastOut = 0.0;
-
-        for (let i = 0; i < bufferSize; i++) {
-          const white = Math.random() * 2 - 1;
-          output[i] = (lastOut + (0.02 * white)) / 1.02;
-          lastOut = output[i];
-          output[i] *= 3.5; // Gain compensation
-        }
-
-        const whiteNoise = ctx.createBufferSource();
-        whiteNoise.buffer = noiseBuffer;
-        whiteNoise.loop = true;
-
-        const filter = ctx.createBiquadFilter();
-        filter.type = type === 'rain' ? 'lowpass' : 'bandpass';
-        filter.frequency.setValueAtTime(type === 'rain' ? 800 : 400, ctx.currentTime);
-
-        whiteNoise.connect(filter);
-        filter.connect(masterGain);
-        whiteNoise.start();
-        soundNodesRef.current = { whiteNoise, filter, masterGain };
-      }
-    } catch (e) {
-      console.warn("Ambient sound could not be initialized:", e);
-    }
-  };
-
-  const handleSoundChange = (newType: 'off' | 'binaural' | 'brownNoise' | 'rain') => {
-    setSoundType(newType);
-    if (newType === 'off') {
-      stopAmbientSound();
-    } else {
-      startAmbientSound(newType);
-    }
   };
 
   const toggleFullscreen = () => {
@@ -500,7 +398,7 @@ export default function FocusLockdownManager({
         )}
       </AnimatePresence>
 
-      {/* 2. External Navigation Blocked Modal (Intercepts target='_blank' & external apps) */}
+      {/* 2. External Navigation Blocked Modal */}
       <AnimatePresence>
         {showBlockedNavModal && (
           <div className="fixed inset-0 z-70 flex items-center justify-center p-4 bg-black/70 backdrop-blur-md">
@@ -510,7 +408,6 @@ export default function FocusLockdownManager({
               exit={{ opacity: 0, scale: 0.92, y: 15 }}
               className="w-full max-w-md bg-zinc-900 text-white rounded-3xl p-6 shadow-2xl border-2 border-amber-500/50 text-left relative overflow-hidden"
             >
-              {/* Subtle decorative glow */}
               <div className="absolute -top-12 -right-12 w-32 h-32 bg-amber-500/10 rounded-full blur-2xl pointer-events-none" />
               
               <div className="flex items-center gap-3 mb-4">
@@ -597,7 +494,78 @@ export default function FocusLockdownManager({
         )}
       </AnimatePresence>
 
-      {/* 3. Subtle Non-Intrusive 30-Minute Visual Break Prompt Banner */}
+      {/* 3. ⏰ 1-Minute Early Warning Toast Notification (Fires 60s before 30-min break) */}
+      <AnimatePresence>
+        {showOneMinuteWarning && !isVisualRestModalOpen && !showVisualBreakPrompt && (
+          <motion.div
+            initial={{ opacity: 0, y: -25, scale: 0.94 }}
+            animate={{ opacity: 1, y: 0, scale: 1 }}
+            exit={{ opacity: 0, y: -20, scale: 0.94 }}
+            transition={{ type: 'spring', damping: 24, stiffness: 280 }}
+            className="fixed top-18 right-4 sm:right-6 z-65 w-[92%] sm:w-96 bg-zinc-900/95 text-white p-4 rounded-2xl shadow-2xl border border-amber-400/50 backdrop-blur-2xl pointer-events-auto"
+          >
+            <div className="flex items-start gap-3">
+              <div className="relative shrink-0">
+                <div className="w-9 h-9 rounded-xl bg-amber-500/20 text-amber-400 flex items-center justify-center border border-amber-500/40">
+                  <BellRing className="w-4 h-4 animate-bounce" />
+                </div>
+                <span className="absolute -bottom-1 -right-1 px-1 py-0.2 rounded-full bg-amber-400 text-zinc-950 font-mono font-black text-[9px]">
+                  {oneMinuteCountdown}s
+                </span>
+              </div>
+
+              <div className="flex-1 text-left">
+                <div className="flex items-center justify-between">
+                  <h4 className="font-display font-bold text-xs text-amber-300 flex items-center gap-1.5">
+                    <span>
+                      {lang === 'te' 
+                        ? '1 నిమిషం హెచ్చరిక • కంటి విశ్రాంతి త్వరలో' 
+                        : lang === 'hi' 
+                        ? '1-मिनट चेतावनी • नेत्र विराम निकट है' 
+                        : '1-Min Warning • Visual Rest Ahead'}
+                    </span>
+                  </h4>
+                  <button
+                    onClick={() => setShowOneMinuteWarning(false)}
+                    className="text-zinc-400 hover:text-white p-0.5 rounded transition-colors cursor-pointer"
+                    title="Dismiss warning"
+                  >
+                    <X className="w-3.5 h-3.5" />
+                  </button>
+                </div>
+
+                <p className="text-[11px] text-zinc-300 mt-1 leading-relaxed">
+                  {lang === 'te'
+                    ? `మీరు 29 నిమిషాలు చదివారు. ప్రస్తుత అంశాన్ని ముగించండి—5 నిమిషాల కంటి మరియు శ్వాస విశ్రాంతి ${oneMinuteCountdown} సెకన్లలో ప్రారంభమవుతుంది.`
+                    : lang === 'hi'
+                    ? `आप पिछले 29 मिनट से पढ़ रहे हैं। वर्तमान वाक्य पूरा करें—5 मिनट का नेत्र विराम ${oneMinuteCountdown} सेकंड में शुरू होगा।`
+                    : `Wrap up your current thought or snippet. A 5-minute visual recovery break starts in ${oneMinuteCountdown}s to prevent eye fatigue.`}
+                </p>
+
+                {/* Quick actions */}
+                <div className="mt-2.5 pt-2 border-t border-white/10 flex items-center gap-2">
+                  <button
+                    onClick={handleStartVisualBreak}
+                    className="flex-1 py-1 px-2.5 rounded-lg bg-amber-500 hover:bg-amber-400 text-zinc-950 font-bold text-[11px] transition-all cursor-pointer shadow-xs flex items-center justify-center gap-1"
+                  >
+                    <Eye className="w-3 h-3" />
+                    <span>{lang === 'te' ? 'ఇప్పుడే ప్రారంభించు' : lang === 'hi' ? 'अभी ब्रेक लें' : 'Start Break Early'}</span>
+                  </button>
+
+                  <button
+                    onClick={() => setShowOneMinuteWarning(false)}
+                    className="py-1 px-2 rounded-lg bg-white/5 hover:bg-white/10 text-zinc-400 hover:text-white text-[11px] border border-white/10 transition-colors cursor-pointer"
+                  >
+                    {lang === 'te' ? 'సరే' : lang === 'hi' ? 'ठीक है' : 'Got it'}
+                  </button>
+                </div>
+              </div>
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
+      {/* 4. Subtle Non-Intrusive 30-Minute Visual Break Prompt Banner */}
       <AnimatePresence>
         {showVisualBreakPrompt && !isVisualRestModalOpen && (
           <motion.div
@@ -664,17 +632,18 @@ export default function FocusLockdownManager({
         )}
       </AnimatePresence>
 
-      {/* 4. Dedicated 5-Minute Visual Rest Component with Guided Breathing */}
+      {/* 5. Dedicated 5-Minute Visual Rest Component with Guided Breathing */}
       <VisualRestModal
         isOpen={isVisualRestModalOpen}
         onClose={() => setIsVisualRestModalOpen(false)}
         onComplete={() => {
           setIsVisualRestModalOpen(false);
           setShowVisualBreakPrompt(false);
+          setShowOneMinuteWarning(false);
         }}
       />
 
-      {/* 5. Real-Time Gamified Focus Metrics Sidebar (Appears only in Focus Mode) */}
+      {/* 6. Real-Time Gamified Focus Metrics Sidebar (Appears in Focus Mode) */}
       <FocusMetricsSidebar
         isVisible={isActive}
         currentLessonId={currentLessonId}
@@ -683,7 +652,7 @@ export default function FocusLockdownManager({
         onTriggerVisualBreak={() => setIsVisualRestModalOpen(true)}
       />
 
-      {/* 6. Floating Minimal Focus HUD Bar (Pinned at top of screen) */}
+      {/* 7. Floating Minimal Focus HUD Bar (Pinned at top of screen) */}
       <motion.div
         initial={{ opacity: 0, y: -20 }}
         animate={{ opacity: 1, y: 0 }}
@@ -742,7 +711,7 @@ export default function FocusLockdownManager({
             <button
               onClick={handleStartVisualBreak}
               className={`p-2 rounded-xl transition-all cursor-pointer border ${
-                showVisualBreakPrompt
+                showVisualBreakPrompt || showOneMinuteWarning
                   ? 'bg-emerald-500 text-zinc-950 font-bold border-emerald-400 animate-bounce'
                   : 'bg-white/5 hover:bg-white/10 text-emerald-400 hover:text-emerald-300 border-white/10'
               }`}
@@ -768,20 +737,21 @@ export default function FocusLockdownManager({
             <div className="relative group">
               <button
                 onClick={() => {
-                  const nextSound: Record<string, 'off' | 'binaural' | 'brownNoise' | 'rain'> = {
-                    off: 'binaural',
-                    binaural: 'rain',
-                    rain: 'brownNoise',
-                    brownNoise: 'off'
+                  const nextSound: Record<SoundscapeType, SoundscapeType> = {
+                    off: 'rain',
+                    rain: 'whiteNoise',
+                    whiteNoise: 'deepSpace',
+                    deepSpace: 'binaural',
+                    binaural: 'off'
                   };
-                  handleSoundChange(nextSound[soundType]);
+                  focusSoundEngine.setSoundType(nextSound[soundType]);
                 }}
                 className={`p-2 rounded-xl transition-all cursor-pointer border ${
                   soundType !== 'off'
-                    ? 'bg-amber-500 text-zinc-950 font-bold border-amber-400'
+                    ? 'bg-amber-500 text-zinc-950 font-bold border-amber-400 shadow-md'
                     : 'bg-white/5 hover:bg-white/10 text-zinc-400 hover:text-white border-white/10'
                 }`}
-                title={`Ambient Focus Sound: ${soundType.toUpperCase()}`}
+                title={`Ambient Focus Sound: ${soundType.toUpperCase()} (Click to cycle)`}
               >
                 {soundType !== 'off' ? <Volume2 className="w-3.5 h-3.5" /> : <VolumeX className="w-3.5 h-3.5" />}
               </button>
