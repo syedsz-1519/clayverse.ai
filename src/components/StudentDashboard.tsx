@@ -59,6 +59,7 @@ import { MockInterviewRecord, MockInterviewDraft } from '../types';
 import { UserProfile, setupAuthListener, logoutUserManually } from '../lib/firebase';
 import { audioEngine } from '../lib/audioEngine';
 import CurriculumProgressChart from './CurriculumProgressChart';
+import QuizPerformanceBarChart from './QuizPerformanceBarChart';
 import InterviewPerformanceChart from './InterviewPerformanceChart';
 import InterviewReportModal from './InterviewReportModal';
 import InterviewAudioReplayModal from './InterviewAudioReplayModal';
@@ -137,6 +138,7 @@ export default function StudentDashboard({
 
   // Active Dashboard Tab
   const [activeTab, setActiveTab] = useState<'overview' | 'roadmap' | 'badges' | 'community' | 'study-groups'>('overview');
+  const [analyticsChartType, setAnalyticsChartType] = useState<'quiz' | 'curriculum'>('quiz');
 
   // Daily Streak State
   const [streakState, setStreakState] = useState<DailyStreakState>(() => streakManager.getStreakState());
@@ -926,14 +928,71 @@ export default function StudentDashboard({
         </div>
 
         {/* ========================================================================= */}
-        {/* INTERACTIVE CURRICULUM PROGRESS CHART (RECHARTS) */}
+        {/* INTERACTIVE ANALYTICS VISUALIZER TABS (RECHARTS BAR CHART & CURRICULUM) */}
         {/* ========================================================================= */}
-        <CurriculumProgressChart
-          completedLessonIds={streakState.completedLessonIds || []}
-          masteredConceptIds={masteredConcepts}
-          streakState={streakState}
-          onNavigateSection={onNavigateSection}
-        />
+        <div className="space-y-4">
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+            <div className="flex items-center gap-2">
+              <div className="p-1.5 rounded-xl bg-brand-amber/15 text-brand-amber">
+                <BarChart3 className="w-4 h-4" />
+              </div>
+              <div>
+                <h3 className="font-display text-base font-bold text-brand-charcoal">
+                  {lang === 'en' ? "Performance Visualizer & Analytics" : "Performance Charts aur Analytics"}
+                </h3>
+                <p className="text-xs text-brand-muted">
+                  {lang === 'en'
+                    ? "Interactive Recharts visualizer for quiz historical scores, competency accuracy, and curriculum completion."
+                    : "Quizzes ki tareekhi accuracy aur curriculum ki raftaar ka visual chart."}
+                </p>
+              </div>
+            </div>
+
+            <div className="flex items-center p-1 rounded-2xl bg-white border border-brand-slate/15 shadow-2xs self-start sm:self-auto">
+              <button
+                type="button"
+                onClick={() => {
+                  setAnalyticsChartType('quiz');
+                  audioEngine.playLoFiChord();
+                }}
+                className={`px-3.5 py-1.5 rounded-xl text-xs font-mono font-bold transition-all cursor-pointer flex items-center gap-1.5 ${
+                  analyticsChartType === 'quiz'
+                    ? 'bg-brand-charcoal text-white shadow-xs'
+                    : 'text-brand-slate hover:text-brand-charcoal hover:bg-brand-sand/40'
+                }`}
+              >
+                <Award className="w-3.5 h-3.5 text-brand-amber" />
+                <span>Quiz Performance (Bar Chart)</span>
+              </button>
+              <button
+                type="button"
+                onClick={() => {
+                  setAnalyticsChartType('curriculum');
+                  audioEngine.playLoFiChord();
+                }}
+                className={`px-3.5 py-1.5 rounded-xl text-xs font-mono font-bold transition-all cursor-pointer flex items-center gap-1.5 ${
+                  analyticsChartType === 'curriculum'
+                    ? 'bg-brand-charcoal text-white shadow-xs'
+                    : 'text-brand-slate hover:text-brand-charcoal hover:bg-brand-sand/40'
+                }`}
+              >
+                <TrendingUp className="w-3.5 h-3.5 text-emerald-400" />
+                <span>Curriculum Mastery & Time</span>
+              </button>
+            </div>
+          </div>
+
+          {analyticsChartType === 'quiz' ? (
+            <QuizPerformanceBarChart onNavigateSection={onNavigateSection} />
+          ) : (
+            <CurriculumProgressChart
+              completedLessonIds={streakState.completedLessonIds || []}
+              masteredConceptIds={masteredConcepts}
+              streakState={streakState}
+              onNavigateSection={onNavigateSection}
+            />
+          )}
+        </div>
 
         {/* ========================================================================= */}
         {/* 1. DAILY STREAK & CONSISTENCY HABIT TRACKER (FRAMER MOTION BOUNCE & GLOW) */}
