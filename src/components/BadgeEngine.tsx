@@ -36,6 +36,7 @@ import { MockInterviewRecord } from '../types';
 import { DailyStreakState } from '../lib/streakManager';
 import { useLanguage } from '../hooks/useLanguage';
 import { audioEngine } from '../lib/audioEngine';
+import LearningMilestonesSection from './LearningMilestonesSection';
 
 export interface BadgeEngineProps {
   completedLessonIds: string[];
@@ -307,6 +308,13 @@ export default function BadgeEngine({
             </motion.div>
           );
         })}
+      </div>
+
+      {/* ========================================================================= */}
+      {/* DEDICATED LEARNING MILESTONES & QUIZ ACHIEVEMENTS */}
+      {/* ========================================================================= */}
+      <div className="pt-4 border-t border-brand-slate/15">
+        <LearningMilestonesSection onNavigateSection={onNavigateLesson} />
       </div>
 
       {/* ========================================================================= */}

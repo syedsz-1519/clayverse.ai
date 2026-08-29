@@ -60,6 +60,8 @@ import { UserProfile, setupAuthListener, logoutUserManually } from '../lib/fireb
 import { audioEngine } from '../lib/audioEngine';
 import CurriculumProgressChart from './CurriculumProgressChart';
 import QuizPerformanceBarChart from './QuizPerformanceBarChart';
+import LearningMilestonesSection from './LearningMilestonesSection';
+import RecommendedNextLessonCard from './RecommendedNextLessonCard';
 import InterviewPerformanceChart from './InterviewPerformanceChart';
 import InterviewReportModal from './InterviewReportModal';
 import InterviewAudioReplayModal from './InterviewAudioReplayModal';
@@ -928,6 +930,11 @@ export default function StudentDashboard({
         </div>
 
         {/* ========================================================================= */}
+        {/* RECOMMENDED NEXT LESSON (ADAPTIVE AI TUTOR & PERFORMANCE-BASED) */}
+        {/* ========================================================================= */}
+        <RecommendedNextLessonCard onNavigateSection={onNavigateSection} />
+
+        {/* ========================================================================= */}
         {/* INTERACTIVE ANALYTICS VISUALIZER TABS (RECHARTS BAR CHART & CURRICULUM) */}
         {/* ========================================================================= */}
         <div className="space-y-4">
@@ -1336,6 +1343,11 @@ export default function StudentDashboard({
           </div>
 
         </div>
+
+        {/* ========================================================================= */}
+        {/* LEARNING MILESTONES & QUIZ ACHIEVEMENTS SECTION */}
+        {/* ========================================================================= */}
+        <LearningMilestonesSection onNavigateSection={onNavigateSection} />
 
         {/* ========================================================================= */}
         {/* MAIN DASHBOARD CONTENT GRID: CURRICULUM + INTERVIEW HISTORY */}
