@@ -194,6 +194,7 @@ export const LAYOUT_PRESETS: {
 ];
 
 interface SortableBentoTileProps {
+  key?: React.Key;
   id: BentoTileId;
   isCustomizeMode: boolean;
   children: React.ReactNode;

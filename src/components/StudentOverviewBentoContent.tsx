@@ -32,16 +32,26 @@ import {
   Clock,
 } from 'lucide-react';
 import { BentoTileId } from './BentoDashboardDndGrid';
-import { LearningPathDependencyMap } from './LearningPathDependencyMap';
-import { RecommendedNextLessonCard } from './RecommendedNextLessonCard';
-import { QuizPerformanceBarChart } from './QuizPerformanceBarChart';
-import { CurriculumProgressChart } from './CurriculumProgressChart';
-import { LearningMilestonesSection } from './LearningMilestonesSection';
-import { InterviewPerformanceChart } from './InterviewPerformanceChart';
-import { HistoricalInterviewTable } from './HistoricalInterviewTable';
-import { InterviewConsistencyCalendar } from './InterviewConsistencyCalendar';
-import { SessionInlineReflectionEditor } from './SessionInlineReflectionEditor';
-import { AI_CURRICULUM_CONCEPTS } from '../curriculumData';
+import LearningPathDependencyMap from './LearningPathDependencyMap';
+import RecommendedNextLessonCard from './RecommendedNextLessonCard';
+import QuizPerformanceBarChart from './QuizPerformanceBarChart';
+import CurriculumProgressChart from './CurriculumProgressChart';
+import LearningMilestonesSection from './LearningMilestonesSection';
+import InterviewPerformanceChart from './InterviewPerformanceChart';
+import HistoricalInterviewTable from './HistoricalInterviewTable';
+import InterviewConsistencyCalendar from './InterviewConsistencyCalendar';
+import SessionInlineReflectionEditor from './SessionInlineReflectionEditor';
+
+export const AI_CURRICULUM_CONCEPTS = [
+  { id: 'c1', title: 'AI vs ML vs Deep Learning Hierarchy', category: 'Foundations', level: 'Beginner' },
+  { id: 'c2', title: 'Supervised vs Unsupervised vs Reinforcement', category: 'ML Types', level: 'Beginner' },
+  { id: 'c3', title: 'Neural Networks & Backpropagation', category: 'Deep Learning', level: 'Intermediate' },
+  { id: 'c4', title: 'Transformer Architecture & Self-Attention', category: 'GenAI', level: 'Advanced' },
+  { id: 'c5', title: 'RAG (Retrieval-Augmented Generation) & Vectors', category: 'GenAI', level: 'Advanced' },
+  { id: 'c6', title: 'Prompt Engineering & System Personas', category: 'Prompting', level: 'Beginner' },
+  { id: 'c7', title: 'Loss Functions, Regularization & Overfitting', category: 'Optimization', level: 'Intermediate' },
+  { id: 'c8', title: 'KV-Caching, Quantization & Model Latency', category: 'Production', level: 'Advanced' },
+];
 
 export interface StudentOverviewBentoContentProps {
   tileId: BentoTileId;
@@ -842,16 +852,19 @@ export const StudentOverviewBentoContent: React.FC<StudentOverviewBentoContentPr
                 </div>
               ) : historyViewMode === 'calendar' ? (
                 <InterviewConsistencyCalendar
-                  records={interviewHistory}
-                  onSelectSession={(rec) => {
+                  interviewHistory={interviewHistory}
+                  streakState={streakState}
+                  onOpenReportModal={(rec) => {
                     setSelectedReportRecord(rec);
                     setIsReportModalOpen(true);
                     audioEngine.playLoFiChord();
                   }}
-                  onSelectDateFilter={(dateStr) => {
-                    setSearchQuery(dateStr);
-                    setHistoryViewMode('cards');
+                  onOpenAudioReplay={(rec) => {
+                    setSelectedReplayRecord(rec);
+                    setIsAudioReplayOpen(true);
+                    audioEngine.playLoFiChord();
                   }}
+                  onStartInterview={() => onNavigateSection('mock-interview')}
                 />
               ) : historyViewMode === 'table' ? (
                 <HistoricalInterviewTable
@@ -861,7 +874,7 @@ export const StudentOverviewBentoContent: React.FC<StudentOverviewBentoContentPr
                     setIsReportModalOpen(true);
                     audioEngine.playLoFiChord();
                   }}
-                  onOpenAudioReplayModal={(rec) => {
+                  onOpenAudioReplay={(rec) => {
                     setSelectedReplayRecord(rec);
                     setIsAudioReplayOpen(true);
                     audioEngine.playLoFiChord();

@@ -34,7 +34,7 @@ import {
   getStudyGroupMessages, 
   postStudyGroupMessage 
 } from '../lib/firebase';
-import { AI_CURRICULUM_CONCEPTS } from './StudentDashboard';
+import { AI_CURRICULUM_CONCEPTS } from './StudentOverviewBentoContent';
 
 interface StudyGroupsSectionProps {
   currentUser: UserProfile | null;
