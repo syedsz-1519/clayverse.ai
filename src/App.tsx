@@ -401,23 +401,6 @@ export default function App() {
         initialTitle={ttsReaderTitle}
       />
 
-      {/* Floating Keyboard Shortcuts Trigger Badge (Hidden in Focus Mode) */}
-      {!isFocusMode && (
-        <div className="fixed bottom-4 left-4 z-40 hidden sm:block">
-          <button
-            onClick={() => setIsShortcutsModalOpen(true)}
-            className="flex items-center gap-2 px-3 py-1.5 rounded-xl bg-white/90 dark:bg-zinc-900/90 hover:bg-white dark:hover:bg-zinc-800 border border-black/10 dark:border-white/10 text-brand-slate hover:text-brand-charcoal text-xs font-semibold shadow-md hover:shadow-lg transition-all cursor-pointer backdrop-blur-md group"
-            title="Press '?' on your keyboard to view all navigation shortcuts"
-          >
-            <Keyboard className="w-3.5 h-3.5 text-brand-amber group-hover:scale-110 transition-transform" />
-            <span className="text-[11px] font-medium">Shortcuts</span>
-            <kbd className="px-1.5 py-0.5 font-mono text-[10px] font-bold bg-black/5 dark:bg-white/5 border border-black/10 dark:border-white/10 rounded">
-              ?
-            </kbd>
-          </button>
-        </div>
-      )}
-
       {/* Keyboard Action Toast Feedback */}
       <AnimatePresence>
         {shortcutToast && (
