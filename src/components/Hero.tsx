@@ -210,14 +210,23 @@ export default function Hero() {
         >
           <button
             onClick={() => {
-              const el = document.getElementById('curriculum-grid') || document.getElementById('what-is-ai');
+              const el = document.getElementById('curriculum') || document.getElementById('curriculum-grid');
               if (el) el.scrollIntoView({ behavior: 'smooth' });
               else window.dispatchEvent(new CustomEvent('clay_open_lesson', { detail: 'what-is-ai' }));
             }}
             className="px-6 py-3 rounded-xl bg-brand-amber hover:bg-brand-amber-dark text-white font-bold text-sm shadow-md hover:shadow-lg transition-all flex items-center gap-2 hover:scale-[1.02] cursor-pointer"
           >
-            <span>{lang === 'te' ? 'ఉచిత ప్రయాణం ప్రారంభించండి' : lang === 'hi' ? 'सीखना शुरू करें (100% Free)' : 'Begin Journey (Free)'}</span>
+            <span>{lang === 'te' ? '9-పాఠాల కోర్స్ ప్రారంభించండి' : lang === 'hi' ? '9-पाठों का AI कोर्स शुरू करें' : 'Explore 9-Step Curriculum'}</span>
             <ArrowDown className="w-4 h-4" />
+          </button>
+
+          <button
+            onClick={() => {
+              window.dispatchEvent(new CustomEvent('clay_navigate_view', { detail: 'interview' }));
+            }}
+            className="px-5 py-3 rounded-xl bg-brand-charcoal hover:bg-black text-white font-bold text-sm shadow-sm hover:shadow-md transition-all flex items-center gap-2 cursor-pointer"
+          >
+            <span>{lang === 'te' ? 'AI మాక్ ఇంటర్వ్యూ' : lang === 'hi' ? 'AI मॉक इंटरव्यूअर' : 'AI Mock Interviewer'}</span>
           </button>
 
           <button
@@ -228,21 +237,12 @@ export default function Hero() {
           >
             <span>{lang === 'te' ? '25+ భారతీయ భాషలు' : lang === 'hi' ? '25+ भारतीय भाषाएं' : '25+ Indian Languages'}</span>
           </button>
-
-          <button
-            onClick={() => {
-              window.dispatchEvent(new CustomEvent('clay_open_lesson', { detail: 'prompting-rag' }));
-            }}
-            className="px-5 py-3 rounded-xl bg-white/70 dark:bg-zinc-800/70 hover:bg-white dark:hover:bg-zinc-800 border border-black/[0.08] dark:border-white/[0.08] text-brand-slate font-medium text-sm transition-all hover:text-brand-amber cursor-pointer"
-          >
-            <span>{lang === 'te' ? 'లైవ్ శాండ్‌బాక్స్' : lang === 'hi' ? 'लाइव सैंडबॉक्स' : 'Interactive Sandboxes'}</span>
-          </button>
         </motion.div>
 
         {/* Scroll Indicator */}
         <motion.button
           onClick={() => {
-            const el = document.getElementById('what-is-ai');
+            const el = document.getElementById('curriculum') || document.getElementById('what-is-ai');
             if (el) el.scrollIntoView({ behavior: 'smooth' });
           }}
           initial={{ opacity: 0 }}

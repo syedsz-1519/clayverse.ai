@@ -21,6 +21,7 @@ import AuthModal from './components/AuthModal';
 import HomeCurriculumGrid from './components/HomeCurriculumGrid';
 import IndividualLessonView from './components/IndividualLessonView';
 import LearningHubPage from './components/LearningHubPage';
+import StructuredHubShowcase from './components/StructuredHubShowcase';
 import SocialShareSection from './components/SocialShareSection';
 import TrustSignals from './components/TrustSignals';
 import ValueProps from './components/ValueProps';
@@ -599,31 +600,45 @@ export default function App() {
               <SocialShareSection />
             </main>
           ) : (
-            /* 3. Streamlined, Highly Professional Modular Home Page */
-            <main id="main-content" className="relative z-10 flex flex-col gap-6">
-              {/* Hero: What is Clayverse AI, Ethos & Sensory Tactile Mission */}
+            /* 3. Streamlined, Highly Professional Engineered Masterpiece Home Page */
+            <main id="main-content" className="relative z-10 flex flex-col gap-10">
+              {/* 1. Hero: Ethos, Interactive Pattern Canvas, Direct Action CTAs */}
               <motion.div initial="hidden" whileInView="visible" viewport={{ once: true, margin: "-100px" }} variants={sectionAnimation}>
                 <Hero />
               </motion.div>
 
-              {/* Trust Signals: Pillars of Clayverse AI */}
+              {/* 2. Trust Signals: Zero-math, 25+ Languages, Verified Pedagogy */}
               <motion.div initial="hidden" whileInView="visible" viewport={{ once: true, margin: "-100px" }} variants={sectionAnimation}>
                 <TrustSignals onOpenLanguages={() => setIsLanguagesModalOpen(true)} />
               </motion.div>
 
-              {/* Foundations: What is AI? Intro, Mental Models & 3 Horizons */}
+              {/* 3. Four Pillars of the Ecosystem Showcase */}
               <motion.div initial="hidden" whileInView="visible" viewport={{ once: true, margin: "-100px" }} variants={sectionAnimation}>
-                <WhatIsAI />
-                <QuickTakeaway sectionId="what-is-ai" />
-                <ClayExplainer />
+                <StructuredHubShowcase
+                  onOpenCurriculum={() => {
+                    const el = document.getElementById('curriculum');
+                    if (el) el.scrollIntoView({ behavior: 'smooth' });
+                  }}
+                  onOpenInterview={() => {
+                    setCurrentView('interview');
+                    window.scrollTo({ top: 0, behavior: 'smooth' });
+                  }}
+                  onOpenDashboard={() => {
+                    setCurrentView('dashboard');
+                    window.scrollTo({ top: 0, behavior: 'smooth' });
+                  }}
+                  onOpenLearningHub={() => {
+                    setCurrentView('learning-hub');
+                    window.scrollTo({ top: 0, behavior: 'smooth' });
+                  }}
+                  onOpenLesson={(lessonId) => {
+                    setCurrentLessonId(lessonId);
+                    window.scrollTo({ top: 0, behavior: 'smooth' });
+                  }}
+                />
               </motion.div>
 
-              {/* Value Props: Zero-Math Visual Approach */}
-              <motion.div initial="hidden" whileInView="visible" viewport={{ once: true, margin: "-100px" }} variants={sectionAnimation}>
-                <ValueProps onOpenLanguages={() => setIsLanguagesModalOpen(true)} />
-              </motion.div>
-
-              {/* Dedicated Curriculum Course Modules Hub */}
+              {/* 4. Structured 9-Step Curriculum Architecture Grid & Roadmap */}
               <motion.div initial="hidden" whileInView="visible" viewport={{ once: true, margin: "-100px" }} variants={sectionAnimation}>
                 <HomeCurriculumGrid 
                   onSelectLesson={(lessonId) => {
@@ -634,10 +649,26 @@ export default function App() {
                     setIsContinuousGuide(true);
                     window.scrollTo({ top: 0, behavior: 'smooth' });
                   }}
+                  onStartInterview={() => {
+                    setCurrentView('interview');
+                    window.scrollTo({ top: 0, behavior: 'smooth' });
+                  }}
                 />
               </motion.div>
 
-              {/* Social Sharing Banner */}
+              {/* 5. Interactive Starter AI Assistant Sandbox */}
+              <motion.div initial="hidden" whileInView="visible" viewport={{ once: true, margin: "-100px" }} variants={sectionAnimation}>
+                <div className="max-w-4xl mx-auto px-6">
+                  <ClayExplainer />
+                </div>
+              </motion.div>
+
+              {/* 6. Value Props: Zero-Math Visual Approach */}
+              <motion.div initial="hidden" whileInView="visible" viewport={{ once: true, margin: "-100px" }} variants={sectionAnimation}>
+                <ValueProps onOpenLanguages={() => setIsLanguagesModalOpen(true)} />
+              </motion.div>
+
+              {/* 7. Social Sharing & Peer Certification */}
               <SocialShareSection />
             </main>
           )}
