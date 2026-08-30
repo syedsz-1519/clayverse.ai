@@ -140,31 +140,31 @@ export default function StructuredHubShowcase({
                 audioEngine.playLoFiChord();
                 hub.action();
               }}
-              className="group flex flex-col justify-between p-5 rounded-3xl bg-white/90 dark:bg-zinc-900/90 hover:bg-white dark:hover:bg-zinc-900 border border-brand-slate/15 hover:border-brand-amber/50 shadow-xs hover:shadow-lg transition-all cursor-pointer overflow-hidden text-left"
+              className="group flex flex-col justify-between p-5 rounded-3xl bg-white dark:bg-zinc-900 border border-slate-200 dark:border-zinc-800 hover:border-amber-500/50 shadow-sm hover:shadow-xl transition-all cursor-pointer overflow-hidden text-left"
             >
               <div>
                 {/* Top Badge & Icon */}
                 <div className="flex items-center justify-between mb-3.5">
-                  <span className="text-[10px] font-mono font-bold uppercase tracking-wider px-2.5 py-0.5 rounded-full bg-brand-sand/80 text-brand-slate border border-brand-slate/10">
+                  <span className="text-[10px] font-mono font-bold uppercase tracking-wider px-2.5 py-0.5 rounded-full bg-slate-100 dark:bg-zinc-800 text-slate-600 dark:text-zinc-300 border border-slate-200 dark:border-zinc-700">
                     {hub.badge}
                   </span>
-                  <div className={`p-2 rounded-xl bg-gradient-to-br ${hub.color} border group-hover:scale-110 transition-transform`}>
+                  <div className={`p-2 rounded-xl bg-gradient-to-br ${hub.color} border group-hover:scale-110 transition-transform shadow-2xs`}>
                     <Icon className="w-4 h-4" />
                   </div>
                 </div>
 
                 {/* Title & Desc */}
-                <h3 className="font-display text-base font-black text-brand-charcoal group-hover:text-brand-amber transition-colors leading-tight mb-2">
+                <h3 className="font-display text-base font-black text-slate-900 dark:text-white group-hover:text-amber-600 transition-colors leading-tight mb-2">
                   {lang === 'en' ? hub.titleEn : hub.titleHyd}
                 </h3>
-                <p className="text-xs text-brand-slate leading-relaxed mb-4 line-clamp-3">
+                <p className="text-xs text-slate-600 dark:text-zinc-300 leading-relaxed mb-4 line-clamp-3">
                   {lang === 'en' ? hub.descEn : hub.descHyd}
                 </p>
 
                 {/* Tags */}
                 <div className="flex flex-wrap gap-1 mb-4">
                   {hub.tags.map((t, idx) => (
-                    <span key={idx} className="text-[9px] font-mono bg-brand-sand/60 dark:bg-zinc-800 text-brand-slate px-1.5 py-0.5 rounded border border-brand-slate/10">
+                    <span key={idx} className="text-[9px] font-mono font-medium bg-slate-100 dark:bg-zinc-800 text-slate-600 dark:text-zinc-300 px-2 py-0.5 rounded border border-slate-200/80 dark:border-zinc-700">
                       {t}
                     </span>
                   ))}
@@ -172,9 +172,9 @@ export default function StructuredHubShowcase({
               </div>
 
               {/* Action Link */}
-              <div className="pt-3 border-t border-brand-slate/10 flex items-center justify-between text-xs font-bold text-brand-charcoal group-hover:text-brand-amber transition-colors">
+              <div className="pt-3 border-t border-slate-100 dark:border-zinc-800 flex items-center justify-between text-xs font-bold text-slate-900 dark:text-white group-hover:text-amber-600 transition-colors">
                 <span>{lang === 'en' ? hub.actionTextEn : hub.actionTextHyd}</span>
-                <ArrowRight className="w-3.5 h-3.5 text-brand-amber group-hover:translate-x-1 transition-transform" />
+                <ArrowRight className="w-3.5 h-3.5 text-amber-500 group-hover:translate-x-1 transition-transform" />
               </div>
             </motion.div>
           );

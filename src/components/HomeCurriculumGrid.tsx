@@ -510,33 +510,33 @@ export default function HomeCurriculumGrid({
                       audioEngine.playLoFiChord();
                       onSelectLesson(module.id);
                     }}
-                    className={`group relative flex flex-col justify-between p-6 rounded-3xl bg-white/90 dark:bg-zinc-900/90 hover:bg-white dark:hover:bg-zinc-900 border ${
+                    className={`group relative flex flex-col justify-between p-6 rounded-3xl bg-white dark:bg-zinc-900 hover:bg-white dark:hover:bg-zinc-900 border ${
                       isCompleted 
-                        ? 'border-emerald-500/40 shadow-xs' 
-                        : 'border-brand-slate/15 hover:border-brand-amber/50 shadow-sm hover:shadow-xl'
+                        ? 'border-emerald-500/50 shadow-xs' 
+                        : 'border-slate-200 dark:border-zinc-800 hover:border-amber-500/50 shadow-sm hover:shadow-xl'
                     } transition-all cursor-pointer text-left overflow-hidden`}
                   >
                     {/* Top Row: Stage & Lesson Number & Status Badge */}
                     <div className="flex items-center justify-between mb-4">
                       <div className="flex items-center gap-2">
                         <span className={`w-7 h-7 rounded-xl font-mono font-black text-xs flex items-center justify-center shadow-xs ${
-                          isCompleted ? 'bg-emerald-600 text-white' : 'bg-brand-charcoal text-white'
+                          isCompleted ? 'bg-emerald-600 text-white' : 'bg-slate-900 dark:bg-zinc-100 text-white dark:text-slate-900'
                         }`}>
                           0{module.lessonNum}
                         </span>
-                        <span className="text-[10px] font-mono font-bold text-brand-muted uppercase tracking-wider">
+                        <span className="text-[10px] font-mono font-bold text-slate-500 dark:text-zinc-400 uppercase tracking-wider">
                           {lang === 'en' ? module.categoryEn : module.categoryHyd}
                         </span>
                       </div>
 
                       <div className="flex items-center gap-2">
                         {isCompleted ? (
-                          <span className="flex items-center gap-1 text-[10px] font-mono font-bold text-emerald-700 bg-emerald-500/15 px-2 py-0.5 rounded-full border border-emerald-500/30">
-                            <Check className="w-3 h-3 text-emerald-600" /> Completed
+                          <span className="flex items-center gap-1 text-[10px] font-mono font-bold text-emerald-700 dark:text-emerald-300 bg-emerald-500/15 px-2.5 py-0.5 rounded-full border border-emerald-500/30">
+                            <Check className="w-3 h-3 text-emerald-600 dark:text-emerald-400" /> Completed
                           </span>
                         ) : (
-                          <div className="flex items-center gap-1 text-[10px] font-mono font-bold text-brand-muted bg-brand-sand/70 px-2 py-0.5 rounded-full border border-brand-slate/10">
-                            <Clock className="w-3 h-3 text-brand-amber" />
+                          <div className="flex items-center gap-1 text-[10px] font-mono font-bold text-slate-600 dark:text-zinc-400 bg-slate-100 dark:bg-zinc-800 px-2.5 py-0.5 rounded-full border border-slate-200 dark:border-zinc-700">
+                            <Clock className="w-3 h-3 text-amber-500" />
                             <span>{module.readTime}</span>
                           </div>
                         )}
@@ -546,20 +546,20 @@ export default function HomeCurriculumGrid({
                     {/* Title & Subtitle */}
                     <div className="space-y-2 mb-5">
                       <div className="flex items-start gap-3">
-                        <div className={`p-2.5 rounded-2xl bg-gradient-to-br ${module.color} border shrink-0 group-hover:scale-110 transition-transform`}>
+                        <div className={`p-2.5 rounded-2xl bg-gradient-to-br ${module.color} border shrink-0 group-hover:scale-110 transition-transform shadow-2xs`}>
                           <Icon className="w-5 h-5" />
                         </div>
                         <div>
-                          <div className="text-[10px] font-mono font-bold text-brand-amber tracking-tight mb-0.5">
+                          <div className="text-[10px] font-mono font-bold text-amber-600 dark:text-amber-400 tracking-tight mb-0.5">
                             {lang === 'en' ? module.stageNameEn : module.stageNameHyd}
                           </div>
-                          <h3 className="font-display text-base font-black text-brand-charcoal group-hover:text-brand-amber transition-colors leading-tight">
+                          <h3 className="font-display text-base font-black text-slate-900 dark:text-white group-hover:text-amber-600 transition-colors leading-tight">
                             {lang === 'en' ? module.titleEn : module.titleHyd}
                           </h3>
                         </div>
                       </div>
 
-                      <p className="text-xs text-brand-slate leading-relaxed line-clamp-2">
+                      <p className="text-xs text-slate-600 dark:text-zinc-300 leading-relaxed line-clamp-2">
                         {lang === 'en' ? module.subtitleEn : module.subtitleHyd}
                       </p>
                     </div>
@@ -569,7 +569,7 @@ export default function HomeCurriculumGrid({
                       {module.tags.map((tag, idx) => (
                         <span 
                           key={idx} 
-                          className="text-[9.5px] font-medium bg-brand-sand/60 dark:bg-zinc-800 text-brand-slate px-2 py-0.5 rounded-md border border-brand-slate/10"
+                          className="text-[9.5px] font-medium bg-slate-100 dark:bg-zinc-800 text-slate-600 dark:text-zinc-300 px-2 py-0.5 rounded-md border border-slate-200/80 dark:border-zinc-700"
                         >
                           {tag}
                         </span>
@@ -577,12 +577,12 @@ export default function HomeCurriculumGrid({
                     </div>
 
                     {/* Bottom Card Action */}
-                    <div className="pt-3 border-t border-brand-slate/10 flex items-center justify-between text-xs font-bold text-brand-charcoal group-hover:text-brand-amber transition-colors">
+                    <div className="pt-3 border-t border-slate-100 dark:border-zinc-800 flex items-center justify-between text-xs font-bold text-slate-900 dark:text-white group-hover:text-amber-600 transition-colors">
                       <span className="flex items-center gap-1.5">
-                        <PlayCircle className={`w-3.5 h-3.5 ${isCompleted ? 'text-emerald-600' : 'text-brand-amber'}`} />
+                        <PlayCircle className={`w-3.5 h-3.5 ${isCompleted ? 'text-emerald-600' : 'text-amber-500'}`} />
                         <span>{isCompleted ? (lang === 'en' ? "Review Lesson" : "Sabak Dobara Padhein") : (lang === 'en' ? "Start Lesson" : "Sabaq Kholein")}</span>
                       </span>
-                      <ArrowRight className="w-4 h-4 text-brand-amber group-hover:translate-x-1 transition-transform" />
+                      <ArrowRight className="w-4 h-4 text-amber-500 group-hover:translate-x-1 transition-transform" />
                     </div>
                   </motion.div>
                 );

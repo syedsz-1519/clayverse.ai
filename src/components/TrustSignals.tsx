@@ -115,24 +115,26 @@ export default function TrustSignals() {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ delay: idx * 0.06, duration: 0.5 }}
-              whileHover={{ y: -3, transition: { duration: 0.2 } }}
-              className="p-4 rounded-2xl bg-white/70 dark:bg-zinc-900/60 border border-black/[0.06] dark:border-white/[0.08] shadow-xs flex flex-col justify-between hover:border-brand-amber/40 hover:shadow-md transition-all group"
+              whileHover={{ y: -4, transition: { duration: 0.2 } }}
+              className="p-5 rounded-2xl bg-white dark:bg-zinc-900 border border-slate-200 dark:border-zinc-800 shadow-sm hover:shadow-lg hover:border-amber-500/50 transition-all flex flex-col justify-between group text-left"
             >
-              <div className="flex items-center justify-between mb-3">
-                <div className="w-8 h-8 rounded-xl bg-brand-amber/10 text-brand-amber flex items-center justify-center group-hover:scale-110 group-hover:bg-brand-amber group-hover:text-white transition-all">
-                  <Icon className="w-4 h-4" />
+              <div className="flex items-center justify-between mb-3.5">
+                <div className="w-9 h-9 rounded-xl bg-amber-500/10 dark:bg-amber-500/20 text-amber-600 dark:text-amber-400 flex items-center justify-center group-hover:scale-110 group-hover:bg-amber-500 group-hover:text-white transition-all shadow-2xs">
+                  <Icon className="w-4.5 h-4.5" />
                 </div>
-                <span className="text-[10px] font-mono text-brand-muted opacity-60">#{idx + 1}</span>
+                <span className="text-[10px] font-mono font-bold text-slate-400 dark:text-zinc-500 bg-slate-100 dark:bg-zinc-800 px-2 py-0.5 rounded-full">
+                  0{idx + 1}
+                </span>
               </div>
 
               <div>
-                <div className="font-display font-black text-lg sm:text-xl text-brand-charcoal tracking-tight">
+                <div className="font-display font-black text-lg sm:text-xl text-slate-900 dark:text-white tracking-tight">
                   {stat.value}
                 </div>
-                <div className="text-xs font-semibold text-brand-charcoal/90 mt-0.5 leading-snug">
+                <div className="text-xs font-bold text-slate-700 dark:text-zinc-200 mt-1 leading-snug">
                   {lang === 'te' ? stat.labelTe : lang === 'hi' ? stat.labelHi : stat.labelEn}
                 </div>
-                <div className="text-[11px] text-brand-muted mt-1 leading-tight line-clamp-2">
+                <div className="text-[11px] text-slate-500 dark:text-zinc-400 mt-1.5 leading-relaxed">
                   {lang === 'te' ? stat.subTe : lang === 'hi' ? stat.subHi : stat.subEn}
                 </div>
               </div>
