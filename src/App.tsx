@@ -299,6 +299,7 @@ export default function App() {
       window.removeEventListener('clay_open_lesson' as any, handleOpenLesson);
       window.removeEventListener('clay_open_languages_showcase' as any, handleOpenLanguages);
       window.removeEventListener('clay_open_offline_manager' as any, handleOpenOfflineManager);
+      window.removeEventListener('clay_open_tts_reader' as any, handleOpenTTSReaderEvent);
       window.removeEventListener('clay_toggle_focus_mode' as any, handleToggleFocusEvent);
       window.removeEventListener('hashchange', handleHashChange);
     };

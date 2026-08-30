@@ -1,14 +1,31 @@
-import { useState, type MouseEvent } from 'react';
+import React, { useState } from 'react';
 import { motion, useMotionValue, useSpring, useTransform } from 'motion/react';
-import { ArrowDown, CheckCircle2 } from 'lucide-react';
+import { 
+  BookOpen, 
+  Video, 
+  Languages, 
+  Sparkles, 
+  ArrowRight, 
+  PlayCircle, 
+  CheckCircle2, 
+  Zap, 
+  Volume2, 
+  Trophy, 
+  BrainCircuit,
+  Compass,
+  ArrowDown,
+  Layers
+} from 'lucide-react';
 import ClayLogo from './ClayLogo';
 import { useLanguage } from '../hooks/useLanguage';
+import { audioEngine } from '../lib/audioEngine';
 
 export default function Hero() {
-  const { t, lang } = useLanguage();
-  const [hoveredNode, setHoveredNode] = useState<number | null>(null);
+  const { t, lang, setLanguage } = useLanguage();
+  const [activeTab, setActiveTab] = useState<'curriculum' | 'interview' | 'languages'>('curriculum');
+  const [hoveredCard, setHoveredCard] = useState<string | null>(null);
 
-  // Mouse parallax motion values
+  // Mouse parallax motion values for subtle ambient glow
   const mouseX = useMotionValue(0);
   const mouseY = useMotionValue(0);
   const smoothMouseX = useSpring(mouseX, { damping: 30, stiffness: 200 });
@@ -17,7 +34,7 @@ export default function Hero() {
   const bgGlowX = useTransform(smoothMouseX, [-300, 300], [-15, 15]);
   const bgGlowY = useTransform(smoothMouseY, [-300, 300], [-15, 15]);
 
-  const handleMouseMove = (e: MouseEvent<HTMLDivElement>) => {
+  const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
     const rect = e.currentTarget.getBoundingClientRect();
     const centerX = rect.left + rect.width / 2;
     const centerY = rect.top + rect.height / 2;
@@ -25,21 +42,21 @@ export default function Hero() {
     mouseY.set(e.clientY - centerY);
   };
 
-  // A list of interactive "data points" for a miniature pattern matching game
-  const nodes = [
-    { id: 1, x: 25, y: 35, color: '#d97706', matches: [3, 5] },
-    { id: 2, x: 75, y: 25, color: '#475569', matches: [4, 6] },
-    { id: 3, x: 35, y: 70, color: '#d97706', matches: [1, 5] },
-    { id: 4, x: 80, y: 65, color: '#475569', matches: [2, 6] },
-    { id: 5, x: 50, y: 50, color: '#d97706', matches: [1, 3] },
-    { id: 6, x: 65, y: 80, color: '#475569', matches: [2, 4] },
+  const sampleLanguages = [
+    { code: 'en', label: 'English', native: 'English' },
+    { code: 'hi', label: 'Hindi', native: 'हिन्दी' },
+    { code: 'hyd', label: 'Dakhni Urdu', native: 'دکنی اردو' },
+    { code: 'te', label: 'Telugu', native: 'తెలుగు' },
+    { code: 'ta', label: 'Tamil', native: 'தமிழ்' },
+    { code: 'bn', label: 'Bengali', native: 'বাংলা' },
+    { code: 'mr', label: 'Marathi', native: 'मराठी' },
   ];
 
   return (
     <section 
       id="hero" 
       onMouseMove={handleMouseMove}
-      className="relative min-h-[88vh] flex flex-col justify-center items-center px-6 overflow-hidden pt-24 pb-16 select-none"
+      className="relative min-h-[85vh] flex flex-col justify-center items-center px-6 overflow-hidden pt-20 pb-12 select-none"
     >
       {/* Clean Subtle Architectural Background Grid */}
       <div 
@@ -56,18 +73,18 @@ export default function Hero() {
       {/* Gentle Ambient Warm Accent Lighting with Parallax Tilt */}
       <motion.div 
         style={{ x: bgGlowX, y: bgGlowY }}
-        className="absolute top-1/4 left-1/2 -translate-x-1/2 w-[600px] max-w-[90vw] h-[350px] rounded-full bg-brand-amber/8 blur-[100px] pointer-events-none z-0"
+        className="absolute top-1/4 left-1/2 -translate-x-1/2 w-[650px] max-w-[90vw] h-[350px] rounded-full bg-brand-amber/10 blur-[100px] pointer-events-none z-0"
       />
 
       {/* Main Hero Content */}
-      <div className="max-w-4xl mx-auto text-center z-10 flex flex-col items-center relative">
+      <div className="max-w-5xl mx-auto text-center z-10 flex flex-col items-center relative">
         
         {/* Crisp Pill Badge */}
         <motion.div
           initial={{ opacity: 0, y: -12 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5 }}
-          className="inline-flex items-center gap-2 px-4 py-1.5 bg-white/90 dark:bg-zinc-900/90 backdrop-blur-md border border-brand-amber/35 rounded-full text-xs font-bold text-brand-amber shadow-xs mb-6 hover:border-brand-amber/60 transition-all hover:scale-[1.02]"
+          className="inline-flex items-center gap-2 px-4 py-1.5 bg-white/95 dark:bg-zinc-900/95 backdrop-blur-md border border-brand-amber/35 rounded-full text-xs font-bold text-brand-amber shadow-xs mb-5 hover:border-brand-amber/60 transition-all hover:scale-[1.02]"
         >
           <ClayLogo size={20} />
           <span className="tracking-tight">{t('hero.badge')}</span>
@@ -79,7 +96,7 @@ export default function Hero() {
           initial={{ opacity: 0, y: 16 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.7, delay: 0.1 }}
-          className="font-display text-4xl sm:text-5xl md:text-6xl font-black text-brand-charcoal leading-[1.12] tracking-tight max-w-3xl mb-5 text-balance"
+          className="font-display text-4xl sm:text-5xl md:text-6xl font-black text-brand-charcoal leading-[1.12] tracking-tight max-w-3xl mb-4 text-balance"
         >
           {lang === 'en' ? (
             <>
@@ -101,165 +118,224 @@ export default function Hero() {
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ duration: 0.8, delay: 0.25 }}
-          className="font-sans text-base sm:text-lg md:text-xl text-brand-slate max-w-2xl leading-relaxed mb-6 text-balance font-normal"
+          className="font-sans text-base sm:text-lg text-brand-slate max-w-2xl leading-relaxed mb-6 text-balance font-normal"
         >
           {t('hero.subtitle')}
         </motion.p>
 
-        {/* Scannable Key Beginner Highlights */}
+        {/* Scannable Key Highlights */}
         <motion.div 
           initial={{ opacity: 0, y: 8 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6, delay: 0.35 }}
-          className="flex flex-wrap justify-center items-center gap-2.5 sm:gap-3 mb-8 text-xs sm:text-sm font-medium text-brand-charcoal"
+          className="flex flex-wrap justify-center items-center gap-2 sm:gap-2.5 mb-8 text-xs font-medium text-brand-charcoal"
         >
-          <div className="flex items-center gap-1.5 bg-white/80 dark:bg-zinc-800/80 backdrop-blur-md px-3.5 py-1.5 rounded-full border border-black/5 dark:border-white/10 shadow-2xs">
-            <CheckCircle2 className="w-4 h-4 text-emerald-600 dark:text-emerald-400" />
-            <span>{lang === 'en' ? "Visual analogies" : lang === 'te' ? "విజువల్ ఉదాహరణలు" : "Aasan misaalein"}</span>
+          <div className="flex items-center gap-1.5 bg-white/90 dark:bg-zinc-800/90 backdrop-blur-md px-3 py-1 rounded-full border border-black/5 dark:border-white/10 shadow-2xs">
+            <CheckCircle2 className="w-3.5 h-3.5 text-emerald-600 dark:text-emerald-400" />
+            <span>{lang === 'en' ? "Zero Math Prerequisite" : lang === 'te' ? "గణితం అవసరం లేదు" : "Zero Maths Required"}</span>
           </div>
-          <div className="flex items-center gap-1.5 bg-white/80 dark:bg-zinc-800/80 backdrop-blur-md px-3.5 py-1.5 rounded-full border border-black/5 dark:border-white/10 shadow-2xs">
-            <CheckCircle2 className="w-4 h-4 text-emerald-600 dark:text-emerald-400" />
-            <span>{lang === 'en' ? "Hands-on sandboxes" : lang === 'te' ? "ఇంటరాక్టివ్ శ్యాండ్‌బాక్స్" : "Live interactive sandboxes"}</span>
+          <div className="flex items-center gap-1.5 bg-white/90 dark:bg-zinc-800/90 backdrop-blur-md px-3 py-1 rounded-full border border-black/5 dark:border-white/10 shadow-2xs">
+            <CheckCircle2 className="w-3.5 h-3.5 text-emerald-600 dark:text-emerald-400" />
+            <span>{lang === 'en' ? "Interactive Visual Sandboxes" : lang === 'te' ? "ఇంటరాక్టివ్ శ్యాండ్‌బాక్స్" : "Live Visual Sandboxes"}</span>
           </div>
-          <div className="flex items-center gap-1.5 bg-white/80 dark:bg-zinc-800/80 backdrop-blur-md px-3.5 py-1.5 rounded-full border border-black/5 dark:border-white/10 shadow-2xs">
-            <CheckCircle2 className="w-4 h-4 text-emerald-600 dark:text-emerald-400" />
-            <span>{lang === 'en' ? "25+ Indian Languages" : lang === 'te' ? "25+ భారతీయ భాషల మద్దతు" : "25+ Zabaano mein support"}</span>
+          <div className="flex items-center gap-1.5 bg-white/90 dark:bg-zinc-800/90 backdrop-blur-md px-3 py-1 rounded-full border border-black/5 dark:border-white/10 shadow-2xs">
+            <CheckCircle2 className="w-3.5 h-3.5 text-emerald-600 dark:text-emerald-400" />
+            <span>{lang === 'en' ? "AI Mock Interview Practice" : lang === 'te' ? "AI మాక్ ఇంటర్వ్యూ" : "Live AI Mock Interview"}</span>
           </div>
         </motion.div>
 
-        {/* Tactile Interactive Pattern Canvas */}
+        {/* Interactive CTA Hub Cards */}
         <motion.div
-          initial={{ opacity: 0, scale: 0.96 }}
-          animate={{ opacity: 1, scale: 1 }}
-          transition={{ duration: 0.7, delay: 0.45 }}
-          className="relative w-full max-w-lg h-52 bg-white/95 dark:bg-zinc-900/90 border border-black/[0.08] dark:border-white/[0.1] rounded-2xl p-5 mb-8 shadow-md flex flex-col justify-between overflow-hidden backdrop-blur-md hover:border-brand-amber/40 transition-all"
-        >
-          {/* Subtle grid pattern background */}
-          <div className="absolute inset-0 opacity-[0.03] bg-[radial-gradient(#000_1px,transparent_1px)] [background-size:16px_16px] pointer-events-none" />
-
-          {/* SVG Connection Lines */}
-          <svg className="absolute inset-0 w-full h-full pointer-events-none">
-            {nodes.map((node) => 
-              node.matches.map((matchId) => {
-                const targetNode = nodes.find((n) => n.id === matchId);
-                if (!targetNode || node.id > matchId) return null; // Avoid duplicate lines
-                const isMatchingHover = hoveredNode === node.id || hoveredNode === targetNode.id;
-                return (
-                  <motion.line
-                    key={`${node.id}-${matchId}`}
-                    x1={`${node.x}%`}
-                    y1={`${node.y}%`}
-                    x2={`${targetNode.x}%`}
-                    y2={`${targetNode.y}%`}
-                    stroke={isMatchingHover ? node.color : '#cbd5e1'}
-                    strokeWidth={isMatchingHover ? 2.5 : 1}
-                    strokeDasharray={isMatchingHover ? '0' : '4,4'}
-                    initial={{ pathLength: 0 }}
-                    animate={{ pathLength: 1 }}
-                    transition={{ duration: 1.2, delay: 0.6 }}
-                  />
-                );
-              })
-            )}
-          </svg>
-
-          {/* Interactive Nodes */}
-          {nodes.map((node) => (
-            <button
-              key={node.id}
-              className="absolute group -translate-x-1/2 -translate-y-1/2 cursor-pointer focus:outline-none"
-              style={{ left: `${node.x}%`, top: `${node.y}%` }}
-              onMouseEnter={() => setHoveredNode(node.id)}
-              onMouseLeave={() => setHoveredNode(null)}
-              aria-label={`Interactive pattern node ${node.id}`}
-            >
-              <div 
-                className="w-7 h-7 rounded-full flex items-center justify-center transition-all duration-300"
-                style={{ 
-                  backgroundColor: hoveredNode === node.id ? node.color : '#ffffff',
-                  border: `2px solid ${node.color}`,
-                  boxShadow: hoveredNode === node.id 
-                    ? `0 0 14px ${node.color}70, inset 0 1px 2px rgba(255,255,255,0.6)`
-                    : '0 2px 5px rgba(0,0,0,0.06)'
-                }}
-              >
-                <div 
-                  className="w-2 h-2 rounded-full transition-transform duration-300 group-hover:scale-125"
-                  style={{ backgroundColor: hoveredNode === node.id ? '#ffffff' : node.color }}
-                />
-              </div>
-            </button>
-          ))}
-
-          {/* Tactile interaction instructions */}
-          <div className="absolute bottom-3 left-4 right-4 flex justify-between items-center text-xs text-brand-muted pointer-events-none">
-            <span className="font-medium flex items-center gap-1.5">
-              <span className="w-1.5 h-1.5 rounded-full bg-brand-amber animate-pulse inline-block" />
-              {t('hero.canvas.instruction')}
-            </span>
-            <span className="font-mono bg-brand-sand/70 dark:bg-zinc-800 px-2 py-0.5 rounded border border-black/5 dark:border-white/10 text-[10px]">{t('hero.canvas.engine')}</span>
-          </div>
-        </motion.div>
-
-        {/* Clear Action CTA Hierarchy */}
-        <motion.div
-          initial={{ opacity: 0, y: 12 }}
+          initial={{ opacity: 0, y: 16 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.65, duration: 0.5 }}
-          className="flex flex-wrap items-center justify-center gap-3 mb-8"
+          transition={{ duration: 0.7, delay: 0.45 }}
+          className="w-full max-w-4xl grid grid-cols-1 md:grid-cols-3 gap-4 mb-8 text-left"
+        >
+          {/* Card 1: 9-Step Curriculum */}
+          <div
+            onMouseEnter={() => {
+              setHoveredCard('curriculum');
+            }}
+            onMouseLeave={() => setHoveredCard(null)}
+            onClick={() => {
+              audioEngine.playLoFiChord();
+              const el = document.getElementById('curriculum');
+              if (el) {
+                el.scrollIntoView({ behavior: 'smooth' });
+              } else {
+                window.dispatchEvent(new CustomEvent('clay_open_lesson', { detail: 'what-is-ai' }));
+              }
+            }}
+            className="group relative p-5 rounded-3xl bg-gradient-to-b from-amber-500/10 via-white to-white dark:from-amber-950/20 dark:via-zinc-900 dark:to-zinc-900 border-2 border-brand-amber/40 hover:border-brand-amber shadow-sm hover:shadow-xl transition-all cursor-pointer flex flex-col justify-between overflow-hidden"
+          >
+            <div className="absolute top-0 right-0 px-3 py-1 rounded-bl-2xl bg-brand-amber text-white font-mono text-[10px] font-black uppercase tracking-wider shadow-xs">
+              Primary Course
+            </div>
+
+            <div>
+              <div className="w-10 h-10 rounded-2xl bg-brand-amber/20 text-brand-amber flex items-center justify-center mb-3.5 group-hover:scale-110 transition-transform">
+                <BookOpen className="w-5 h-5" />
+              </div>
+              <h3 className="font-display text-lg font-black text-brand-charcoal group-hover:text-brand-amber transition-colors leading-tight mb-1">
+                {lang === 'en' ? "9-Step Curriculum" : "9 Asbaaq Course"}
+              </h3>
+              <p className="text-xs text-brand-slate leading-relaxed mb-4">
+                {lang === 'en'
+                  ? "Master mental models, LLMs, prompting, and RAG architectures step-by-step."
+                  : "Buniyaadi models se le kar RAG aur Transformers tak aasan visual sabaq."}
+              </p>
+            </div>
+
+            <div className="pt-3 border-t border-brand-slate/10 flex items-center justify-between">
+              <span className="text-xs font-bold text-brand-amber flex items-center gap-1.5">
+                <PlayCircle className="w-4 h-4" />
+                <span>{lang === 'en' ? "Start Learning" : "Sabak Shuru Karein"}</span>
+              </span>
+              <ArrowRight className="w-4 h-4 text-brand-amber group-hover:translate-x-1 transition-transform" />
+            </div>
+          </div>
+
+          {/* Card 2: AI Mock Interviewer */}
+          <div
+            onMouseEnter={() => setHoveredCard('interview')}
+            onMouseLeave={() => setHoveredCard(null)}
+            onClick={() => {
+              audioEngine.playClick();
+              window.dispatchEvent(new CustomEvent('clay_navigate_view', { detail: 'interview' }));
+            }}
+            className="group relative p-5 rounded-3xl bg-white/90 dark:bg-zinc-900/90 hover:bg-white dark:hover:bg-zinc-900 border border-brand-slate/15 hover:border-blue-500/50 shadow-sm hover:shadow-xl transition-all cursor-pointer flex flex-col justify-between overflow-hidden"
+          >
+            <div className="absolute top-0 right-0 px-3 py-1 rounded-bl-2xl bg-blue-500/15 text-blue-600 font-mono text-[10px] font-bold uppercase tracking-wider">
+              Simulation
+            </div>
+
+            <div>
+              <div className="w-10 h-10 rounded-2xl bg-blue-500/15 text-blue-600 flex items-center justify-center mb-3.5 group-hover:scale-110 transition-transform">
+                <Video className="w-5 h-5" />
+              </div>
+              <h3 className="font-display text-lg font-black text-brand-charcoal group-hover:text-blue-600 transition-colors leading-tight mb-1">
+                {lang === 'en' ? "AI Mock Interview" : "AI Mock Interview"}
+              </h3>
+              <p className="text-xs text-brand-slate leading-relaxed mb-4">
+                {lang === 'en'
+                  ? "Practice real ML job questions with live camera feedback, speech metrics, and rubric scoring."
+                  : "Live video aur audio feedback ke sath real interview practice karein."}
+              </p>
+            </div>
+
+            <div className="pt-3 border-t border-brand-slate/10 flex items-center justify-between">
+              <span className="text-xs font-bold text-blue-600 flex items-center gap-1.5">
+                <Zap className="w-4 h-4" />
+                <span>{lang === 'en' ? "Practice Live" : "Interview Kholein"}</span>
+              </span>
+              <ArrowRight className="w-4 h-4 text-blue-600 group-hover:translate-x-1 transition-transform" />
+            </div>
+          </div>
+
+          {/* Card 3: 25+ Indian Languages */}
+          <div
+            onMouseEnter={() => setHoveredCard('languages')}
+            onMouseLeave={() => setHoveredCard(null)}
+            onClick={() => {
+              audioEngine.playPop();
+              window.dispatchEvent(new CustomEvent('clay_open_languages_showcase'));
+            }}
+            className="group relative p-5 rounded-3xl bg-white/90 dark:bg-zinc-900/90 hover:bg-white dark:hover:bg-zinc-900 border border-brand-slate/15 hover:border-emerald-500/50 shadow-sm hover:shadow-xl transition-all cursor-pointer flex flex-col justify-between overflow-hidden"
+          >
+            <div className="absolute top-0 right-0 px-3 py-1 rounded-bl-2xl bg-emerald-500/15 text-emerald-600 font-mono text-[10px] font-bold uppercase tracking-wider">
+              25+ Dialects
+            </div>
+
+            <div>
+              <div className="w-10 h-10 rounded-2xl bg-emerald-500/15 text-emerald-600 flex items-center justify-center mb-3.5 group-hover:scale-110 transition-transform">
+                <Languages className="w-5 h-5" />
+              </div>
+              <h3 className="font-display text-lg font-black text-brand-charcoal group-hover:text-emerald-600 transition-colors leading-tight mb-1">
+                {lang === 'en' ? "Native Languages" : "Apni Zabaan Mein"}
+              </h3>
+              <p className="text-xs text-brand-slate leading-relaxed mb-3">
+                {lang === 'en'
+                  ? "Read or listen with full text-to-speech in Hindi, Dakhni, Telugu, Tamil, and Bengali."
+                  : "Urdu, Telugu, Hindi aur Tamil mein aasaani se seekhein aur sunein."}
+              </p>
+              
+              {/* Mini Language Selector Chips */}
+              <div className="flex flex-wrap gap-1 mb-2">
+                {sampleLanguages.slice(0, 5).map((l) => (
+                  <button
+                    key={l.code}
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      audioEngine.playClick();
+                      setLanguage(l.code as any);
+                    }}
+                    className={`text-[9.5px] font-mono px-1.5 py-0.5 rounded cursor-pointer transition-colors ${
+                      lang === l.code
+                        ? 'bg-emerald-600 text-white font-bold'
+                        : 'bg-brand-sand/70 dark:bg-zinc-800 text-brand-slate hover:text-brand-charcoal hover:bg-brand-sand'
+                    }`}
+                  >
+                    {l.native}
+                  </button>
+                ))}
+              </div>
+            </div>
+
+            <div className="pt-3 border-t border-brand-slate/10 flex items-center justify-between">
+              <span className="text-xs font-bold text-emerald-600 flex items-center gap-1.5">
+                <Volume2 className="w-4 h-4" />
+                <span>{lang === 'en' ? "Explore Dialects" : "Zabaanein Dekhein"}</span>
+              </span>
+              <ArrowRight className="w-4 h-4 text-emerald-600 group-hover:translate-x-1 transition-transform" />
+            </div>
+          </div>
+        </motion.div>
+
+        {/* Direct Action Bar */}
+        <motion.div
+          initial={{ opacity: 0, y: 10 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.6, duration: 0.5 }}
+          className="flex flex-wrap items-center justify-center gap-3 mb-6"
         >
           <button
             onClick={() => {
-              const el = document.getElementById('curriculum') || document.getElementById('curriculum-grid');
+              audioEngine.playLoFiChord();
+              const el = document.getElementById('curriculum');
               if (el) el.scrollIntoView({ behavior: 'smooth' });
               else window.dispatchEvent(new CustomEvent('clay_open_lesson', { detail: 'what-is-ai' }));
             }}
-            className="px-6 py-3 rounded-xl bg-brand-amber hover:bg-brand-amber-dark text-white font-bold text-sm shadow-md hover:shadow-lg transition-all flex items-center gap-2 hover:scale-[1.02] cursor-pointer"
+            className="px-6 py-3 rounded-2xl bg-brand-charcoal hover:bg-black text-white font-bold text-sm shadow-md hover:shadow-xl transition-all flex items-center gap-2 hover:scale-[1.02] cursor-pointer"
           >
-            <span>{lang === 'te' ? '9-పాఠాల కోర్స్ ప్రారంభించండి' : lang === 'hi' ? '9-पाठों का AI कोर्स शुरू करें' : 'Explore 9-Step Curriculum'}</span>
-            <ArrowDown className="w-4 h-4" />
+            <Sparkles className="w-4 h-4 text-brand-amber" />
+            <span>{lang === 'te' ? '9-పాఠాల కోర్స్ ప్రారంభించండి' : lang === 'hi' ? '9-पाठों का AI कोर्स शुरू करें' : 'Start 9-Step AI Course'}</span>
+            <ArrowDown className="w-4 h-4 text-brand-amber" />
           </button>
 
           <button
             onClick={() => {
+              audioEngine.playClick();
               window.dispatchEvent(new CustomEvent('clay_navigate_view', { detail: 'interview' }));
             }}
-            className="px-5 py-3 rounded-xl bg-brand-charcoal hover:bg-black text-white font-bold text-sm shadow-sm hover:shadow-md transition-all flex items-center gap-2 cursor-pointer"
+            className="px-5 py-3 rounded-2xl bg-white dark:bg-zinc-800 hover:bg-brand-sand/50 border border-brand-slate/20 hover:border-brand-charcoal text-brand-charcoal font-bold text-sm shadow-xs transition-all flex items-center gap-2 cursor-pointer"
           >
+            <Video className="w-4 h-4 text-blue-600" />
             <span>{lang === 'te' ? 'AI మాక్ ఇంటర్వ్యూ' : lang === 'hi' ? 'AI मॉक इंटरव्यूअर' : 'AI Mock Interviewer'}</span>
           </button>
 
           <button
             onClick={() => {
-              window.dispatchEvent(new CustomEvent('clay_open_languages_showcase'));
+              audioEngine.playPop();
+              window.dispatchEvent(new CustomEvent('clay_open_tts_reader', { detail: { text: "AI is pattern matching at massive scale.", title: "Introduction to AI" } }));
             }}
-            className="px-5 py-3 rounded-xl bg-white dark:bg-zinc-800 hover:bg-brand-sand/40 border border-black/10 dark:border-white/10 text-brand-charcoal font-semibold text-sm shadow-xs hover:border-brand-amber/40 transition-all flex items-center gap-2 cursor-pointer"
+            className="px-4 py-3 rounded-2xl bg-white/80 dark:bg-zinc-800/80 hover:bg-white border border-brand-slate/20 text-brand-slate hover:text-brand-charcoal font-medium text-sm transition-all flex items-center gap-2 cursor-pointer"
           >
-            <span>{lang === 'te' ? '25+ భారతీయ భాషలు' : lang === 'hi' ? '25+ भारतीय भाषाएं' : '25+ Indian Languages'}</span>
+            <Volume2 className="w-4 h-4 text-brand-amber" />
+            <span>{lang === 'en' ? "Listen Narration" : "Awaaz Sunein"}</span>
           </button>
         </motion.div>
-
-        {/* Scroll Indicator */}
-        <motion.button
-          onClick={() => {
-            const el = document.getElementById('curriculum') || document.getElementById('what-is-ai');
-            if (el) el.scrollIntoView({ behavior: 'smooth' });
-          }}
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ delay: 0.8, duration: 0.5 }}
-          className="flex flex-col items-center gap-2 text-xs font-semibold text-brand-slate hover:text-brand-amber transition-colors group cursor-pointer"
-        >
-          <span>{t('hero.button')}</span>
-          <motion.div
-            animate={{ y: [0, 5, 0] }}
-            transition={{ repeat: Infinity, duration: 1.5, ease: 'easeInOut' }}
-            className="w-7 h-7 rounded-full bg-white dark:bg-zinc-800 border border-black/10 dark:border-white/15 flex items-center justify-center shadow-2xs group-hover:border-brand-amber/40 group-hover:shadow-xs transition-all"
-          >
-            <ArrowDown className="w-3.5 h-3.5 text-brand-slate group-hover:text-brand-amber" />
-          </motion.div>
-        </motion.button>
       </div>
     </section>
   );
 }
+
