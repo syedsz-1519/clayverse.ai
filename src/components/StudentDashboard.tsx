@@ -67,6 +67,9 @@ import InterviewReportModal from './InterviewReportModal';
 import InterviewAudioReplayModal from './InterviewAudioReplayModal';
 import PostInterviewReflectionModal from './PostInterviewReflectionModal';
 import HistoricalInterviewTable from './HistoricalInterviewTable';
+import BentoDashboardDndGrid, { BentoTileId } from './BentoDashboardDndGrid';
+import { StudentOverviewBentoContent } from './StudentOverviewBentoContent';
+import LearningPathDependencyMap from './LearningPathDependencyMap';
 import DailyLearningGoalTracker from './DailyLearningGoalTracker';
 import PracticeReminderModal from './PracticeReminderModal';
 import TakeawaysNotesExportModal from './TakeawaysNotesExportModal';
@@ -82,6 +85,7 @@ import { BadgeEngine as BadgeEngineLib } from '../lib/badgeEngine';
 import { streakManager, type DailyStreakState } from '../lib/streakManager';
 import { offlineLessonCache, type OfflineCacheStats } from '../lib/offlineLessonCache';
 import { getStudentKnowledgeNotes } from '../lib/notesExporter';
+import { exportQuizPerformancePdf } from '../lib/quizPdfExporter';
 import { 
   deriveSessionTags, 
   TOPIC_TAG_DEFINITIONS, 
@@ -523,6 +527,28 @@ export default function StudentDashboard({
     }, 600);
   };
 
+  const handleDownloadQuizPdf = () => {
+    audioEngine.playLoFiChord();
+    const studentName = currentUser?.displayName || 'Clayverse AI Scholar';
+    const studentEmail = currentUser?.email || 'student@clayverse.ai';
+    
+    let sessions: any[] = [];
+    try {
+      const saved = localStorage.getItem('clay_quiz_sessions');
+      if (saved) {
+        sessions = JSON.parse(saved);
+      }
+    } catch {}
+
+    exportQuizPerformancePdf({
+      studentName,
+      studentEmail,
+      sessions,
+      streakState,
+      language: lang === 'ur' ? 'ur' : 'en'
+    });
+  };
+
   return (
     <section className="w-full min-h-screen bg-brand-cream py-8 px-4 sm:px-6 select-none">
       <div className="max-w-6xl mx-auto space-y-6 text-left">
@@ -581,6 +607,17 @@ export default function StudentDashboard({
 
             {/* Quick Actions & Auth */}
             <div className="flex flex-wrap items-center gap-2.5">
+              <motion.button
+                whileHover={{ scale: 1.03, y: -1 }}
+                whileTap={{ scale: 0.97 }}
+                onClick={handleDownloadQuizPdf}
+                className="px-4 py-2.5 bg-white/10 hover:bg-white/20 text-white rounded-2xl text-xs font-bold border border-white/15 transition-all flex items-center gap-2 cursor-pointer"
+                title="Download complete quiz performance and progress summary as PDF"
+              >
+                <Download className="w-4 h-4 text-brand-amber" />
+                <span>{lang === 'en' ? "Download PDF Report" : "PDF Report"}</span>
+              </motion.button>
+
               <motion.button
                 whileHover={{ scale: 1.03, y: -1 }}
                 whileTap={{ scale: 0.97 }}
@@ -859,7 +896,7 @@ export default function StudentDashboard({
         {/* ========================================================================= */}
         {/* STATS OVERVIEW CARDS WITH FRAMER MOTION HOVER */}
         {/* ========================================================================= */}
-        <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
+        <div className="grid grid-cols-2 sm:grid-cols-4 gap-3.5">
           <motion.div 
             initial={{ opacity: 0, y: 15 }}
             animate={{ opacity: 1, y: 0 }}
@@ -930,424 +967,69 @@ export default function StudentDashboard({
         </div>
 
         {/* ========================================================================= */}
-        {/* RECOMMENDED NEXT LESSON (ADAPTIVE AI TUTOR & PERFORMANCE-BASED) */}
+        {/* DRAG-AND-DROP CUSTOMIZABLE BENTO-GRID SYSTEM WITH LOCALSTORAGE PERSISTENCE */}
         {/* ========================================================================= */}
-        <RecommendedNextLessonCard onNavigateSection={onNavigateSection} />
-
-        {/* ========================================================================= */}
-        {/* INTERACTIVE ANALYTICS VISUALIZER TABS (RECHARTS BAR CHART & CURRICULUM) */}
-        {/* ========================================================================= */}
-        <div className="space-y-4">
-          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
-            <div className="flex items-center gap-2">
-              <div className="p-1.5 rounded-xl bg-brand-amber/15 text-brand-amber">
-                <BarChart3 className="w-4 h-4" />
-              </div>
-              <div>
-                <h3 className="font-display text-base font-bold text-brand-charcoal">
-                  {lang === 'en' ? "Performance Visualizer & Analytics" : "Performance Charts aur Analytics"}
-                </h3>
-                <p className="text-xs text-brand-muted">
-                  {lang === 'en'
-                    ? "Interactive Recharts visualizer for quiz historical scores, competency accuracy, and curriculum completion."
-                    : "Quizzes ki tareekhi accuracy aur curriculum ki raftaar ka visual chart."}
-                </p>
-              </div>
-            </div>
-
-            <div className="flex items-center p-1 rounded-2xl bg-white border border-brand-slate/15 shadow-2xs self-start sm:self-auto">
-              <button
-                type="button"
-                onClick={() => {
-                  setAnalyticsChartType('quiz');
-                  audioEngine.playLoFiChord();
-                }}
-                className={`px-3.5 py-1.5 rounded-xl text-xs font-mono font-bold transition-all cursor-pointer flex items-center gap-1.5 ${
-                  analyticsChartType === 'quiz'
-                    ? 'bg-brand-charcoal text-white shadow-xs'
-                    : 'text-brand-slate hover:text-brand-charcoal hover:bg-brand-sand/40'
-                }`}
-              >
-                <Award className="w-3.5 h-3.5 text-brand-amber" />
-                <span>Quiz Performance (Bar Chart)</span>
-              </button>
-              <button
-                type="button"
-                onClick={() => {
-                  setAnalyticsChartType('curriculum');
-                  audioEngine.playLoFiChord();
-                }}
-                className={`px-3.5 py-1.5 rounded-xl text-xs font-mono font-bold transition-all cursor-pointer flex items-center gap-1.5 ${
-                  analyticsChartType === 'curriculum'
-                    ? 'bg-brand-charcoal text-white shadow-xs'
-                    : 'text-brand-slate hover:text-brand-charcoal hover:bg-brand-sand/40'
-                }`}
-              >
-                <TrendingUp className="w-3.5 h-3.5 text-emerald-400" />
-                <span>Curriculum Mastery & Time</span>
-              </button>
-            </div>
-          </div>
-
-          {analyticsChartType === 'quiz' ? (
-            <QuizPerformanceBarChart onNavigateSection={onNavigateSection} />
-          ) : (
-            <CurriculumProgressChart
-              completedLessonIds={streakState.completedLessonIds || []}
-              masteredConceptIds={masteredConcepts}
-              streakState={streakState}
+        <BentoDashboardDndGrid
+          renderTileContent={(tileId) => (
+            <StudentOverviewBentoContent
+              tileId={tileId}
               onNavigateSection={onNavigateSection}
+              lang={lang}
+              audioEngine={audioEngine}
+              streakState={streakState}
+              streakCelebrate={streakCelebrate}
+              handleMarkTodayComplete={handleMarkTodayComplete}
+              masteredConcepts={masteredConcepts}
+              setMasteredConcepts={setMasteredConcepts}
+              toggleConceptMastery={toggleConceptMastery}
+              masteryPercent={masteryPercent}
+              analyticsChartType={analyticsChartType}
+              setAnalyticsChartType={setAnalyticsChartType}
+              handleDownloadQuizPdf={handleDownloadQuizPdf}
+              isOnline={isOnline}
+              cacheStats={cacheStats}
+              handleSyncCacheManually={handleSyncCacheManually}
+              isSyncingCache={isSyncingCache}
+              savedNotesCount={savedNotesCount}
+              setIsExportNotesModalOpen={setIsExportNotesModalOpen}
+              emailDigestPrefs={emailDigestPrefs}
+              setIsEmailDigestModalOpen={setIsEmailDigestModalOpen}
+              currentUser={currentUser}
+              interviewHistory={interviewHistory}
+              setInterviewHistory={setInterviewHistory}
+              selectedChartSessionId={selectedChartSessionId}
+              setSelectedChartSessionId={setSelectedChartSessionId}
+              historyViewMode={historyViewMode}
+              setHistoryViewMode={setHistoryViewMode}
+              setIsComparisonModalOpen={setIsComparisonModalOpen}
+              setComparisonSessionAId={setComparisonSessionAId}
+              setComparisonSessionBId={setComparisonSessionBId}
+              handleExportAllCsv={handleExportAllCsv}
+              handleExportSingleCsv={handleExportSingleCsv}
+              onStartInterview={onStartInterview}
+              searchQuery={searchQuery}
+              setSearchQuery={setSearchQuery}
+              selectedDifficultyFilter={selectedDifficultyFilter}
+              setSelectedDifficultyFilter={setSelectedDifficultyFilter}
+              selectedTopicFilter={selectedTopicFilter}
+              setSelectedTopicFilter={setSelectedTopicFilter}
+              availableTopicTagsWithCounts={availableTopicTagsWithCounts}
+              getTopicTagMeta={getTopicTagMeta}
+              filteredInterviewRecords={filteredInterviewRecords}
+              expandedInterviewId={expandedInterviewId}
+              setExpandedInterviewId={setExpandedInterviewId}
+              setSelectedReplayRecord={setSelectedReplayRecord}
+              setIsAudioReplayOpen={setIsAudioReplayOpen}
+              setSelectedReportRecord={setSelectedReportRecord}
+              setIsReportModalOpen={setIsReportModalOpen}
+              setSelectedReflectionRecord={setSelectedReflectionRecord}
+              setIsReflectionModalOpen={setIsReflectionModalOpen}
+              studentProfile={studentProfile}
+              setActiveTab={setActiveTab}
+              setIsReminderModalOpen={setIsReminderModalOpen}
             />
           )}
-        </div>
-
-        {/* ========================================================================= */}
-        {/* 1. DAILY STREAK & CONSISTENCY HABIT TRACKER (FRAMER MOTION BOUNCE & GLOW) */}
-        {/* ========================================================================= */}
-        <motion.div
-          initial={{ opacity: 0, scale: 0.92, y: 20 }}
-          animate={{ 
-            opacity: 1, 
-            scale: 1, 
-            y: 0,
-            boxShadow: streakCelebrate 
-              ? [
-                  "0 4px 12px rgba(0,0,0,0.05)",
-                  "0 0 35px rgba(217, 119, 6, 0.4)",
-                  "0 4px 12px rgba(0,0,0,0.05)"
-                ]
-              : "0 1px 3px rgba(0, 0, 0, 0.05)"
-          }}
-          transition={{ 
-            type: "spring", 
-            stiffness: 260, 
-            damping: 20,
-            boxShadow: { duration: 2, repeat: streakCelebrate ? Infinity : 0 }
-          }}
-          className={`bg-gradient-to-br from-amber-500/10 via-white to-orange-500/10 border-2 rounded-3xl p-6 shadow-sm space-y-5 transition-all ${
-            streakCelebrate ? 'border-brand-amber ring-4 ring-amber-500/20' : 'border-brand-amber/35'
-          }`}
-        >
-          <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
-            
-            {/* Streak Number & Status */}
-            <div className="flex items-center gap-4">
-              <motion.div 
-                animate={streakCelebrate ? { 
-                  scale: [1, 1.25, 0.95, 1.15, 1], 
-                  rotate: [0, -10, 10, -5, 0] 
-                } : { scale: 1 }}
-                transition={{ duration: 0.8, ease: "easeInOut" }}
-                className="w-14 h-14 rounded-2xl bg-gradient-to-tr from-amber-500 to-orange-600 text-white flex items-center justify-center shadow-md relative group shrink-0"
-              >
-                <motion.div
-                  animate={{ 
-                    scale: [1, 1.14, 1],
-                    y: [0, -2, 0]
-                  }}
-                  transition={{ repeat: Infinity, duration: 1.6, ease: "easeInOut" }}
-                >
-                  <Flame className="w-7 h-7 stroke-[2.5]" />
-                </motion.div>
-
-                {streakState.todayCompleted && (
-                  <motion.span 
-                    initial={{ scale: 0 }}
-                    animate={{ scale: 1 }}
-                    transition={{ type: "spring", stiffness: 500, damping: 15 }}
-                    className="absolute -top-1.5 -right-1.5 w-5 h-5 bg-emerald-500 text-white text-[10px] rounded-full flex items-center justify-center font-bold border-2 border-white shadow-xs"
-                  >
-                    ✓
-                  </motion.span>
-                )}
-              </motion.div>
-
-              <div>
-                <div className="flex items-center gap-2">
-                  <span className="text-[10px] font-mono font-bold uppercase tracking-wider px-2 py-0.5 rounded-full bg-brand-amber/20 text-brand-amber-dark border border-brand-amber/30">
-                    Daily Consistency Tracker
-                  </span>
-                  <span className="text-xs font-mono font-bold text-brand-muted">
-                    Best: {streakState.longestStreak} Days
-                  </span>
-                </div>
-                <h2 className="font-display text-xl sm:text-2xl font-black text-brand-charcoal mt-0.5 flex items-center gap-2">
-                  <span>{streakState.currentStreak} Consecutive Days Streak</span>
-                  <motion.span 
-                    animate={streakCelebrate ? { scale: [1, 1.4, 1], rotate: [0, 15, -15, 0] } : {}}
-                    transition={{ duration: 0.6 }}
-                    className="text-lg inline-block"
-                  >
-                    {streakState.todayCompleted ? '🔥' : '⏳'}
-                  </motion.span>
-                </h2>
-                <p className="text-xs text-brand-slate">
-                  {streakState.todayCompleted
-                    ? (lang === 'en' ? "Awesome job! Today's learning streak is secured." : "Zabardast! Aaj ka sabaq mukammal ho gaya.")
-                    : (lang === 'en' ? "Complete a lesson or knowledge check today to maintain your streak!" : "Streak bachane ke liye aaj ka sabaq mukammal karein!")}
-                </p>
-              </div>
-            </div>
-
-            {/* Action / Celebration */}
-            <div className="flex items-center gap-3">
-              {streakCelebrate ? (
-                <motion.div 
-                  initial={{ scale: 0.8, opacity: 0 }}
-                  animate={{ scale: 1, opacity: 1 }}
-                  className="px-4 py-2.5 rounded-2xl bg-emerald-500 text-white text-xs font-bold flex items-center gap-2 shadow-md"
-                >
-                  <Sparkles className="w-4 h-4 animate-spin" />
-                  <span>Streak Milestone Secured! 🎉</span>
-                </motion.div>
-              ) : (
-                <motion.button
-                  whileHover={{ scale: 1.03 }}
-                  whileTap={{ scale: 0.97 }}
-                  onClick={handleMarkTodayComplete}
-                  className={`px-4 py-2.5 rounded-2xl text-xs font-bold transition-all shadow-xs flex items-center gap-2 cursor-pointer ${
-                    streakState.todayCompleted
-                      ? 'bg-emerald-500/15 border border-emerald-500/30 text-emerald-800 hover:bg-emerald-500/25'
-                      : 'bg-brand-charcoal hover:bg-black text-white'
-                  }`}
-                >
-                  {streakState.todayCompleted ? (
-                    <>
-                      <CheckCircle2 className="w-4 h-4 text-emerald-600" />
-                      <span>Today's Learning Verified</span>
-                    </>
-                  ) : (
-                    <>
-                      <Flame className="w-4 h-4 text-brand-amber" />
-                      <span>Check In & Mark Today Complete</span>
-                    </>
-                  )}
-                </motion.button>
-              )}
-            </div>
-          </div>
-
-          {/* 7-Day Weekly Streak Dots & Milestone Strip */}
-          <div className="grid grid-cols-1 md:grid-cols-12 gap-4 pt-4 border-t border-brand-amber/15 items-center">
-            
-            {/* 7-Day Visual Dots */}
-            <div className="md:col-span-7 flex items-center justify-between gap-1.5 sm:gap-2 p-3 rounded-2xl bg-white/80 border border-brand-slate/10">
-              {streakState.weeklyActivity.map((day, idx) => (
-                <div key={idx} className="flex flex-col items-center gap-1 text-center min-w-[36px]">
-                  <span className="text-[10px] font-mono font-bold text-brand-muted">
-                    {day.dayName}
-                  </span>
-                  <motion.div 
-                    whileHover={{ scale: 1.1 }}
-                    className={`w-8 h-8 rounded-xl flex items-center justify-center transition-all ${
-                      day.completed
-                        ? 'bg-gradient-to-tr from-amber-500 to-orange-500 text-white shadow-xs font-bold text-xs'
-                        : day.isToday
-                        ? 'border-2 border-dashed border-brand-amber bg-brand-amber/10 text-brand-amber text-xs'
-                        : 'bg-brand-sand/50 text-brand-slate/40 text-xs'
-                    }`}
-                  >
-                    {day.completed ? (
-                      <Check className="w-4 h-4 stroke-[3]" />
-                    ) : day.isToday ? (
-                      <span className="w-2 h-2 rounded-full bg-brand-amber animate-ping" />
-                    ) : (
-                      <span className="text-[10px] font-mono">{day.dayNumber}</span>
-                    )}
-                  </motion.div>
-                  <span className={`text-[9px] font-mono font-semibold ${day.isToday ? 'text-brand-amber font-bold' : 'text-brand-slate/50'}`}>
-                    {day.isToday ? 'Today' : ''}
-                  </span>
-                </div>
-              ))}
-            </div>
-
-            {/* Milestone Badge & Progress */}
-            <motion.div 
-              whileHover={{ scale: 1.02 }}
-              className="md:col-span-5 p-3 rounded-2xl bg-white/80 border border-brand-slate/10 space-y-1.5"
-            >
-              <div className="flex items-center justify-between text-xs">
-                <span className="font-bold text-brand-charcoal flex items-center gap-1.5">
-                  <span className="text-base">{streakState.currentMilestone.badgeEmoji}</span>
-                  <span>{streakState.currentMilestone.title}</span>
-                </span>
-                <span className="font-mono text-[11px] font-bold text-brand-amber">
-                  Target: {streakState.currentMilestone.nextMilestoneDays} Days
-                </span>
-              </div>
-
-              <div className="w-full h-2 bg-brand-sand rounded-full overflow-hidden">
-                <motion.div 
-                  initial={{ width: 0 }}
-                  animate={{ width: `${streakState.currentMilestone.progressPercent}%` }}
-                  transition={{ duration: 0.8, ease: "easeOut" }}
-                  className="h-full bg-gradient-to-r from-brand-amber to-orange-500 rounded-full"
-                />
-              </div>
-
-              <p className="text-[10px] text-brand-muted">
-                {streakState.currentMilestone.description}
-              </p>
-            </motion.div>
-
-          </div>
-        </motion.div>
-
-        {/* ========================================================================= */}
-        {/* 2. OFFLINE LESSON CACHE, NOTES EXPORT & WEEKLY EMAIL SUMMARY HUB */}
-        {/* ========================================================================= */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-          
-          {/* Offline Cache Card */}
-          <div className="bg-white rounded-3xl p-5 border border-brand-slate/15 shadow-sm space-y-3 flex flex-col justify-between">
-            <div className="space-y-2">
-              <div className="flex items-center justify-between">
-                <div className="flex items-center gap-2">
-                  <div className={`p-2 rounded-xl ${isOnline ? 'bg-emerald-500/15 text-emerald-700' : 'bg-amber-500/15 text-amber-700'}`}>
-                    {isOnline ? <Wifi className="w-4 h-4" /> : <WifiOff className="w-4 h-4" />}
-                  </div>
-                  <div>
-                    <h3 className="font-display text-sm font-bold text-brand-charcoal">
-                      Offline Curriculum
-                    </h3>
-                    <span className="text-[10px] font-mono text-brand-muted block">
-                      {isOnline ? 'Sync: Connected' : 'Offline Mode Active'}
-                    </span>
-                  </div>
-                </div>
-
-                <span className="px-2 py-0.5 rounded-full bg-emerald-500/15 border border-emerald-500/30 text-emerald-800 text-[10px] font-mono font-bold">
-                  100% Cached
-                </span>
-              </div>
-
-              <p className="text-xs text-brand-slate leading-relaxed">
-                All 9 core lessons and glossary terms are stored locally in your browser for study anywhere.
-              </p>
-            </div>
-
-            <div className="pt-3 border-t border-brand-slate/10 flex items-center justify-between">
-              <span className="text-[10.5px] font-mono text-brand-muted">
-                {cacheStats.estimatedSizeKB} KB
-              </span>
-
-              <button
-                onClick={handleSyncCacheManually}
-                disabled={isSyncingCache}
-                className="px-2.5 py-1.5 rounded-xl bg-brand-sand/60 hover:bg-brand-sand border border-brand-slate/20 text-brand-charcoal text-[11px] font-bold transition-all flex items-center gap-1.5 cursor-pointer disabled:opacity-50"
-              >
-                <RefreshCw className={`w-3 h-3 text-brand-amber ${isSyncingCache ? 'animate-spin' : ''}`} />
-                <span>{isSyncingCache ? 'Syncing...' : 'Refresh Cache'}</span>
-              </button>
-            </div>
-          </div>
-
-          {/* Knowledge Notes & Takeaways Exporter Card */}
-          <div className="bg-white rounded-3xl p-5 border border-brand-slate/15 shadow-sm space-y-3 flex flex-col justify-between">
-            <div className="space-y-2">
-              <div className="flex items-center justify-between">
-                <div className="flex items-center gap-2">
-                  <div className="p-2 rounded-xl bg-brand-amber/15 text-brand-amber">
-                    <FolderDown className="w-4 h-4" />
-                  </div>
-                  <div>
-                    <h3 className="font-display text-sm font-bold text-brand-charcoal">
-                      Notes & Takeaways
-                    </h3>
-                    <span className="text-[10px] font-mono text-brand-muted block">
-                      {savedNotesCount} Custom Notes
-                    </span>
-                  </div>
-                </div>
-
-                <span className="px-2 py-0.5 rounded-full bg-brand-amber/15 border border-brand-amber/30 text-brand-amber-dark text-[10px] font-mono font-bold">
-                  PDF / TXT
-                </span>
-              </div>
-
-              <p className="text-xs text-brand-slate leading-relaxed">
-                Export all lesson key points, mental models, and personal reflections into printable PDF or text notes.
-              </p>
-            </div>
-
-            <div className="pt-3 border-t border-brand-slate/10 flex items-center justify-between gap-2">
-              <button
-                onClick={() => setIsExportNotesModalOpen(true)}
-                className="px-3 py-1.5 rounded-xl bg-brand-sand/60 hover:bg-brand-sand border border-brand-slate/20 text-brand-charcoal text-[11px] font-bold transition-all flex items-center gap-1.5 cursor-pointer"
-              >
-                <Edit3 className="w-3 h-3 text-blue-600" />
-                <span>Edit</span>
-              </button>
-
-              <button
-                onClick={() => setIsExportNotesModalOpen(true)}
-                className="px-3.5 py-1.5 rounded-xl bg-brand-charcoal hover:bg-black text-white text-[11px] font-bold transition-all flex items-center gap-1.5 shadow-2xs cursor-pointer"
-              >
-                <Download className="w-3 h-3 text-brand-amber" />
-                <span>Export PDF</span>
-              </button>
-            </div>
-          </div>
-
-          {/* Weekly Email Summary & Digest Card */}
-          <div className="bg-white rounded-3xl p-5 border border-brand-slate/15 shadow-sm space-y-3 flex flex-col justify-between">
-            <div className="space-y-2">
-              <div className="flex items-center justify-between">
-                <div className="flex items-center gap-2">
-                  <div className={`p-2 rounded-xl ${emailDigestPrefs.enabled ? 'bg-indigo-500/15 text-indigo-700' : 'bg-slate-100 text-slate-600'}`}>
-                    <Mail className="w-4 h-4" />
-                  </div>
-                  <div>
-                    <h3 className="font-display text-sm font-bold text-brand-charcoal">
-                      Weekly Email Summary
-                    </h3>
-                    <span className="text-[10px] font-mono text-brand-muted block">
-                      {emailDigestPrefs.enabled 
-                        ? `${emailDigestPrefs.deliveryDay.charAt(0).toUpperCase() + emailDigestPrefs.deliveryDay.slice(1)} • ${emailDigestPrefs.deliveryTime === '09:00' ? '9:00 AM' : '6:00 PM'}`
-                        : 'Opt-in for weekly email'}
-                    </span>
-                  </div>
-                </div>
-
-                <span className={`px-2 py-0.5 rounded-full text-[10px] font-mono font-bold border ${
-                  emailDigestPrefs.enabled 
-                    ? 'bg-emerald-500/15 border-emerald-500/30 text-emerald-800' 
-                    : 'bg-slate-100 border-slate-200 text-slate-600'
-                }`}>
-                  {emailDigestPrefs.enabled ? 'ACTIVE' : 'OPT-IN'}
-                </span>
-              </div>
-
-              <p className="text-xs text-brand-slate leading-relaxed">
-                Automated weekly email recap of your mock interview performance, score progress, and learning streak badges.
-              </p>
-            </div>
-
-            <div className="pt-3 border-t border-brand-slate/10 flex items-center justify-between gap-2">
-              <span className="text-[10.5px] font-mono text-brand-muted truncate max-w-[110px]" title={emailDigestPrefs.email || currentUser?.email || 'syedshahnawazz1519@gmail.com'}>
-                {emailDigestPrefs.email || currentUser?.email || 'syedshahnawazz1519@gmail.com'}
-              </span>
-
-              <button
-                onClick={() => {
-                  setIsEmailDigestModalOpen(true);
-                  audioEngine.playLoFiChord();
-                }}
-                className="px-3.5 py-1.5 rounded-xl bg-indigo-50 hover:bg-indigo-100 border border-indigo-200 text-indigo-800 text-[11px] font-bold transition-all flex items-center gap-1.5 cursor-pointer shadow-2xs shrink-0"
-              >
-                <Mail className="w-3 h-3 text-indigo-600" />
-                <span>{emailDigestPrefs.enabled ? 'Preferences' : 'Opt In'}</span>
-              </button>
-            </div>
-          </div>
-
-        </div>
-
-        {/* ========================================================================= */}
-        {/* LEARNING MILESTONES & QUIZ ACHIEVEMENTS SECTION */}
-        {/* ========================================================================= */}
-        <LearningMilestonesSection onNavigateSection={onNavigateSection} />
+        />
 
         {/* ========================================================================= */}
         {/* MAIN DASHBOARD CONTENT GRID: CURRICULUM + INTERVIEW HISTORY */}

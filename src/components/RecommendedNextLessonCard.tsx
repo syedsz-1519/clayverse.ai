@@ -440,14 +440,14 @@ export default function RecommendedNextLessonCard({
   };
 
   return (
-    <div className={`space-y-4 text-left ${className}`}>
+    <div className={`space-y-4 text-left flex flex-col justify-between ${className}`}>
       
       {/* Main Hero Recommendation Card */}
       <motion.div
         initial={{ opacity: 0, y: 15 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.4 }}
-        className="bg-gradient-to-br from-white via-brand-sand/15 to-amber-500/[0.04] rounded-3xl p-6 sm:p-7 border border-brand-slate/20 shadow-sm relative overflow-hidden text-left"
+        className="bg-gradient-to-br from-white via-brand-sand/15 to-amber-500/[0.04] rounded-3xl p-6 sm:p-7 border border-brand-slate/20 shadow-sm relative overflow-hidden text-left flex flex-col justify-between h-full"
       >
         {/* Subtle decorative glow */}
         <div className="absolute top-0 right-0 w-72 h-72 bg-amber-500/10 rounded-full blur-3xl pointer-events-none" />

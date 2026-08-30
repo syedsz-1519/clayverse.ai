@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useMemo } from 'react';
+import React, { useState, useEffect, useMemo, useRef } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import {
   Award,
@@ -21,12 +21,15 @@ import {
   X,
   TrendingUp,
   Medal,
-  Crown
+  Crown,
+  PartyPopper,
+  Sparkle
 } from 'lucide-react';
 import { useLanguage } from '../hooks/useLanguage';
 import { audioEngine } from '../lib/audioEngine';
 import { quizModules } from '../data/quizQuestions';
 import { QuizSessionRecord } from './QuizPerformanceBarChart';
+import MilestoneBadgeCelebrationModal from './MilestoneBadgeCelebrationModal';
 
 export type MilestoneCategory = 'all' | 'completion' | 'threshold' | 'mastery';
 export type MilestoneTier = 'Bronze' | 'Silver' | 'Gold' | 'Platinum' | 'Diamond';
@@ -165,7 +168,10 @@ export default function LearningMilestonesSection({
   const [completedSectionIds, setCompletedSectionIds] = useState<Record<string, boolean>>({});
   const [activeCategory, setActiveCategory] = useState<MilestoneCategory>('all');
   const [selectedMilestone, setSelectedMilestone] = useState<LearningMilestone | null>(null);
+  const [celebratingMilestone, setCelebratingMilestone] = useState<LearningMilestone | null>(null);
   const [copiedShareToast, setCopiedShareToast] = useState(false);
+  const previousUnlockedIdsRef = useRef<Set<string>>(new Set());
+  const isInitialLoadRef = useRef(true);
 
   // Load quiz progress from storage
   const loadQuizData = () => {
@@ -604,9 +610,76 @@ export default function LearningMilestonesSection({
     };
   }, [milestones]);
 
+  // Check for newly earned badges to trigger celebratory animation
+  useEffect(() => {
+    try {
+      const storedCelebrated = localStorage.getItem('clay_celebrated_milestones');
+      const celebratedIds = new Set<string>(storedCelebrated ? JSON.parse(storedCelebrated) : []);
+      
+      const currentUnlocked = milestones.filter(m => m.unlocked);
+      const currentUnlockedIds = new Set(currentUnlocked.map(m => m.id));
+
+      if (isInitialLoadRef.current) {
+        isInitialLoadRef.current = false;
+        // On initial load, track unlocked IDs so subsequent triggers in session detect deltas
+        previousUnlockedIdsRef.current = currentUnlockedIds;
+        return;
+      }
+
+      // Check if any milestone became unlocked that wasn't previously unlocked and uncelebrated
+      const newlyEarned = currentUnlocked.find(m => !previousUnlockedIdsRef.current.has(m.id) && !celebratedIds.has(m.id));
+
+      if (newlyEarned) {
+        setCelebratingMilestone(newlyEarned);
+        celebratedIds.add(newlyEarned.id);
+        localStorage.setItem('clay_celebrated_milestones', JSON.stringify(Array.from(celebratedIds)));
+      }
+
+      previousUnlockedIdsRef.current = currentUnlockedIds;
+    } catch (e) {
+      // Gracefully ignore storage access issues
+    }
+  }, [milestones]);
+
+  // Listen for explicit milestone celebration events (from quizzes, etc.)
+  useEffect(() => {
+    const handleCelebrateEvent = (e: any) => {
+      const id = e?.detail?.milestoneId;
+      const targetMilestone = 
+        (id ? milestones.find(m => m.id === id) : null) || 
+        milestones.find(m => m.unlocked) || 
+        milestones[0];
+
+      if (targetMilestone) {
+        setCelebratingMilestone(targetMilestone);
+      }
+    };
+
+    window.addEventListener('clay_celebrate_milestone', handleCelebrateEvent);
+    return () => {
+      window.removeEventListener('clay_celebrate_milestone', handleCelebrateEvent);
+    };
+  }, [milestones]);
+
   const handleOpenMilestone = (m: LearningMilestone) => {
     audioEngine.playLoFiChord();
     setSelectedMilestone(m);
+  };
+
+  const handleCelebrateBadge = (m: LearningMilestone, e?: React.MouseEvent) => {
+    if (e) e.stopPropagation();
+    audioEngine.playLoFiChord();
+    setCelebratingMilestone(m);
+  };
+
+  const handleClaimMilestone = (m: LearningMilestone) => {
+    try {
+      const stored = localStorage.getItem('clay_celebrated_milestones');
+      const set = new Set<string>(stored ? JSON.parse(stored) : []);
+      set.add(m.id);
+      localStorage.setItem('clay_celebrated_milestones', JSON.stringify(Array.from(set)));
+    } catch {}
+    setCelebratingMilestone(null);
   };
 
   const handleShareBadge = () => {
@@ -616,6 +689,13 @@ export default function LearningMilestonesSection({
     setCopiedShareToast(true);
     setTimeout(() => setCopiedShareToast(false), 2500);
   };
+
+  // Find most prestigious unlocked milestone for celebration replay in header
+  const topUnlockedMilestone = useMemo(() => {
+    const unlocked = milestones.filter(m => m.unlocked);
+    if (unlocked.length === 0) return milestones[0];
+    return unlocked[unlocked.length - 1];
+  }, [milestones]);
 
   return (
     <div className={`bg-white rounded-3xl p-6 border border-brand-slate/15 shadow-sm space-y-6 text-left ${className}`}>
@@ -643,21 +723,36 @@ export default function LearningMilestonesSection({
           </div>
         </div>
 
-        {/* Quick Launch Quiz Arena */}
-        {onNavigateSection && (
-          <motion.button
-            whileHover={{ scale: 1.03 }}
-            whileTap={{ scale: 0.97 }}
-            onClick={() => {
-              audioEngine.playLoFiChord();
-              onNavigateSection('quiz-arena');
-            }}
-            className="px-4 py-2 rounded-2xl bg-brand-charcoal hover:bg-black text-white text-xs font-bold shadow-xs transition-all flex items-center gap-1.5 cursor-pointer shrink-0 self-start sm:self-auto"
-          >
-            <Play className="w-3.5 h-3.5 fill-current text-brand-amber" />
-            <span>{lang === 'en' ? "Play AI Arena" : "Quiz Shuru Karein"}</span>
-          </motion.button>
-        )}
+        {/* Quick Launch & Celebration Buttons */}
+        <div className="flex items-center gap-2 shrink-0 self-start sm:self-auto">
+          {milestoneSummary.unlockedCount > 0 && (
+            <motion.button
+              whileHover={{ scale: 1.03 }}
+              whileTap={{ scale: 0.97 }}
+              onClick={() => handleCelebrateBadge(topUnlockedMilestone)}
+              className="px-3.5 py-2 rounded-2xl bg-amber-500/15 hover:bg-amber-500/25 border border-amber-500/30 text-amber-900 text-xs font-mono font-bold transition-all flex items-center gap-1.5 cursor-pointer"
+              title="Celebrate your latest earned achievement badge with celebratory confetti & fanfare"
+            >
+              <PartyPopper className="w-3.5 h-3.5 text-amber-700" />
+              <span>{lang === 'en' ? "Celebrate Badge 🎉" : "Badge Manaein 🎉"}</span>
+            </motion.button>
+          )}
+
+          {onNavigateSection && (
+            <motion.button
+              whileHover={{ scale: 1.03 }}
+              whileTap={{ scale: 0.97 }}
+              onClick={() => {
+                audioEngine.playLoFiChord();
+                onNavigateSection('quiz-arena');
+              }}
+              className="px-4 py-2 rounded-2xl bg-brand-charcoal hover:bg-black text-white text-xs font-bold shadow-xs transition-all flex items-center gap-1.5 cursor-pointer"
+            >
+              <Play className="w-3.5 h-3.5 fill-current text-brand-amber" />
+              <span>{lang === 'en' ? "Play AI Arena" : "Quiz Shuru Karein"}</span>
+            </motion.button>
+          )}
+        </div>
       </div>
 
       {/* Highlights Strip */}
@@ -817,10 +912,22 @@ export default function LearningMilestonesSection({
               </div>
 
               {milestone.unlocked ? (
-                <span className="flex items-center gap-1 text-[10px] font-mono font-black text-emerald-700 bg-emerald-100 px-2 py-0.5 rounded-md border border-emerald-300">
-                  <CheckCircle2 className="w-3 h-3" />
-                  <span>UNLOCKED</span>
-                </span>
+                <div className="flex items-center gap-1.5">
+                  <motion.button
+                    whileHover={{ scale: 1.1 }}
+                    whileTap={{ scale: 0.9 }}
+                    onClick={(e) => handleCelebrateBadge(milestone, e)}
+                    className="p-1 rounded-md bg-amber-500/20 hover:bg-amber-500/30 text-amber-900 border border-amber-500/30 text-[10px] font-mono font-bold flex items-center gap-1 cursor-pointer shadow-2xs"
+                    title="Play celebratory fanfare and confetti animation"
+                  >
+                    <PartyPopper className="w-3 h-3 text-amber-700" />
+                    <span>Celebrate</span>
+                  </motion.button>
+                  <span className="flex items-center gap-1 text-[10px] font-mono font-black text-emerald-700 bg-emerald-100 px-2 py-0.5 rounded-md border border-emerald-300">
+                    <CheckCircle2 className="w-3 h-3" />
+                    <span>UNLOCKED</span>
+                  </span>
+                </div>
               ) : (
                 <span className="flex items-center gap-1 text-[10px] font-mono font-bold text-brand-muted bg-slate-100 px-2 py-0.5 rounded-md border border-slate-200">
                   <Lock className="w-3 h-3 text-brand-slate" />
@@ -831,9 +938,14 @@ export default function LearningMilestonesSection({
 
             {/* Title & Description */}
             <div className="space-y-1">
-              <h4 className="font-display font-bold text-sm text-brand-charcoal truncate">
-                {lang === 'en' ? milestone.title.en : milestone.title.ur}
-              </h4>
+              <div className="flex items-center justify-between gap-2">
+                <h4 className="font-display font-bold text-sm text-brand-charcoal truncate">
+                  {lang === 'en' ? milestone.title.en : milestone.title.ur}
+                </h4>
+                {milestone.unlocked && (
+                  <Sparkles className="w-3.5 h-3.5 text-amber-500 shrink-0 animate-pulse" />
+                )}
+              </div>
               <p className="text-xs text-brand-slate line-clamp-2 leading-relaxed">
                 {lang === 'en' ? milestone.description.en : milestone.description.ur}
               </p>
@@ -941,14 +1053,32 @@ export default function LearningMilestonesSection({
               </div>
 
               {/* Actions Footer */}
-              <div className="flex items-center justify-between gap-3 pt-3 border-t border-brand-slate/15">
-                <button
-                  onClick={handleShareBadge}
-                  className="px-4 py-2.5 rounded-xl bg-brand-sand/50 hover:bg-brand-sand border border-brand-slate/20 text-brand-charcoal text-xs font-bold font-mono transition-all flex items-center gap-1.5 cursor-pointer"
-                >
-                  <Share2 className="w-3.5 h-3.5 text-brand-slate" />
-                  <span>{copiedShareToast ? "Copied!" : "Share"}</span>
-                </button>
+              <div className="flex flex-wrap items-center justify-between gap-2.5 pt-3 border-t border-brand-slate/15">
+                <div className="flex items-center gap-2">
+                  <button
+                    onClick={handleShareBadge}
+                    className="px-3.5 py-2.5 rounded-xl bg-brand-sand/50 hover:bg-brand-sand border border-brand-slate/20 text-brand-charcoal text-xs font-bold font-mono transition-all flex items-center gap-1.5 cursor-pointer"
+                  >
+                    <Share2 className="w-3.5 h-3.5 text-brand-slate" />
+                    <span>{copiedShareToast ? "Copied!" : "Share"}</span>
+                  </button>
+
+                  {selectedMilestone.unlocked && (
+                    <motion.button
+                      whileHover={{ scale: 1.03 }}
+                      whileTap={{ scale: 0.97 }}
+                      onClick={() => {
+                        const m = selectedMilestone;
+                        setSelectedMilestone(null);
+                        handleCelebrateBadge(m);
+                      }}
+                      className="px-3.5 py-2.5 rounded-xl bg-amber-500/20 hover:bg-amber-500/30 border border-amber-500/30 text-amber-950 text-xs font-bold font-mono transition-all flex items-center gap-1.5 cursor-pointer"
+                    >
+                      <PartyPopper className="w-3.5 h-3.5 text-amber-700" />
+                      <span>Celebrate 🎉</span>
+                    </motion.button>
+                  )}
+                </div>
 
                 {onNavigateSection && (
                   <motion.button
@@ -959,10 +1089,10 @@ export default function LearningMilestonesSection({
                       setSelectedMilestone(null);
                       onNavigateSection('quiz-arena');
                     }}
-                    className="px-5 py-2.5 rounded-xl bg-brand-charcoal hover:bg-black text-white text-xs font-bold transition-all flex items-center gap-1.5 shadow-sm cursor-pointer"
+                    className="px-4 py-2.5 rounded-xl bg-brand-charcoal hover:bg-black text-white text-xs font-bold transition-all flex items-center gap-1.5 shadow-sm cursor-pointer"
                   >
                     <Play className="w-3.5 h-3.5 fill-current text-brand-amber" />
-                    <span>Take Quiz in Arena</span>
+                    <span>Take Quiz</span>
                   </motion.button>
                 )}
               </div>
@@ -970,6 +1100,14 @@ export default function LearningMilestonesSection({
           </div>
         )}
       </AnimatePresence>
+
+      {/* Celebratory Milestone Unlocked Framer Motion Modal */}
+      <MilestoneBadgeCelebrationModal
+        isOpen={!!celebratingMilestone}
+        milestone={celebratingMilestone}
+        onClose={() => setCelebratingMilestone(null)}
+        onClaim={handleClaimMilestone}
+      />
 
     </div>
   );
