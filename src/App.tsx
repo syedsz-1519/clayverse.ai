@@ -603,43 +603,17 @@ export default function App() {
           ) : (
             /* 3. Streamlined, Highly Professional Engineered Masterpiece Home Page */
             <main id="main-content" className="relative z-10 flex flex-col gap-10">
-              {/* 1. Hero: Ethos, Interactive Pattern Canvas, Direct Action CTAs */}
+              {/* 1. Hero: Ethos, Title, Subtitle and Explore indicator */}
               <motion.div initial="hidden" whileInView="visible" viewport={{ once: true, margin: "-100px" }} variants={sectionAnimation}>
                 <Hero />
               </motion.div>
 
-              {/* 2. Trust Signals: Zero-math, 25+ Languages, Verified Pedagogy */}
+              {/* 2. Trust Signals: Zero-math, 25+ Languages, Key Verified Pedagogy */}
               <motion.div initial="hidden" whileInView="visible" viewport={{ once: true, margin: "-100px" }} variants={sectionAnimation}>
                 <TrustSignals onOpenLanguages={() => setIsLanguagesModalOpen(true)} />
               </motion.div>
 
-              {/* 3. Four Pillars of the Ecosystem Showcase */}
-              <motion.div initial="hidden" whileInView="visible" viewport={{ once: true, margin: "-100px" }} variants={sectionAnimation}>
-                <StructuredHubShowcase
-                  onOpenCurriculum={() => {
-                    const el = document.getElementById('curriculum');
-                    if (el) el.scrollIntoView({ behavior: 'smooth' });
-                  }}
-                  onOpenInterview={() => {
-                    setCurrentView('interview');
-                    window.scrollTo({ top: 0, behavior: 'smooth' });
-                  }}
-                  onOpenDashboard={() => {
-                    setCurrentView('dashboard');
-                    window.scrollTo({ top: 0, behavior: 'smooth' });
-                  }}
-                  onOpenLearningHub={() => {
-                    setCurrentView('learning-hub');
-                    window.scrollTo({ top: 0, behavior: 'smooth' });
-                  }}
-                  onOpenLesson={(lessonId) => {
-                    setCurrentLessonId(lessonId);
-                    window.scrollTo({ top: 0, behavior: 'smooth' });
-                  }}
-                />
-              </motion.div>
-
-              {/* 4. Structured 9-Step Curriculum Architecture Grid & Roadmap */}
+              {/* 3. Structured 9-Step Curriculum Architecture Grid & Roadmap */}
               <motion.div initial="hidden" whileInView="visible" viewport={{ once: true, margin: "-100px" }} variants={sectionAnimation}>
                 <HomeCurriculumGrid 
                   onSelectLesson={(lessonId) => {
@@ -657,19 +631,7 @@ export default function App() {
                 />
               </motion.div>
 
-              {/* 5. Interactive Starter AI Assistant Sandbox */}
-              <motion.div initial="hidden" whileInView="visible" viewport={{ once: true, margin: "-100px" }} variants={sectionAnimation}>
-                <div className="max-w-4xl mx-auto px-6">
-                  <ClayExplainer />
-                </div>
-              </motion.div>
-
-              {/* 6. Value Props: Zero-Math Visual Approach */}
-              <motion.div initial="hidden" whileInView="visible" viewport={{ once: true, margin: "-100px" }} variants={sectionAnimation}>
-                <ValueProps onOpenLanguages={() => setIsLanguagesModalOpen(true)} />
-              </motion.div>
-
-              {/* 7. Social Sharing & Peer Certification */}
+              {/* 4. Social Sharing & Peer Certification */}
               <SocialShareSection />
             </main>
           )}
