@@ -20,6 +20,7 @@ import StudentDashboard from './components/StudentDashboard';
 import AuthModal from './components/AuthModal';
 import HomeCurriculumGrid from './components/HomeCurriculumGrid';
 import IndividualLessonView from './components/IndividualLessonView';
+import GuideBreadcrumbNav from './components/GuideBreadcrumbNav';
 import LearningHubPage from './components/LearningHubPage';
 import StructuredHubShowcase from './components/StructuredHubShowcase';
 import SocialShareSection from './components/SocialShareSection';
@@ -488,7 +489,29 @@ export default function App() {
       )}
 
       {currentView === 'guide' && (
-        <>
+        <div className="min-h-screen">
+          {/* Breadcrumb Navigation Bar for Guide View */}
+          {!isFocusMode && (
+            <GuideBreadcrumbNav
+              currentLessonId={currentLessonId}
+              isContinuousGuide={isContinuousGuide}
+              onNavigateHome={() => {
+                setCurrentLessonId(null);
+                setIsContinuousGuide(false);
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+              }}
+              onSelectLesson={(newId) => {
+                setCurrentLessonId(newId);
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+              }}
+              onToggleContinuousGuide={(enable) => {
+                setIsContinuousGuide(enable);
+                setCurrentLessonId(null);
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+              }}
+            />
+          )}
+
           {/* 1. If an Individual Lesson is Active, render Dedicated Lesson Page */}
           {currentLessonId ? (
             <IndividualLessonView 
@@ -506,7 +529,7 @@ export default function App() {
             />
           ) : isContinuousGuide ? (
             /* 2. Full Continuous Guide Mode */
-            <main id="main-content" className="relative z-10 flex flex-col gap-6 pt-16">
+            <main id="main-content" className="relative z-10 flex flex-col gap-6 pt-4">
               {/* Continuous Mode Banner */}
               <div className="max-w-5xl mx-auto px-6 w-full pt-4 flex items-center justify-between">
                 <button
@@ -635,7 +658,7 @@ export default function App() {
               <SocialShareSection />
             </main>
           )}
-        </>
+        </div>
       )}
 
       {/* Editorial Journal Styled Footer (Hidden in Focus Mode) */}

@@ -231,11 +231,11 @@ export default function IndividualLessonView({
   };
 
   return (
-    <div className={`min-h-screen ${isFocusMode ? 'pt-3' : 'pt-16'} pb-20 text-left transition-all`}>
+    <div className={`min-h-screen ${isFocusMode ? 'pt-3' : 'pt-0'} pb-20 text-left transition-all`}>
       {/* 1. Sticky Sub-Topic Progress Navigation Bar */}
       <nav 
         aria-label="Sub-topic navigation"
-        className={`sticky ${isFocusMode ? 'top-0' : 'top-14 sm:top-16'} z-30 bg-white/90 backdrop-blur-md border-b border-brand-slate/15 shadow-xs transition-all`}
+        className={`sticky ${isFocusMode ? 'top-0' : 'top-[92px] sm:top-[100px]'} z-30 bg-white/95 dark:bg-zinc-900/95 backdrop-blur-md border-b border-slate-200 dark:border-zinc-800 shadow-2xs transition-all`}
       >
         <div className="max-w-7xl mx-auto px-4 sm:px-6 py-2.5 flex items-center justify-between gap-3">
           {/* Left: Current Lesson & Subtopic Indicator */}
