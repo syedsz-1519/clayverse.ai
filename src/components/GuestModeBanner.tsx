@@ -8,7 +8,7 @@ interface GuestModeBannerProps {
 }
 
 export default function GuestModeBanner({ onOpenAuth }: GuestModeBannerProps) {
-  const { lang } = useLanguage();
+  const { lang, t } = useLanguage();
   const [isVisible, setIsVisible] = useState(false);
 
   useEffect(() => {
@@ -33,7 +33,7 @@ export default function GuestModeBanner({ onOpenAuth }: GuestModeBannerProps) {
   return (
     <AnimatePresence>
       <motion.aside
-        aria-label="Guest Mode Status"
+        aria-label={t('guest.status')}
         initial={{ opacity: 0, y: -10 }}
         animate={{ opacity: 1, y: 0 }}
         exit={{ opacity: 0, y: -10 }}
@@ -43,11 +43,7 @@ export default function GuestModeBanner({ onOpenAuth }: GuestModeBannerProps) {
           <div className="flex items-center gap-2">
             <span className="w-2 h-2 rounded-full bg-brand-amber animate-pulse shrink-0" />
             <span className="font-semibold text-brand-charcoal">
-              {lang === 'te'
-                ? 'గెస్ట్ మోడ్ సక్రియంగా ఉంది: మీ స్ట్రీక్ మరియు ప్రోగ్రెస్ లోకల్‌గా సేవ్ చేయబడుతోంది.'
-                : lang === 'hi'
-                ? 'गेस्ट मोड एक्टिव: आपका प्रोग्रेस और स्ट्रीक डिवाइस में सुरक्षित है।'
-                : 'Guest Mode Active: Your study streak and progress are saved locally.'}
+              {t('guest.activeMessage')}
             </span>
           </div>
 
@@ -58,14 +54,14 @@ export default function GuestModeBanner({ onOpenAuth }: GuestModeBannerProps) {
             >
               <UserCheck className="w-3.5 h-3.5" />
               <span>
-                {lang === 'te' ? 'ఉచిత ప్రొఫైల్ సృష్టించండి' : lang === 'hi' ? 'फ्री अकाउंट बनाएं' : 'Sync to Cloud (Free)'}
+                {t('guest.syncToCloud')}
               </span>
             </button>
 
             <button
               onClick={handleDismiss}
               className="p-1 text-brand-muted hover:text-brand-charcoal cursor-pointer rounded-full hover:bg-black/5"
-              aria-label="Dismiss guest mode banner"
+              aria-label={t('guest.dismiss')}
             >
               <X className="w-3.5 h-3.5" />
             </button>

@@ -155,7 +155,7 @@ export default function CurriculumRoadmap({
         className="relative overflow-hidden bg-gradient-to-br from-brand-charcoal via-slate-900 to-black text-white rounded-3xl p-6 sm:p-7 shadow-xl border border-white/10"
       >
         {/* Ambient background glow */}
-        <div className="absolute top-0 right-0 -mt-8 -mr-8 w-64 h-64 bg-brand-amber/20 rounded-full blur-3xl pointer-events-none" />
+        <div className="absolute top-0 end-0 -mt-8 -me-8 w-64 h-64 bg-brand-amber/20 rounded-full blur-3xl pointer-events-none" />
         <div className="absolute bottom-0 left-1/3 -mb-12 w-48 h-48 bg-purple-500/15 rounded-full blur-2xl pointer-events-none" />
 
         <div className="relative z-10 flex flex-col md:flex-row md:items-center justify-between gap-6">

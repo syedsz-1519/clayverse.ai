@@ -55,11 +55,11 @@ export default function AboutClayverseModal({ isOpen, onClose }: AboutClayverseM
         >
           {/* Top Header Banner */}
           <div className="relative bg-gradient-to-br from-brand-charcoal via-[#262A33] to-[#1E2128] text-white p-6 sm:p-8 border-b border-brand-amber/20 shrink-0">
-            <div className="absolute top-0 right-0 w-64 h-64 bg-brand-amber/15 rounded-full blur-3xl pointer-events-none -mr-16 -mt-16" />
+            <div className="absolute top-0 end-0 w-64 h-64 bg-brand-amber/15 rounded-full blur-3xl pointer-events-none -me-16 -mt-16" />
             
             <button
               onClick={onClose}
-              className="absolute top-5 right-5 p-2 rounded-full bg-white/10 hover:bg-white/20 text-brand-sand transition-colors cursor-pointer"
+              className="absolute top-5 end-5 p-2 rounded-full bg-white/10 hover:bg-white/20 text-brand-sand transition-colors cursor-pointer"
               title="Close modal"
             >
               <X className="w-5 h-5" />

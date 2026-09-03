@@ -20,7 +20,7 @@ interface SocialShareSectionProps {
 }
 
 export default function SocialShareSection({ currentChapterTitle }: SocialShareSectionProps) {
-  const { lang } = useLanguage();
+  const { lang, t } = useLanguage();
   const [isCopied, setIsCopied] = useState(false);
   const [streakCount, setStreakCount] = useState<number>(3);
   const [completedLessons, setCompletedLessons] = useState<number>(5);
@@ -89,48 +89,40 @@ export default function SocialShareSection({ currentChapterTitle }: SocialShareS
         className="relative overflow-hidden rounded-3xl bg-gradient-to-br from-brand-charcoal via-[#23272F] to-[#1A1D23] text-white p-6 sm:p-8 md:p-10 border border-brand-amber/25 shadow-xl"
       >
         {/* Subtle Ambient Glow */}
-        <div className="absolute top-0 right-0 w-80 h-80 bg-brand-amber/10 rounded-full blur-3xl pointer-events-none -mr-20 -mt-20" />
-        <div className="absolute bottom-0 left-0 w-60 h-60 bg-amber-500/10 rounded-full blur-2xl pointer-events-none -ml-20 -mb-20" />
+        <div className="absolute top-0 end-0 w-80 h-80 bg-brand-amber/10 rounded-full blur-3xl pointer-events-none -me-20 -mt-20" />
+        <div className="absolute bottom-0 start-0 w-60 h-60 bg-amber-500/10 rounded-full blur-2xl pointer-events-none -ms-20 -mb-20" />
 
         <div className="relative z-10 flex flex-col md:flex-row items-start md:items-center justify-between gap-6">
           {/* Left Text & Stats */}
           <div className="space-y-3 max-w-xl text-left">
             <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-brand-amber/20 border border-brand-amber/40 text-brand-amber text-xs font-black uppercase tracking-wider font-mono">
               <Share2 className="w-3.5 h-3.5" />
-              <span>{lang === 'en' ? "Share Your AI Journey" : lang === 'te' ? "మీ పురోగతిని పంచుకోండి" : "Apna Safar Share Karein"}</span>
+              <span>{t('socialShare.shareYourAIJourney')}</span>
             </div>
 
             <h3 className="font-display text-xl sm:text-2xl md:text-3xl font-black tracking-tight text-white">
-              {lang === 'en' 
-                ? "Spread the knowledge with friends & peers" 
-                : lang === 'te'
-                ? "స్నేహితులతో జ్ఞానాన్ని పంచుకోండి"
-                : "Doston aur classmates ke sath AI seekhein"}
+              {t('socialShare.spreadKnowledge')}
             </h3>
 
             <p className="text-xs sm:text-sm text-brand-sand/80 leading-relaxed">
-              {lang === 'en'
-                ? "Inspire others to learn AI without fear, math jargon, or confusion. Share your study milestones and invite colleagues to test their skills."
-                : lang === 'te'
-                ? "కృత్రిమ మేధస్సును సులభంగా అర్థం చేసుకునేలా ఇతరులకు సహాయం చేయండి. మీ పురోగతిని పంచుకోండి."
-                : "Bina kisi darr ya mushkil formulas ke AI seekhne me doston ki madad karein aur apna learning link share karein."}
+              {t('socialShare.inspireOthers')}
             </p>
 
             {/* Learner Stats Pill Card */}
             <div className="pt-2 flex flex-wrap items-center gap-2.5 sm:gap-3 text-xs">
               <div className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-white/10 border border-white/15 text-brand-amber font-mono font-bold">
                 <Flame className="w-4 h-4 text-amber-400 fill-amber-400/30 animate-pulse" />
-                <span>{streakCount} {lang === 'en' ? "Day Streak" : "Din ki Streak"}</span>
+                <span>{streakCount} {t('socialShare.dayStreak')}</span>
               </div>
 
               <div className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-white/10 border border-white/15 text-emerald-400 font-mono font-bold">
                 <GraduationCap className="w-4 h-4 text-emerald-400" />
-                <span>{completedLessons}/9 {lang === 'en' ? "Chapters Mastered" : "Lessons Seekhe"}</span>
+                <span>{completedLessons}/9 {t('socialShare.chaptersMastered')}</span>
               </div>
 
               <div className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-white/10 border border-white/15 text-white/90 font-mono font-bold">
                 <Sparkles className="w-4 h-4 text-amber-300" />
-                <span>100% Free & Open</span>
+                <span>{t('socialShare.freeAndOpen')}</span>
               </div>
             </div>
           </div>
@@ -145,12 +137,12 @@ export default function SocialShareSection({ currentChapterTitle }: SocialShareS
               {isCopied ? (
                 <>
                   <Check className="w-4 h-4 text-emerald-950 stroke-[3]" />
-                  <span className="text-emerald-950 font-black">{lang === 'en' ? "Link & Stats Copied!" : "Link Copy Ho Gaya!"}</span>
+                  <span className="text-emerald-950 font-black">{t('socialShare.linkStatsCopied')}</span>
                 </>
               ) : (
                 <>
                   <Copy className="w-4 h-4 group-hover:scale-110 transition-transform" />
-                  <span>{lang === 'en' ? "Copy Share Link" : "Link Copy Karein"}</span>
+                  <span>{t('socialShare.copyShareLink')}</span>
                 </>
               )}
             </button>
@@ -160,7 +152,7 @@ export default function SocialShareSection({ currentChapterTitle }: SocialShareS
               <button
                 onClick={handleShareTwitter}
                 className="flex items-center justify-center p-3 rounded-xl bg-white/10 hover:bg-white/20 border border-white/15 hover:border-brand-amber/50 text-white transition-all cursor-pointer hover:scale-105 active:scale-95"
-                title="Share on X (Twitter)"
+                title={t('socialShare.twitter')}
                 aria-label="Share on X"
               >
                 <span className="font-bold text-xs">𝕏</span>
@@ -169,7 +161,7 @@ export default function SocialShareSection({ currentChapterTitle }: SocialShareS
               <button
                 onClick={handleShareLinkedIn}
                 className="flex items-center justify-center p-3 rounded-xl bg-white/10 hover:bg-white/20 border border-white/15 hover:border-brand-amber/50 text-white transition-all cursor-pointer hover:scale-105 active:scale-95"
-                title="Share on LinkedIn"
+                title={t('socialShare.linkedin')}
                 aria-label="Share on LinkedIn"
               >
                 <span className="font-bold text-xs">in</span>
@@ -178,7 +170,7 @@ export default function SocialShareSection({ currentChapterTitle }: SocialShareS
               <button
                 onClick={handleShareWhatsApp}
                 className="flex items-center justify-center p-3 rounded-xl bg-white/10 hover:bg-white/20 border border-white/15 hover:border-brand-amber/50 text-emerald-400 transition-all cursor-pointer hover:scale-105 active:scale-95"
-                title="Share on WhatsApp"
+                title={t('socialShare.whatsapp')}
                 aria-label="Share on WhatsApp"
               >
                 <Send className="w-4 h-4" />
@@ -187,7 +179,7 @@ export default function SocialShareSection({ currentChapterTitle }: SocialShareS
               <button
                 onClick={handleShareTelegram}
                 className="flex items-center justify-center p-3 rounded-xl bg-white/10 hover:bg-white/20 border border-white/15 hover:border-brand-amber/50 text-sky-400 transition-all cursor-pointer hover:scale-105 active:scale-95"
-                title="Share on Telegram"
+                title={t('socialShare.telegram')}
                 aria-label="Share on Telegram"
               >
                 <ExternalLink className="w-4 h-4" />

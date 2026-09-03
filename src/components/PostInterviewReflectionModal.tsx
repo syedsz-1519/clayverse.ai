@@ -226,7 +226,7 @@ ${generalNotes || '_No additional notes._'}
                   />
                 </button>
               ))}
-              <span className="text-xs font-mono font-bold text-brand-charcoal ml-2">
+              <span className="text-xs font-mono font-bold text-brand-charcoal ms-2">
                 {selfRating}/5
               </span>
             </div>

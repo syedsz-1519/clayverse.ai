@@ -990,7 +990,7 @@ export default function StudentDashboard({
             initial={{ opacity: 0, y: 30, scale: 0.95 }}
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, y: 20, scale: 0.95 }}
-            className="fixed bottom-6 right-6 z-50 flex items-center gap-3 px-4 py-3 bg-slate-900 text-white rounded-2xl shadow-2xl border border-emerald-500/40 text-xs font-medium backdrop-blur-md"
+            className="fixed bottom-6 end-6 z-50 flex items-center gap-3 px-4 py-3 bg-slate-900 text-white rounded-2xl shadow-2xl border border-emerald-500/40 text-xs font-medium backdrop-blur-md"
           >
             <div className="w-8 h-8 rounded-xl bg-emerald-500/20 text-emerald-400 flex items-center justify-center shrink-0">
               <FileSpreadsheet className="w-4 h-4 text-emerald-400" />
@@ -1001,7 +1001,7 @@ export default function StudentDashboard({
             </div>
             <button
               onClick={() => setCsvToast(null)}
-              className="ml-2 text-white/40 hover:text-white text-xs p-1"
+              className="ms-2 text-white/40 hover:text-white text-xs p-1"
             >
               ✕
             </button>

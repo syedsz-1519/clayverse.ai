@@ -56,7 +56,7 @@ export default function CodeSnippetBlock({
           </div>
 
           {/* Language / File badge */}
-          <div className="flex items-center gap-1.5 ml-2 min-w-0">
+          <div className="flex items-center gap-1.5 ms-2 min-w-0">
             {language.toLowerCase() === 'bash' || language.toLowerCase() === 'shell' ? (
               <Terminal className="w-3.5 h-3.5 text-brand-amber shrink-0" />
             ) : (
@@ -73,7 +73,7 @@ export default function CodeSnippetBlock({
             </span>
 
             {(filename || title) && (
-              <span className="font-mono text-[11px] truncate opacity-85 font-medium ml-1">
+              <span className="font-mono text-[11px] truncate opacity-85 font-medium ms-1">
                 {filename || title}
               </span>
             )}
@@ -92,7 +92,8 @@ export default function CodeSnippetBlock({
 
       {/* Code Body */}
       <div
-        className={`relative overflow-x-auto p-4 font-mono text-[12px] leading-relaxed select-text ${
+        dir="ltr"
+        className={`relative overflow-x-auto p-4 font-mono text-[12px] leading-relaxed select-text text-left ${
           maxHeight && !isExpanded ? maxHeight : ''
         }`}
       >

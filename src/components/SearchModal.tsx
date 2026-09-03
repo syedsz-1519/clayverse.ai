@@ -265,7 +265,7 @@ export default function SearchModal({ isOpen, onClose }: SearchModalProps) {
 
             {/* Filter Tabs */}
             <div className="px-5 py-2.5 bg-brand-sand/35 border-b border-brand-charcoal/5 flex items-center gap-2 shrink-0 overflow-x-auto scrollbar-none">
-              <SlidersHorizontal className="w-3.5 h-3.5 text-brand-slate shrink-0 mr-1 hidden sm:block" />
+              <SlidersHorizontal className="w-3.5 h-3.5 text-brand-slate shrink-0 me-1 hidden sm:block" />
               {[
                 { id: 'all', label: t.all, count: activeTab === 'all' ? filteredResults.length : null },
                 { id: 'sections', label: t.sections, count: activeTab === 'sections' ? filteredResults.length : null },

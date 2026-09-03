@@ -199,7 +199,7 @@ export default function CheckYourKnowledge({ sectionId }: CheckYourKnowledgeProp
 
   return (
     <div className="max-w-3xl mx-auto my-12 p-6 md:p-8 bg-brand-sand/40 border border-brand-slate/10 rounded-3xl text-left relative overflow-hidden backdrop-blur-xs">
-      <div className="absolute top-0 right-0 w-32 h-32 bg-brand-amber/5 rounded-full blur-2xl -mr-10 -mt-10 pointer-events-none" />
+      <div className="absolute top-0 end-0 w-32 h-32 bg-brand-amber/5 rounded-full blur-2xl -me-10 -mt-10 pointer-events-none" />
       
       {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-brand-slate/10 pb-4 mb-6">

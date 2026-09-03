@@ -749,7 +749,7 @@ export const StudentOverviewBentoContent: React.FC<StudentOverviewBentoContentPr
 
                     {/* Difficulty Quick Filter */}
                     <div className="flex items-center gap-1 shrink-0 overflow-x-auto pb-1 sm:pb-0">
-                      <span className="text-[10px] font-mono font-bold uppercase text-brand-muted mr-1 hidden sm:inline">
+                      <span className="text-[10px] font-mono font-bold uppercase text-brand-muted me-1 hidden sm:inline">
                         Level:
                       </span>
                       {['all', 'Beginner', 'Mid-Level', 'Senior', 'Staff'].map((diff) => (
@@ -770,7 +770,7 @@ export const StudentOverviewBentoContent: React.FC<StudentOverviewBentoContentPr
 
                   {/* Topic Auto-Tag Pills */}
                   <div className="flex items-center gap-1.5 flex-wrap pt-1 border-t border-brand-slate/10">
-                    <div className="flex items-center gap-1 text-[10px] font-mono font-bold uppercase text-brand-muted mr-1">
+                    <div className="flex items-center gap-1 text-[10px] font-mono font-bold uppercase text-brand-muted me-1">
                       <Tag className="w-3 h-3 text-brand-amber" />
                       <span>Topic Tags:</span>
                     </div>
@@ -1072,7 +1072,7 @@ export const StudentOverviewBentoContent: React.FC<StudentOverviewBentoContentPr
                                         className="p-2 rounded-xl bg-white border border-brand-slate/10 text-xs flex items-center justify-between gap-2"
                                       >
                                         <div className="truncate flex-1">
-                                          <span className="font-bold text-brand-amber mr-1.5">Q{attIdx + 1}:</span>
+                                          <span className="font-bold text-brand-amber me-1.5">Q{attIdx + 1}:</span>
                                           <span className="text-brand-charcoal text-[11px] font-medium">{att.questionText}</span>
                                         </div>
                                         <span className={`px-2 py-0.5 rounded text-[10px] font-mono font-bold shrink-0 ${

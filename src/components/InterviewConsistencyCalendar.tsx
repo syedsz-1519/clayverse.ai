@@ -395,7 +395,7 @@ export default function InterviewConsistencyCalendar({
                             title={`${rec.roleTrack}: ${score}% (${rec.hiringDecision})`}
                           >
                             <span className="truncate">{rec.roleTrack.split(' ')[0]}</span>
-                            <span className="font-black shrink-0 ml-1">{score}%</span>
+                            <span className="font-black shrink-0 ms-1">{score}%</span>
                           </div>
                         );
                       })}
@@ -479,7 +479,7 @@ export default function InterviewConsistencyCalendar({
                 </div>
 
                 <div className="flex items-center gap-2 self-end sm:self-auto">
-                  <div className="text-right mr-2">
+                  <div className="text-end me-2">
                     <div className="text-[10px] font-mono uppercase text-brand-muted">Score</div>
                     <div className={`text-base font-black font-display ${
                       rec.overallScore >= 85 ? 'text-emerald-700' :

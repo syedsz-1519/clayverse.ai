@@ -193,16 +193,38 @@
     "alreadyAccount": "Already have an account? Sign In",
     "close": "Close"
   },
+  "guest": {
+    "status": "Guest Mode Status",
+    "activeMessage": "Guest Mode Active: Your study streak and progress are saved locally.",
+    "syncToCloud": "Sync to Cloud (Free)",
+    "dismiss": "Dismiss guest mode banner"
+  },
   "offline": {
     "title": "Offline Learning Manager",
     "subtitle": "Download the entire Clayverse AI curriculum for offline study without internet access.",
+    "curriculumAndCache": "Offline Curriculum & Cache",
+    "studyAnywhere": "Study 100% of the zero-jargon AI curriculum anywhere without internet",
     "statusOnline": "Connected (Online)",
     "statusOffline": "Offline Mode Active",
+    "connection": "Connection",
+    "onlineConnected": "Online (Connected)",
+    "offlineNoData": "Offline (No Data)",
+    "cachedModules": "Cached Modules",
     "cachedLessons": "Locally Cached Lessons",
+    "available": "Available",
+    "storageFootprint": "Storage Footprint",
+    "lightweight": "Lightweight",
+    "whatWorksOffline": "What works 100% offline in Clayverse AI?",
+    "cachedCoreModules": "Cached Core Modules (12 Total)",
+    "readyForOfflineStudy": "Ready for Offline Study",
     "downloadAll": "Download Entire Curriculum",
     "clearStorage": "Clear Offline Cache",
+    "clearCache": "Clear Cache",
     "storageUsed": "Storage Used",
-    "lastSynced": "Last Synced"
+    "lastSynced": "Last Synced",
+    "cachingContent": "Caching Content...",
+    "allContentSynced": "All Content Synced!",
+    "reCacheAllLessons": "Re-Cache All Lessons"
   },
   "shortcuts": {
     "title": "Keyboard Shortcuts",
@@ -247,10 +269,34 @@
   "socialShare": {
     "title": "Share the Knowledge",
     "subtitle": "Help friends, classmates, and colleagues demystify AI with zero math and calm visual clarity.",
+    "shareYourAIJourney": "Share Your AI Journey",
+    "spreadKnowledge": "Spread the knowledge with friends & peers",
+    "inspireOthers": "Inspire others to learn AI without fear, math jargon, or confusion. Share your study milestones and invite colleagues to test their skills.",
+    "dayStreak": "Day Streak",
+    "chaptersMastered": "Chapters Mastered",
+    "freeAndOpen": "100% Free & Open",
+    "linkStatsCopied": "Link & Stats Copied!",
+    "copyShareLink": "Copy Share Link",
     "copyLink": "Copy Direct Link",
     "copied": "Link Copied!",
     "twitter": "Share on X / Twitter",
     "whatsapp": "Share on WhatsApp",
-    "linkedin": "Share on LinkedIn"
+    "linkedin": "Share on LinkedIn",
+    "telegram": "Share on Telegram"
+  },
+  "shortcuts": {
+    "title": "Keyboard Shortcuts",
+    "subtitle": "Navigate Clayverse AI effortlessly at lightning speed",
+    "filterPlaceholder": "Filter shortcuts (e.g. Esc, Theme, Lesson)...",
+    "categories": {
+      "all": "All Shortcuts",
+      "navigation": "Navigation",
+      "actions": "Tools & Search",
+      "lesson": "Lesson Controls",
+      "accessibility": "Theme & Audio"
+    },
+    "noResults": "No matching keyboard shortcuts found.",
+    "footerTip": "Press ? anywhere to open this menu",
+    "gotIt": "Got it"
   }
 }

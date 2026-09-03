@@ -546,7 +546,7 @@ Generated on: ${new Date().toLocaleDateString()}
                                           <span className="text-white/80">{sub.name}</span>
                                           <span className="font-mono text-white/90">
                                             {sub.a}% → <strong className="text-amber-300">{sub.b}%</strong>
-                                            <span className={`ml-1 text-[9px] ${subDiff >= 0 ? 'text-emerald-400' : 'text-rose-400'}`}>
+                                            <span className={`ms-1 text-[9px] ${subDiff >= 0 ? 'text-emerald-400' : 'text-rose-400'}`}>
                                               ({subDiff >= 0 ? `+${subDiff}` : subDiff}%)
                                             </span>
                                           </span>

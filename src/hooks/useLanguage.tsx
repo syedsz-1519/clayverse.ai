@@ -818,7 +818,7 @@ const dictionary: Record<string, Record<string, string>> = {
 export const LanguageProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [lang, setLangState] = useState<Language>(() => {
     try {
-      const saved = localStorage.getItem('app_language');
+      const saved = localStorage.getItem('app_language') || localStorage.getItem('clayverse_lang');
       return saved ? (saved as Language) : 'en';
     } catch {
       return 'en';
@@ -829,6 +829,7 @@ export const LanguageProvider: React.FC<{ children: React.ReactNode }> = ({ chil
     setLangState(newLang);
     try {
       localStorage.setItem('app_language', newLang);
+      localStorage.setItem('clayverse_lang', newLang);
       window.dispatchEvent(new CustomEvent('clay_language_changed', { detail: { lang: newLang } }));
     } catch (e) {
       console.warn('Could not persist language preference to localStorage', e);

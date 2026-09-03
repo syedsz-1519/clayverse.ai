@@ -105,7 +105,7 @@ export default function ClayLogo({ className = '', size = 48, showText = false }
       
       {showText && (
         <span className="font-display text-base font-extrabold text-brand-charcoal tracking-tight flex items-center">
-          CLAY<span className="font-light italic text-brand-slate ml-1.5">the explainer</span>
+          CLAY<span className="font-light italic text-brand-slate ms-1.5">the explainer</span>
         </span>
       )}
     </div>

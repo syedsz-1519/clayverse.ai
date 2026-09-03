@@ -1069,8 +1069,8 @@ export default function FloatingNav() {
                               : 'text-brand-slate hover:bg-brand-sand'
                           }`}
                         >
-                          <span className="truncate pr-1">
-                            <span className="font-mono text-[9px] font-bold text-brand-amber mr-1.5">{sec.number}</span>
+                          <span className="truncate pe-1">
+                            <span className="font-mono text-[9px] font-bold text-brand-amber me-1.5">{sec.number}</span>
                             {sec.title}
                           </span>
                           <span className={`text-[8px] font-mono px-1.5 py-0.5 rounded shrink-0 ${isActiveSub ? 'bg-white/20 text-white' : 'bg-brand-sand text-brand-muted'}`}>
@@ -1085,7 +1085,7 @@ export default function FloatingNav() {
                 {/* Reading completion tracker */}
                 <div className="bg-[#FAF8F5] border border-brand-slate/10 p-3 rounded-2xl shrink-0 text-left mt-auto">
                   <span className="block text-[9px] font-mono font-bold text-brand-muted uppercase mb-1">
-                    {lang === 'en' ? "Reading Progress" : "Kitna Padhe"}
+                    {t('nav.readingProgress')}
                   </span>
                   <div className="flex justify-between items-center mb-1 text-xs font-black text-brand-charcoal">
                     <span>{Math.round(scrollProgress)}%</span>

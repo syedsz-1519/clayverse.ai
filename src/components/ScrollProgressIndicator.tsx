@@ -398,7 +398,7 @@ export default function ScrollProgressIndicator() {
                   </button>
                   <button
                     onClick={() => scrollToSection('hero')}
-                    className="p-1 rounded-lg hover:bg-brand-sand text-brand-slate hover:text-brand-charcoal cursor-pointer transition-colors ml-1"
+                    className="p-1 rounded-lg hover:bg-brand-sand text-brand-slate hover:text-brand-charcoal cursor-pointer transition-colors ms-1"
                     title={lang === 'en' ? "Back to top" : "Shuru mein jayein"}
                   >
                     <ArrowUp className="w-3.5 h-3.5" />

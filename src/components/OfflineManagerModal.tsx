@@ -27,7 +27,7 @@ interface OfflineManagerModalProps {
 
 export default function OfflineManagerModal({ isOpen, onClose }: OfflineManagerModalProps) {
   const { isOnline, stats, cacheAll, clearCache } = useOfflineStatus();
-  const { lang } = useLanguage();
+  const { lang, t } = useLanguage();
   const [isCaching, setIsCaching] = useState(false);
   const [cacheSuccessToast, setCacheSuccessToast] = useState(false);
 
@@ -72,14 +72,10 @@ export default function OfflineManagerModal({ isOpen, onClose }: OfflineManagerM
               </div>
               <div>
                 <h2 id="offline-manager-title" className="text-xl font-bold font-display text-brand-charcoal">
-                  {lang === 'te' ? 'ఆఫ్‌లైన్ నిల్వ & లెసన్ క్యాషింగ్' : lang === 'hi' ? 'ऑफलाइन स्टोरेज और कैशिंग' : 'Offline Curriculum & Cache'}
+                  {t('offline.curriculumAndCache')}
                 </h2>
                 <p className="text-xs text-brand-muted">
-                  {lang === 'te' 
-                    ? 'ఇంటర్నెట్ లేకుండా పూర్తి కోర్స్, ఉపమానాలు మరియు క్విజ్‌లను చదవండి'
-                    : lang === 'hi'
-                    ? 'इंटरनेट के बिना पूरा पाठ्यक्रम, एनालॉजी और क्विज पढ़ें'
-                    : 'Study 100% of the zero-jargon AI curriculum anywhere without internet'}
+                  {t('offline.studyAnywhere')}
                 </p>
               </div>
             </div>
@@ -105,9 +101,9 @@ export default function OfflineManagerModal({ isOpen, onClose }: OfflineManagerM
                   {isOnline ? <Wifi className="w-5 h-5" /> : <WifiOff className="w-5 h-5" />}
                 </div>
                 <div>
-                  <div className="text-[10px] uppercase font-mono font-bold text-brand-muted">Connection</div>
+                  <div className="text-[10px] uppercase font-mono font-bold text-brand-muted">{t('offline.connection')}</div>
                   <div className="text-xs font-bold text-brand-charcoal">
-                    {isOnline ? 'Online (Connected)' : 'Offline (No Data)'}
+                    {isOnline ? t('offline.onlineConnected') : t('offline.offlineNoData')}
                   </div>
                 </div>
               </div>
@@ -118,9 +114,9 @@ export default function OfflineManagerModal({ isOpen, onClose }: OfflineManagerM
                   <Database className="w-5 h-5" />
                 </div>
                 <div>
-                  <div className="text-[10px] uppercase font-mono font-bold text-brand-muted">Cached Modules</div>
+                  <div className="text-[10px] uppercase font-mono font-bold text-brand-muted">{t('offline.cachedModules')}</div>
                   <div className="text-xs font-bold text-brand-charcoal">
-                    {stats.cachedCount} / {stats.totalLessons} Available
+                    {stats.cachedCount} / {stats.totalLessons} {t('offline.available')}
                   </div>
                 </div>
               </div>
@@ -131,9 +127,9 @@ export default function OfflineManagerModal({ isOpen, onClose }: OfflineManagerM
                   <ShieldCheck className="w-5 h-5" />
                 </div>
                 <div>
-                  <div className="text-[10px] uppercase font-mono font-bold text-brand-muted">Storage Footprint</div>
+                  <div className="text-[10px] uppercase font-mono font-bold text-brand-muted">{t('offline.storageFootprint')}</div>
                   <div className="text-xs font-bold text-brand-charcoal">
-                    {stats.storageUsedFormatted} (Lightweight)
+                    {stats.storageUsedFormatted} ({t('offline.lightweight')})
                   </div>
                 </div>
               </div>
@@ -143,7 +139,7 @@ export default function OfflineManagerModal({ isOpen, onClose }: OfflineManagerM
             <div className="p-4 rounded-2xl bg-amber-500/10 border border-amber-500/20 space-y-2">
               <div className="flex items-center gap-2 text-xs font-bold text-brand-charcoal">
                 <Sparkles className="w-4 h-4 text-brand-amber" />
-                <span>What works 100% offline in Clayverse AI?</span>
+                <span>{t('offline.whatWorksOffline')}</span>
               </div>
               <ul className="text-xs text-brand-slate space-y-1 pl-6 list-disc">
                 <li>All 12 structured curriculum lessons with zero-math analogies in Telugu, Hindi, Urdu, Tamil, & English.</li>
@@ -157,11 +153,11 @@ export default function OfflineManagerModal({ isOpen, onClose }: OfflineManagerM
             <div className="space-y-2.5">
               <div className="flex items-center justify-between">
                 <span className="text-xs font-bold font-display uppercase tracking-wider text-brand-charcoal">
-                  Cached Core Modules (12 Total)
+                  {t('offline.cachedCoreModules')}
                 </span>
                 <span className="text-[11px] font-mono text-emerald-600 dark:text-emerald-400 flex items-center gap-1 font-bold">
                   <CheckCircle2 className="w-3.5 h-3.5" />
-                  Ready for Offline Study
+                  {t('offline.readyForOfflineStudy')}
                 </span>
               </div>
 
@@ -179,7 +175,7 @@ export default function OfflineManagerModal({ isOpen, onClose }: OfflineManagerM
                         {m.titleEn}
                       </span>
                     </div>
-                    <CheckCircle2 className="w-4 h-4 text-emerald-500 shrink-0 ml-2" />
+                    <CheckCircle2 className="w-4 h-4 text-emerald-500 shrink-0 ms-2" />
                   </div>
                 ))}
               </div>
@@ -193,7 +189,7 @@ export default function OfflineManagerModal({ isOpen, onClose }: OfflineManagerM
               className="px-3 py-2 rounded-xl text-xs font-semibold text-rose-600 hover:bg-rose-50 dark:hover:bg-rose-950/30 transition-all flex items-center gap-1.5 cursor-pointer"
             >
               <Trash2 className="w-3.5 h-3.5" />
-              <span>Clear Cache</span>
+              <span>{t('offline.clearCache')}</span>
             </button>
 
             <div className="flex items-center gap-2">
@@ -205,12 +201,12 @@ export default function OfflineManagerModal({ isOpen, onClose }: OfflineManagerM
                 {isCaching ? (
                   <>
                     <RefreshCw className="w-3.5 h-3.5 animate-spin" />
-                    <span>Caching Content...</span>
+                    <span>{t('offline.cachingContent')}</span>
                   </>
                 ) : (
                   <>
                     <HardDriveDownload className="w-3.5 h-3.5" />
-                    <span>{cacheSuccessToast ? 'All Content Synced!' : 'Re-Cache All Lessons'}</span>
+                    <span>{cacheSuccessToast ? t('offline.allContentSynced') : t('offline.reCacheAllLessons')}</span>
                   </>
                 )}
               </button>

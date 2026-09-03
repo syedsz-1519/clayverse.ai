@@ -156,7 +156,7 @@ const SHORTCUTS: ShortcutItem[] = [
 ];
 
 export default function KeyboardShortcutsModal({ isOpen, onClose }: KeyboardShortcutsModalProps) {
-  const { lang } = useLanguage();
+  const { lang, t } = useLanguage();
   const [filterQuery, setFilterQuery] = useState('');
   const [selectedCategory, setSelectedCategory] = useState<'all' | 'navigation' | 'actions' | 'lesson' | 'accessibility'>('all');
 
@@ -206,15 +206,15 @@ export default function KeyboardShortcutsModal({ isOpen, onClose }: KeyboardShor
           {/* Header */}
           <div className="p-6 border-b border-black/[0.08] dark:border-white/[0.08] flex items-center justify-between bg-white dark:bg-zinc-900/90">
             <div className="flex items-center gap-3">
-              <div className="w-10 h-10 rounded-2xl bg-brand-amber/15 text-brand-amber flex items-center justify-center shadow-xs">
+              <div className="w-10 h-10 rounded-2xl bg-brand-amber/15 text-brand-amber flex items-center justify-center shadow-xs shrink-0">
                 <Command className="w-5 h-5" />
               </div>
               <div>
                 <h2 id="keyboard-shortcuts-title" className="text-xl font-bold font-display text-brand-charcoal">
-                  {lang === 'te' ? 'కీబోర్డ్ షార్ట్‌కట్‌లు' : lang === 'hi' ? 'कीबोर्ड शॉर्टकट्स' : 'Keyboard Shortcuts'}
+                  {t('shortcuts.title', 'Keyboard Shortcuts')}
                 </h2>
                 <p className="text-xs text-brand-muted">
-                  {lang === 'te' ? 'వేగవంతమైన నావిగేషన్ కోసం కీబోర్డ్ ఉపయోగించండి' : lang === 'hi' ? 'फास्ट नेविगेशन और एक्सेसिबिलिटी के लिए शॉर्टकट्स' : 'Navigate Clayverse AI effortlessly at lightning speed'}
+                  {t('shortcuts.subtitle', 'Navigate Clayverse AI effortlessly at lightning speed')}
                 </p>
               </div>
             </div>
@@ -231,23 +231,24 @@ export default function KeyboardShortcutsModal({ isOpen, onClose }: KeyboardShor
           {/* Filter Bar & Category Pills */}
           <div className="p-4 border-b border-black/[0.06] dark:border-white/[0.06] bg-black/[0.01] dark:bg-white/[0.01] space-y-3">
             <div className="relative">
-              <Search className="w-4 h-4 text-brand-muted absolute left-3.5 top-1/2 -translate-y-1/2" />
+              <Search className="w-4 h-4 text-brand-muted absolute start-3.5 top-1/2 -translate-y-1/2" />
               <input
                 type="text"
-                placeholder={lang === 'te' ? 'షార్ట్‌కట్‌లను వెతకండి...' : lang === 'hi' ? 'शॉर्टकट सर्च करें...' : 'Filter shortcuts (e.g. Esc, Theme, Lesson)...'}
+                placeholder={t('shortcuts.filterPlaceholder', 'Filter shortcuts (e.g. Esc, Theme, Lesson)...')}
                 value={filterQuery}
                 onChange={(e) => setFilterQuery(e.target.value)}
-                className="w-full pl-9 pr-4 py-2 text-xs rounded-xl bg-white dark:bg-zinc-800 border border-black/10 dark:border-white/10 text-brand-charcoal placeholder:text-brand-muted focus:outline-none focus:ring-2 focus:ring-brand-amber/40"
+                className="w-full ps-9 pe-4 py-2 text-xs rounded-xl bg-white dark:bg-zinc-800 border border-black/10 dark:border-white/10 text-brand-charcoal placeholder:text-brand-muted focus:outline-none focus:ring-2 focus:ring-brand-amber/40"
               />
             </div>
 
             <div className="flex flex-wrap items-center gap-1.5 text-xs">
               {(['all', 'navigation', 'actions', 'lesson', 'accessibility'] as const).map((cat) => {
-                const label = 
+                const label = t(`shortcuts.categories.${cat}`, 
                   cat === 'all' ? 'All Shortcuts' :
                   cat === 'navigation' ? 'Navigation' :
                   cat === 'actions' ? 'Tools & Search' :
-                  cat === 'lesson' ? 'Lesson Controls' : 'Theme & Audio';
+                  cat === 'lesson' ? 'Lesson Controls' : 'Theme & Audio'
+                );
 
                 return (
                   <button
@@ -270,7 +271,7 @@ export default function KeyboardShortcutsModal({ isOpen, onClose }: KeyboardShor
           <div className="p-6 overflow-y-auto space-y-2.5 flex-1 divide-y divide-black/[0.04] dark:divide-white/[0.04]">
             {filteredShortcuts.length === 0 ? (
               <div className="text-center py-10 text-brand-muted text-xs">
-                No matching keyboard shortcuts found.
+                {t('shortcuts.noResults', 'No matching keyboard shortcuts found.')}
               </div>
             ) : (
               filteredShortcuts.map((s, idx) => (
@@ -278,7 +279,7 @@ export default function KeyboardShortcutsModal({ isOpen, onClose }: KeyboardShor
                   <div className="flex-1 text-xs text-brand-charcoal font-medium">
                     {lang === 'te' || lang === 'hi' || lang === 'ur' ? s.descriptionHyd : s.descriptionEn}
                   </div>
-                  <div className="flex items-center gap-1.5 shrink-0">
+                  <div className="flex items-center gap-1.5 shrink-0" dir="ltr">
                     {s.keys.map((k, kIdx) => (
                       <kbd
                         key={kIdx}
@@ -296,14 +297,14 @@ export default function KeyboardShortcutsModal({ isOpen, onClose }: KeyboardShor
           {/* Footer Quick Tip */}
           <div className="p-4 bg-white dark:bg-zinc-900 border-t border-black/[0.08] dark:border-white/[0.08] flex items-center justify-between text-xs text-brand-muted">
             <div className="flex items-center gap-2">
-              <Sparkles className="w-3.5 h-3.5 text-brand-amber" />
-              <span>Press <kbd className="px-1.5 py-0.5 font-mono text-[11px] font-bold bg-black/5 dark:bg-white/5 border border-black/10 dark:border-white/10 rounded">?</kbd> anywhere to open this menu</span>
+              <Sparkles className="w-3.5 h-3.5 text-brand-amber shrink-0" />
+              <span>{t('shortcuts.footerTip', 'Press ? anywhere to open this menu')}</span>
             </div>
             <button
               onClick={onClose}
               className="px-4 py-1.5 bg-brand-amber hover:bg-brand-amber-dark text-white font-bold rounded-lg transition-all cursor-pointer"
             >
-              Got it
+              {t('shortcuts.gotIt', 'Got it')}
             </button>
           </div>
         </motion.div>

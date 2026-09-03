@@ -172,7 +172,7 @@ export default function SessionInlineReflectionEditor({
         <div className="flex items-center gap-2.5 self-end sm:self-auto shrink-0">
           {/* Self Assessment Rating Stars */}
           <div className="flex items-center gap-1 bg-white px-2.5 py-1 rounded-xl border border-amber-200/80 shadow-2xs">
-            <span className="text-[10px] font-mono text-brand-slate mr-1">Self Rating:</span>
+            <span className="text-[10px] font-mono text-brand-slate me-1">Self Rating:</span>
             {[1, 2, 3, 4, 5].map((star) => (
               <button
                 key={star}
@@ -265,7 +265,7 @@ export default function SessionInlineReflectionEditor({
         <div className="space-y-3">
           {/* Prompt Suggestion Chips */}
           <div className="flex items-center gap-1.5 flex-wrap">
-            <span className="text-[10px] font-mono text-brand-muted font-bold uppercase mr-1">
+            <span className="text-[10px] font-mono text-brand-muted font-bold uppercase me-1">
               Quick Prompts:
             </span>
             {[

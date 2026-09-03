@@ -927,7 +927,7 @@ export default function QuizPerformanceBarChart({
         {/* Secondary Metric Toggle (for module & timeline modes) */}
         {(activeViewMode === 'modules' || activeViewMode === 'timeline') && (
           <div className="flex items-center gap-1 shrink-0 self-end sm:self-auto">
-            <span className="text-[10px] font-mono text-brand-muted uppercase mr-1">Metric:</span>
+            <span className="text-[10px] font-mono text-brand-muted uppercase me-1">Metric:</span>
             <button
               onClick={() => setActiveMetric('accuracy')}
               className={`px-2 py-0.5 rounded-lg text-[10.5px] font-mono font-bold transition-all cursor-pointer ${

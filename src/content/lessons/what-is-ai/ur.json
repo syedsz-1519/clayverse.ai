@@ -1,0 +1,102 @@
+{
+  "slug": "what-is-ai",
+  "lessonNum": 1,
+  "stage": 1,
+  "title": "AI ki Asli Buniyaad aur Misaalein",
+  "subtitle": "Bina kisi math ke samjhein ke AI normal coding se alag kaise hai.",
+  "readTime": "2 min",
+  "sections": {
+    "hero": {
+      "badge": "Sabak 01",
+      "heading": "Arey Yaaron, AI Bole to Asal mein kya hai?",
+      "intro": "AI yaane Artificial Intelligence bole to computer'aa ko dimaag dena. Iska matlab ye nahi hai ki computer khud ba khud sochra. Khali usko bohot saara data (jaise photo’aa, likhe so baataan) dikha ke seekha dete. Uske baad, computer naye cheezon ko pehchanta aur jawaab deta, bilkul ek dimaag wale ke jaisa! Asal mein ye khali ek tool hai jo bade data mein se patterns dhoond leta hai.",
+      "timelineButton": "AI Timeline Dekho Yaaron",
+      "timelineHideButton": "Timeline Chupao"
+    },
+    "analogy": {
+      "label": "Ekdam Simple Misaal",
+      "text": "Arey bhai, ye bilkul bache ko billi ya kutte ki pehchaan seekhane ke jaisa hai. Tum usko kitaab padha ke biological details nahi samjhate. Tum usko hazaaro baar kutte dikhaate. Bache ka dimaag khud-ba-khud floppy ears, moochh aur dum ke patterns jod leta hai. Bas, computer bhi aise hi seekhta hai!"
+    },
+    "patternMatcher": {
+      "title": "Pattern Pehchanne Wala",
+      "subtitle": "Pehle data andar jaata, phir patterns dhoond ke, seedha faisla bahar aata!"
+    },
+    "pocketExamples": {
+      "badge": "Sabak 02",
+      "title": "Roz ka AI Istemaal",
+      "subtitle": "Hum roz bohot saari jagah pattern matching dekhte hain aur humein pata bhi nahi chalta yaaron. Dekho ye 6 asaan misalein.",
+      "hint": "Koyi bhi card dabaake check karo iske piche kya logic hai.",
+      "revealLabel": "Kholo",
+      "closeLabel": "Band Karo",
+      "items": [
+        {
+          "id": "netflix",
+          "title": "Netflix ki Soch",
+          "iconName": "Tv",
+          "description": "Tumhein agli film bolta.",
+          "explanation": "Blindly select karne ke bajaye, ye tumhari watched films ko baaqi hazaaro logon se compare karke dhang ke patterns nikalta hai."
+        },
+        {
+          "id": "maps",
+          "title": "Google Maps ETA",
+          "iconName": "MapPin",
+          "description": "Traffic patterns dhoondta.",
+          "explanation": "Purani traffic congestion aur abhi chalre so gaadiyon ki speed dekh ke bilkul minute to minute sahi rasta aur ETA batata hai."
+        },
+        {
+          "id": "chatgpt",
+          "title": "ChatGPT ke Jawaab",
+          "iconName": "MessageSquareCode",
+          "description": "Mails likhta aur jawaab deta.",
+          "explanation": "Aisa program jisko duniya jahan ki kitabein padhaye, taaki wo sentence mein agla sabse logical word khud predict kar sake."
+        },
+        {
+          "id": "assistants",
+          "title": "Awaaz wale Assistants",
+          "iconName": "Mic",
+          "description": "Siri aur Alexa ka sunna.",
+          "explanation": "Hamari boli so awaaz ko text commands mein badal ke mobile ya speaker ko alarm lagane ya gaana bajane bolta hai."
+        },
+        {
+          "id": "spam",
+          "title": "Spam Filter (Safe Inbox)",
+          "iconName": "Mail",
+          "description": "Kachra mails door rakhta.",
+          "explanation": "Har aane wale mail ko scan karta hai warning words aur fake senders ke liye, taaki kachra mail seedha spam folder mein chale jaye."
+        },
+        {
+          "id": "photo",
+          "title": "Chehra Pehchanna",
+          "iconName": "Smile",
+          "description": "Doston ke photos alag karta.",
+          "explanation": "Chehre ki ankhon, naak, aur naksh ko pehchan ke ek hi dost ki saari photos ko ek album mein jama kar deta hai."
+        }
+      ]
+    },
+    "threeHorizons": {
+      "badge": "Sabak 03",
+      "title": "AI ke Teen Horizons",
+      "subtitle": "Duniya ke bade scientists AI ko teen bade darjon mein divide karte hain machines ki taaqat ke mutabiq.",
+      "items": [
+        {
+          "title": "Narrow AI (Chota AI)",
+          "short": "ANI",
+          "badge": "Jo aaj chalra hai",
+          "description": "Aise systems jo khali ek hi kaam mein ustad hote hain, jaise chess khelna ya gaane batana. Aaj chalra so har AI khali ANI hai yaaron."
+        },
+        {
+          "title": "General AI (Insaan ke Jaisa)",
+          "short": "AGI",
+          "badge": "Aane wala kal",
+          "description": "Insaan ke barabar dimaag rakhne wala AI jo koi bhi naya kaam khud seekh sake. Ye abhi tak nahi bana hai yaaron."
+        },
+        {
+          "title": "Super AI (Insaan se aage)",
+          "short": "ASI",
+          "badge": "Hypothetical hadd",
+          "description": "Aisi machine jo har cheez mein insaani dimaag se hazar guna aage nikal jaye. Khali filmon mein dikhate abhi tak."
+        }
+      ]
+    }
+  }
+}

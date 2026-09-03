@@ -1,0 +1,102 @@
+{
+  "slug": "what-is-ai",
+  "lessonNum": 1,
+  "stage": 1,
+  "title": "Foundations of AI & Mental Models",
+  "subtitle": "Understand how pattern recognition differs from traditional coding with the pocket analogizer.",
+  "readTime": "2 min",
+  "sections": {
+    "hero": {
+      "badge": "Lesson 01",
+      "heading": "So, What actually is AI?",
+      "intro": "Artificial Intelligence — the capability of computer systems to perform tasks that historically required human thinking or reasoning — is not an independent thinking creature. Instead, it is a tool that detects recurring structures in huge sets of data.",
+      "timelineButton": "Explore AI Timeline",
+      "timelineHideButton": "Hide AI Timeline"
+    },
+    "analogy": {
+      "label": "A Simple Analogy",
+      "text": "It’s just like teaching a child what a 'dog' is. You don't hand them a legal brief explaining animal biology. You show them thousands of dogs in real life until their brain naturally links the floppy ears, tails, and sizes together."
+    },
+    "patternMatcher": {
+      "title": "The Pattern Matcher",
+      "subtitle": "Data goes in, patterns are discovered, decisions come out."
+    },
+    "pocketExamples": {
+      "badge": "Lesson 02",
+      "title": "AI in Your Pocket",
+      "subtitle": "You probably use AI multiple times a day without even noticing. Here are six everyday examples of how AI processes patterns behind the scenes.",
+      "hint": "Tap any card to reveal how it works under the hood.",
+      "revealLabel": "Reveal",
+      "closeLabel": "Close",
+      "items": [
+        {
+          "id": "netflix",
+          "title": "Netflix Predictions",
+          "iconName": "Tv",
+          "description": "Finds your next movie obsession.",
+          "explanation": "Instead of choosing blindly, it compares your exact viewing history with millions of other users to spot similar taste patterns."
+        },
+        {
+          "id": "maps",
+          "title": "Google Maps ETA",
+          "iconName": "MapPin",
+          "description": "Predicts traffic patterns.",
+          "explanation": "Looks at historical road congestion alongside real-time speeds of active drivers to forecast your arrival down to the minute."
+        },
+        {
+          "id": "chatgpt",
+          "title": "ChatGPT responses",
+          "iconName": "MessageSquareCode",
+          "description": "Drafts emails and answers.",
+          "explanation": "A program that has digested massive libraries of human text, letting it predict the most helpful next word in a sentence."
+        },
+        {
+          "id": "assistants",
+          "title": "Voice Assistants",
+          "iconName": "Mic",
+          "description": "Siri & Alexa listening.",
+          "explanation": "Translates sound waves of spoken words into text commands, mapping them to software actions like setting an alarm."
+        },
+        {
+          "id": "spam",
+          "title": "Spam Filtering",
+          "iconName": "Mail",
+          "description": "Keeps your inbox safe.",
+          "explanation": "Scans text files for warning words or sender patterns to filter out unwanted messages before they hit your view."
+        },
+        {
+          "id": "photo",
+          "title": "Photo Face-grouping",
+          "iconName": "Smile",
+          "description": "Sorts photos by friend.",
+          "explanation": "Finds unique geometry in facial structures, grouping photos of the same individual together automatically."
+        }
+      ]
+    },
+    "threeHorizons": {
+      "badge": "Lesson 03",
+      "title": "The Three Horizons of AI",
+      "subtitle": "Scientists divide AI into three major stages based on what the machines can actually achieve.",
+      "items": [
+        {
+          "title": "Narrow AI",
+          "short": "ANI",
+          "badge": "What exists today",
+          "description": "Systems designed to master just one specific task, like playing chess or recommending music. Every single AI system in operation today is Narrow AI."
+        },
+        {
+          "title": "General AI",
+          "short": "AGI",
+          "badge": "Theoretical target",
+          "description": "A theoretical system with human-level intelligence that can learn and apply knowledge to any problem. It does not exist yet."
+        },
+        {
+          "title": "Super AI",
+          "short": "ASI",
+          "badge": "Sci-Fi boundary",
+          "description": "A hypothetical machine that surpasses human brain capacity in every dimension, from logical analysis to social empathy."
+        }
+      ]
+    }
+  }
+}

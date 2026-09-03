@@ -651,7 +651,7 @@ export default function ClosingAndDeeper() {
                                           text={`Question: ${section.testYourself.question}\nAnswer: ${section.testYourself.answer}`}
                                           label={lang === 'en' ? "Copy Answer" : "Jawab Copy"}
                                           variant="compact"
-                                          className="shrink-0 ml-2"
+                                          className="shrink-0 ms-2"
                                         />
                                       </div>
                                     </motion.div>

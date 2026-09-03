@@ -526,7 +526,7 @@ export default function RecommendedNextLessonCard({
 
             {/* Key Concepts Tags */}
             <div className="flex flex-wrap items-center gap-1.5 pt-1">
-              <span className="text-[11px] font-mono text-brand-muted font-bold mr-1">
+              <span className="text-[11px] font-mono text-brand-muted font-bold me-1">
                 Covers:
               </span>
               {activeRec.keyConcepts.map((tag, idx) => (

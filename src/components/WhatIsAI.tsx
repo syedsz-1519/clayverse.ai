@@ -22,95 +22,21 @@ import TechTooltip from './TechTooltip';
 import AITimeline from './AITimeline';
 import { useLanguage } from '../hooks/useLanguage';
 import ReadSectionButton from './ReadSectionButton';
+import { getLessonContent } from '../lib/lessonContent';
 
 export default function WhatIsAI() {
-  const { lang, t } = useLanguage();
+  const { lang } = useLanguage();
   const [selectedExample, setSelectedExample] = useState<string | null>(null);
   const [showTimeline, setShowTimeline] = useState(false);
 
-  const pocketExamples: PocketExample[] = [
-    {
-      id: 'netflix',
-      title: lang === 'en' ? 'Netflix Predictions' : 'Netflix ki Soch',
-      iconName: 'Tv',
-      description: lang === 'en' ? 'Finds your next movie obsession.' : 'Tumhein agli film bolta.',
-      explanation: lang === 'en' 
-        ? 'Instead of choosing blindly, it compares your exact viewing history with millions of other users to spot similar taste patterns.'
-        : 'Blindly select karne ke bajaye, ye tumhari watched films ko baaqi hazaaro logon se compare karke dhang ke patterns nikalta hai.'
-    },
-    {
-      id: 'maps',
-      title: lang === 'en' ? 'Google Maps ETA' : 'Google Maps ETA',
-      iconName: 'MapPin',
-      description: lang === 'en' ? 'Predicts traffic patterns.' : 'Traffic patterns dhoondta.',
-      explanation: lang === 'en'
-        ? 'Looks at historical road congestion alongside real-time speeds of active drivers to forecast your arrival down to the minute.'
-        : 'Purani traffic congestion aur abhi chalre so gaadiyon ki speed dekh ke bilkul minute to minute sahi rasta aur ETA batata hai.'
-    },
-    {
-      id: 'chatgpt',
-      title: lang === 'en' ? 'ChatGPT responses' : 'ChatGPT ke Jawaab',
-      iconName: 'MessageSquareCode',
-      description: lang === 'en' ? 'Drafts emails and answers.' : 'Mails likhta aur jawaab deta.',
-      explanation: lang === 'en'
-        ? 'A program that has digested massive libraries of human text, letting it predict the most helpful next word in a sentence.'
-        : 'Aisa program jisko duniya jahan ki kitabein padhaye, taaki wo sentence mein agla sabse logical word khud predict kar sake.'
-    },
-    {
-      id: 'assistants',
-      title: lang === 'en' ? 'Voice Assistants' : 'Awaaz wale Assistants',
-      iconName: 'Mic',
-      description: lang === 'en' ? 'Siri & Alexa listening.' : 'Siri aur Alexa ka sunna.',
-      explanation: lang === 'en'
-        ? 'Translates sound waves of spoken words into text commands, mapping them to software actions like setting an alarm.'
-        : 'Hamari boli so awaaz ko text commands mein badal ke mobile ya speaker ko alarm lagane ya gaana bajane bolta hai.'
-    },
-    {
-      id: 'spam',
-      title: lang === 'en' ? 'Spam Filtering' : 'Spam Filter (Safe Inbox)',
-      iconName: 'Mail',
-      description: lang === 'en' ? 'Keeps your inbox safe.' : 'Kachra mails door rakhta.',
-      explanation: lang === 'en'
-        ? 'Scans text files for warning words or sender patterns to filter out unwanted messages before they hit your view.'
-        : 'Har aane wale mail ko scan karta hai warning words aur fake senders ke liye, taaki kachra mail seedha spam folder mein chale jaye.'
-    },
-    {
-      id: 'photo',
-      title: lang === 'en' ? 'Photo Face-grouping' : 'Chehra Pehchanna',
-      iconName: 'Smile',
-      description: lang === 'en' ? 'Sorts photos by friend.' : 'Doston ke photos alag karta.',
-      explanation: lang === 'en'
-        ? 'Finds unique geometry in facial structures, grouping photos of the same individual together automatically.'
-        : 'Chehre ki ankhon, naak, aur naksh ko pehchan ke ek hi dost ki saari photos ko ek album mein jama kar deta hai.'
-    }
-  ];
-
-  const aiTypes: AIType[] = [
-    {
-      title: lang === 'en' ? 'Narrow AI' : 'Narrow AI (Chota AI)',
-      short: 'ANI',
-      badge: lang === 'en' ? 'What exists today' : 'Jo aaj chalra hai',
-      description: lang === 'en' 
-        ? 'Systems designed to master just one specific task, like playing chess or recommending music. Every single AI system in operation today is Narrow AI.'
-        : 'Aise systems jo khali ek hi kaam mein ustad hote hain, jaise chess khelna ya gaane batana. Aaj chalra so har AI khali ANI hai yaaron.'
-    },
-    {
-      title: lang === 'en' ? 'General AI' : 'General AI (Insaan ke Jaisa)',
-      short: 'AGI',
-      badge: lang === 'en' ? 'Theoretical target' : 'Aane wala kal',
-      description: lang === 'en'
-        ? 'A theoretical system with human-level intelligence that can learn and apply knowledge to any problem. It does not exist yet.'
-        : 'Insaan ke barabar dimaag rakhne wala AI jo koi bhi naya kaam khud seekh sake. Ye abhi tak nahi bana hai yaaron.'
-    },
-    {
-      title: lang === 'en' ? 'Super AI' : 'Super AI (Insaan se aage)',
-      short: 'ASI',
-      badge: lang === 'en' ? 'Sci-Fi boundary' : 'Hypothetical hadd',
-      description: lang === 'en'
-        ? 'A hypothetical machine that surpasses human brain capacity in every dimension, from logical analysis to social empathy.'
-        : 'Aisi machine jo har cheez mein insaani dimaag se hazar guna aage nikal jaye. Khali filmon mein dikhate abhi tak.'
-    }
-  ];
+  const lessonData = getLessonContent('what-is-ai', lang);
+  const hero = lessonData?.sections.hero;
+  const analogy = lessonData?.sections.analogy;
+  const patternMatcher = lessonData?.sections.patternMatcher;
+  const pocketSection = lessonData?.sections.pocketExamples;
+  const pocketExamples = pocketSection?.items || [];
+  const threeHorizons = lessonData?.sections.threeHorizons;
+  const aiTypes = threeHorizons?.items || [];
 
   const renderIcon = (name: string) => {
     switch (name) {
@@ -151,13 +77,13 @@ export default function WhatIsAI() {
               </div>
 
               <span className="text-xs font-bold uppercase tracking-wider text-brand-amber mb-2 block font-mono">
-                {lang === 'en' ? "Lesson 01" : "Sabak 01"}
+                {hero?.badge}
               </span>
 
               {lang === 'en' ? (
                 <>
                   <h2 className="font-display text-3xl font-extrabold text-brand-charcoal mb-4">
-                    So, What actually is AI?
+                    {hero?.heading}
                   </h2>
                   <p className="font-sans text-brand-charcoal leading-relaxed mb-6 text-[15px]">
                     <TechTooltip term="Artificial Intelligence">Artificial Intelligence</TechTooltip> — <span className="text-brand-slate italic">the capability of computer systems to perform tasks that historically required human thinking or reasoning</span> — is not an independent thinking creature. Instead, it is a tool that detects recurring structures in huge sets of data.
@@ -166,7 +92,7 @@ export default function WhatIsAI() {
               ) : (
                 <>
                   <h2 className="font-display text-3xl font-extrabold text-brand-charcoal mb-4">
-                    Arey Yaaron, AI Bole to Asal mein kya hai?
+                    {hero?.heading}
                   </h2>
                   <p className="font-sans text-brand-charcoal leading-relaxed mb-6 text-[15px]">
                     <strong className="text-brand-amber">AI yaane Artificial Intelligence</strong> bole to <span className="text-brand-slate italic">computer'aa ko dimaag dena</span>. Iska matlab ye nahi hai ki computer khud ba khud sochra. Khali usko bohot saara data (jaise photo’aa, likhe so baataan) dikha ke seekha dete. Uske baad, computer naye cheezon ko pehchanta aur jawaab deta, bilkul ek dimaag wale ke jaisa! Asal mein ye khali ek tool hai jo bade data mein se patterns dhoond leta hai.
@@ -181,7 +107,7 @@ export default function WhatIsAI() {
                   className={`inline-flex items-center gap-2 px-5 py-2.5 rounded-xl font-display text-xs font-bold cursor-pointer transition-all active:scale-95 shadow-sm border ${showTimeline ? 'bg-brand-charcoal text-white border-brand-charcoal' : 'bg-[#E07A5F] text-white border-[#C55937] hover:bg-[#C55937]'}`}
                 >
                   <History className="w-4 h-4" />
-                  <span>{showTimeline ? (lang === 'en' ? "Hide AI Timeline" : "Timeline Chupao") : (lang === 'en' ? "Explore AI Timeline" : "AI Timeline Dekho Yaaron")}</span>
+                  <span>{showTimeline ? hero?.timelineHideButton : hero?.timelineButton}</span>
                 </button>
               </div>
             </div>
@@ -189,14 +115,10 @@ export default function WhatIsAI() {
             {/* Analogy callout - glassmorphic overlay */}
             <div className="glass-panel p-5 rounded-2xl border-l-4 border-brand-amber relative overflow-hidden bg-brand-sand/20">
               <span className="font-mono text-xs font-bold text-brand-amber uppercase block mb-1">
-                {lang === 'en' ? "A Simple Analogy" : "Ekdam Simple Misaal"}
+                {analogy?.label}
               </span>
               <p className="text-brand-charcoal text-xs leading-relaxed italic">
-                {lang === 'en' ? (
-                  `"It’s just like teaching a child what a 'dog' is. You don't hand them a legal brief explaining animal biology. You show them thousands of dogs in real life until their brain naturally links the floppy ears, tails, and sizes together."`
-                ) : (
-                  `"Arey bhai, ye bilkul bache ko billi ya kutte ki pehchaan seekhane ke jaisa hai. Tum usko kitaab padha ke biological details nahi samjhate. Tum usko hazaaro baar kutte dikhaate. Bache ka dimaag khud-ba-khud floppy ears, moochh aur dum ke patterns jod leta hai. Bas, computer bhi aise hi seekhta hai!"`
-                )}
+                "{analogy?.text}"
               </p>
             </div>
           </motion.div>
@@ -230,13 +152,10 @@ export default function WhatIsAI() {
 
              <div className="text-center mt-4">
               <span className="font-display text-sm font-bold text-brand-charcoal">
-                {lang === 'en' ? "The Pattern Matcher" : "Pattern Pehchanne Wala"}
+                {patternMatcher?.title}
               </span>
               <p className="text-[11px] text-brand-muted mt-1 max-w-[200px] mx-auto leading-relaxed">
-                {lang === 'en' 
-                  ? "Data goes in, patterns are discovered, decisions come out." 
-                  : "Pehle data andar jaata, phir patterns dhoond ke, seedha faisla bahar aata!"
-                }
+                {patternMatcher?.subtitle}
               </p>
             </div>
           </motion.div>
@@ -274,18 +193,15 @@ export default function WhatIsAI() {
               </div>
 
               <span className="text-xs font-bold uppercase tracking-wider text-brand-amber font-mono">
-                {lang === 'en' ? "Lesson 02" : "Sabak 02"}
+                {pocketSection?.badge}
               </span>
               <h2 className="font-display text-2xl font-extrabold text-brand-charcoal mt-1 mb-4">
-                {lang === 'en' ? "AI in Your Pocket" : "Roz ka AI Istemaal"}
+                {pocketSection?.title}
               </h2>
               <p className="font-sans text-xs leading-relaxed text-brand-muted">
-                {lang === 'en' 
-                  ? "You probably use AI multiple times a day without even noticing. Here are six everyday examples of how AI processes patterns behind the scenes."
-                  : "Hum roz bohot saari jagah pattern matching dekhte hain aur humein pata bhi nahi chalta yaaron. Dekho ye 6 asaan misalein."
-                }
+                {pocketSection?.subtitle}
                 <span className="block mt-4 text-[#E07A5F] font-bold font-mono">
-                  {lang === 'en' ? "Tap any card to reveal how it works under the hood." : "Koyi bhi card dabaake check karo iske piche kya logic hai."}
+                  {pocketSection?.hint}
                 </span>
               </p>
             </div>
@@ -307,8 +223,8 @@ export default function WhatIsAI() {
                       </div>
                       <span className="text-[10px] font-mono text-brand-muted group-hover:text-brand-amber transition-colors">
                         {selectedExample === example.id 
-                          ? (lang === 'en' ? 'Close' : 'Band Karo') 
-                          : (lang === 'en' ? 'Reveal' : 'Kholo')
+                          ? (pocketSection?.closeLabel || 'Close') 
+                          : (pocketSection?.revealLabel || 'Reveal')
                         }
                       </span>
                     </div>
@@ -347,16 +263,13 @@ export default function WhatIsAI() {
       <section className="py-16 max-w-5xl mx-auto px-6">
         <div className="text-center max-w-2xl mx-auto mb-10">
           <span className="text-xs font-bold uppercase tracking-wider text-brand-amber font-mono">
-            {lang === 'en' ? "Lesson 03" : "Sabak 03"}
+            {threeHorizons?.badge}
           </span>
           <h2 className="font-display text-3xl font-extrabold text-brand-charcoal mt-1 mb-3">
-            {lang === 'en' ? "The Three Horizons of AI" : "AI ke Teen Horizons"}
+            {threeHorizons?.title}
           </h2>
           <p className="font-sans text-xs sm:text-sm text-brand-muted leading-relaxed">
-            {lang === 'en'
-              ? "Scientists divide AI into three major stages based on what the machines can actually achieve."
-              : "Duniya ke bade scientists AI ko teen bade darjon mein divide karte hain machines ki taaqat ke mutabiq."
-            }
+            {threeHorizons?.subtitle}
           </p>
         </div>
 

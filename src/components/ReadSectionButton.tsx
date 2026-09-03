@@ -126,7 +126,7 @@ export default function ReadSectionButton({
                   <span className="w-0.5 bg-white h-3 animate-bounce [animation-delay:0.15s]"></span>
                   <span className="w-0.5 bg-white h-1.5 animate-bounce [animation-delay:0.3s]"></span>
                 </span>
-                <Pause className="w-3 h-3 ml-0.5" />
+                <Pause className="w-3 h-3 ms-0.5" />
               </span>
             )
           ) : (

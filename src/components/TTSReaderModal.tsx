@@ -402,7 +402,7 @@ export default function TTSReaderModal({
 
           {/* Quick Preset Selector */}
           <div className="mt-3 flex items-center justify-center gap-1.5 flex-wrap">
-            <span className="text-[10px] font-plex-mono uppercase text-[#8a7d68] mr-1">
+            <span className="text-[10px] font-plex-mono uppercase text-[#8a7d68] me-1">
               Sample Text:
             </span>
             {SAMPLE_PRESETS.map((preset) => (

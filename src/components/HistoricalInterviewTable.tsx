@@ -186,12 +186,12 @@ export default function HistoricalInterviewTable({
 
   const renderSortIndicator = (field: SortField) => {
     if (sortField !== field) {
-      return <ArrowUpDown className="w-3 h-3 text-brand-muted/60 ml-1 inline" />;
+      return <ArrowUpDown className="w-3 h-3 text-brand-muted/60 ms-1 inline" />;
     }
     return sortOrder === 'asc' ? (
-      <ChevronUp className="w-3.5 h-3.5 text-brand-amber ml-1 inline" />
+      <ChevronUp className="w-3.5 h-3.5 text-brand-amber ms-1 inline" />
     ) : (
-      <ChevronDown className="w-3.5 h-3.5 text-brand-amber ml-1 inline" />
+      <ChevronDown className="w-3.5 h-3.5 text-brand-amber ms-1 inline" />
     );
   };
 
@@ -201,7 +201,7 @@ export default function HistoricalInterviewTable({
       {/* Quick Tag Categorization & Filter Toolbar */}
       <div className="p-3 bg-brand-sand/20 border-b border-brand-slate/15 flex flex-wrap items-center justify-between gap-2 text-xs">
         <div className="flex items-center gap-1.5 flex-wrap">
-          <div className="flex items-center gap-1 text-[11px] font-mono font-bold text-brand-slate mr-1">
+          <div className="flex items-center gap-1 text-[11px] font-mono font-bold text-brand-slate me-1">
             <Tag className="w-3.5 h-3.5 text-brand-amber" />
             <span>Category Tags:</span>
           </div>

@@ -1553,7 +1553,7 @@ Please provide a JSON response with:
 
                     {/* Key expected concepts preview tags */}
                     <div className="flex flex-wrap gap-1.5 mt-3 pt-3 border-t border-white/10">
-                      <span className="text-[9px] font-mono text-white/40 uppercase font-bold mr-1">Focus Areas:</span>
+                      <span className="text-[9px] font-mono text-white/40 uppercase font-bold me-1">Focus Areas:</span>
                       {currentQuestion.keyConcepts.slice(0, 3).map((concept, idx) => (
                         <span key={idx} className="text-[9px] font-mono px-2 py-0.5 rounded-md bg-white/10 text-brand-amber">
                           {concept}
@@ -2265,7 +2265,7 @@ Please provide a JSON response with:
             </div>
             <button
               onClick={() => setCommunityShareToast(null)}
-              className="ml-1 text-white/40 hover:text-white text-xs cursor-pointer p-1"
+              className="ms-1 text-white/40 hover:text-white text-xs cursor-pointer p-1"
             >
               ✕
             </button>
@@ -2277,7 +2277,7 @@ Please provide a JSON response with:
             initial={{ opacity: 0, y: 30, scale: 0.9 }}
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, y: 20, scale: 0.95 }}
-            className="fixed bottom-6 right-6 z-50 flex items-center gap-3.5 px-4 py-3 bg-slate-900/95 backdrop-blur-md text-white rounded-2xl shadow-2xl border border-emerald-500/40 text-left"
+            className="fixed bottom-6 end-6 z-50 flex items-center gap-3.5 px-4 py-3 bg-slate-900/95 backdrop-blur-md text-white rounded-2xl shadow-2xl border border-emerald-500/40 text-left"
           >
             <div className="w-8 h-8 rounded-xl bg-emerald-500/20 border border-emerald-500/40 text-emerald-400 flex items-center justify-center shrink-0">
               <CheckCircle2 className="w-4 h-4" />
@@ -2297,7 +2297,7 @@ Please provide a JSON response with:
             </div>
             <button
               onClick={() => setSaveToast(null)}
-              className="ml-1 text-white/40 hover:text-white text-xs cursor-pointer p-1"
+              className="ms-1 text-white/40 hover:text-white text-xs cursor-pointer p-1"
             >
               ✕
             </button>

@@ -1025,7 +1025,7 @@ export default function AIArena() {
                 >
                   <Trophy className="w-4 h-4 text-brand-amber" />
                   <span>{lang === 'en' ? "Achievements & Badges" : "Kamyabiyan aur Badges"}</span>
-                  <span className="ml-1 text-[10px] px-1.5 py-0.5 rounded-full bg-brand-amber/15 text-brand-charcoal font-mono font-bold">
+                  <span className="ms-1 text-[10px] px-1.5 py-0.5 rounded-full bg-brand-amber/15 text-brand-charcoal font-mono font-bold">
                     {achievements.filter(a => a.unlocked).length}/9
                   </span>
                 </button>
@@ -1614,7 +1614,7 @@ export default function AIArena() {
                         <div className="space-y-4">
                           {/* Search Bar Input */}
                           <div className="relative flex items-center bg-white border border-brand-slate/15 hover:border-brand-slate/25 focus-within:border-brand-amber rounded-2xl px-4 py-3 shadow-sm transition-all duration-200">
-                            <Search className="w-4 h-4 text-brand-muted shrink-0 mr-2.5" />
+                            <Search className="w-4 h-4 text-brand-muted shrink-0 me-2.5" />
                             <input
                               type="text"
                               value={historySearchQuery}
@@ -1711,7 +1711,7 @@ export default function AIArena() {
                                             title={q.isCorrect ? "Correct" : "Incorrect"}
                                           />
                                         ))}
-                                        <span className="text-xs font-mono font-black text-brand-charcoal ml-1">
+                                        <span className="text-xs font-mono font-black text-brand-charcoal ms-1">
                                           {sess.correctCount} / {sess.totalCount}
                                         </span>
                                       </div>

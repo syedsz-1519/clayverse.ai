@@ -253,7 +253,7 @@ export default function KnowledgeGapDiagnosticQuiz({
       className="mt-6 p-5 sm:p-6 bg-gradient-to-br from-amber-500/10 via-brand-sand/40 to-orange-500/10 border-2 border-amber-500/30 rounded-3xl relative overflow-hidden shadow-sm"
     >
       {/* Decorative accent */}
-      <div className="absolute top-0 right-0 w-36 h-36 bg-amber-500/10 rounded-full blur-2xl pointer-events-none -mr-12 -mt-12" />
+      <div className="absolute top-0 end-0 w-36 h-36 bg-amber-500/10 rounded-full blur-2xl pointer-events-none -me-12 -mt-12" />
 
       {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-amber-500/20 pb-4 mb-4">

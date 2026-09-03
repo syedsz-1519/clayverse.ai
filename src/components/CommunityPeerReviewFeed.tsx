@@ -338,7 +338,7 @@ export default function CommunityPeerReviewFeed({
                         <span className="font-bold text-brand-charcoal">
                           Question {idx + 1}: {att.questionText}
                         </span>
-                        <span className="text-brand-muted shrink-0 ml-2">Score: {att.score}%</span>
+                        <span className="text-brand-muted shrink-0 ms-2">Score: {att.score}%</span>
                       </div>
 
                       <div className="p-3 rounded-xl bg-white border border-brand-slate/15 text-xs text-brand-charcoal leading-relaxed">

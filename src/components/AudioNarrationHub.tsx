@@ -545,7 +545,7 @@ export default function AudioNarrationHub({ embeddedInStack = false }: AudioNarr
 
                         {/* Quick Speed Preset Chips */}
                         <div className="flex items-center gap-1 pt-1">
-                          <span className="font-mono text-brand-muted text-[9px] mr-1">Presets:</span>
+                          <span className="font-mono text-brand-muted text-[9px] me-1">Presets:</span>
                           {[
                             { label: '0.75x', val: 0.75 },
                             { label: '0.95x', val: 0.95 },
@@ -718,7 +718,7 @@ export default function AudioNarrationHub({ embeddedInStack = false }: AudioNarr
                 
                 {/* Search Input bar */}
                 <div className="relative flex items-center bg-brand-sand/30 border border-brand-slate/10 rounded-2xl p-2.5">
-                  <Search className="w-4 h-4 text-brand-slate shrink-0 ml-1" />
+                  <Search className="w-4 h-4 text-brand-slate shrink-0 ms-1" />
                   <input
                     type="text"
                     value={searchQuery}
@@ -728,7 +728,7 @@ export default function AudioNarrationHub({ embeddedInStack = false }: AudioNarr
                         ? "Search AI lessons & glossary..."
                         : "Sabaq aur glossary dhoondo..."
                     }
-                    className="w-full bg-transparent text-xs font-bold text-brand-charcoal outline-none placeholder:text-brand-slate/40 border-0 p-0 ml-2 focus:ring-0"
+                    className="w-full bg-transparent text-xs font-bold text-brand-charcoal outline-none placeholder:text-brand-slate/40 border-0 p-0 ms-2 focus:ring-0"
                     autoFocus
                   />
                   {searchQuery && (

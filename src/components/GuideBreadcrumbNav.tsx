@@ -206,7 +206,7 @@ export default function GuideBreadcrumbNav({
             <span className="hidden sm:inline">{t('breadcrumb.curriculum')}</span>
           </button>
 
-          <ChevronRight className="w-3.5 h-3.5 text-slate-400 dark:text-zinc-600 shrink-0" />
+          <ChevronRight className="w-3.5 h-3.5 text-slate-400 dark:text-zinc-600 shrink-0 rtl:rotate-180" />
 
           {/* If inside an individual lesson */}
           {currentModule ? (
@@ -219,7 +219,7 @@ export default function GuideBreadcrumbNav({
                 <span className="truncate max-w-[140px] lg:max-w-[180px]">
                   {lang === 'en' ? currentModule.stageNameEn : currentModule.stageNameHyd}
                 </span>
-                <ChevronRight className="w-3.5 h-3.5 text-slate-400 dark:text-zinc-600 shrink-0 ml-0.5" />
+                <ChevronRight className="w-3.5 h-3.5 text-slate-400 dark:text-zinc-600 shrink-0 ms-0.5 rtl:rotate-180" />
               </div>
 
               {/* Active Lesson Dropdown Selector */}
@@ -292,7 +292,7 @@ export default function GuideBreadcrumbNav({
                                     <span className="truncate">{lang === 'en' ? m.titleEn : m.titleHyd}</span>
                                   </div>
                                   {isCompleted && (
-                                    <CheckCircle2 className="w-4 h-4 text-emerald-500 shrink-0 ml-2" />
+                                    <CheckCircle2 className="w-4 h-4 text-emerald-500 shrink-0 ms-2" />
                                   )}
                                 </button>
                               );
@@ -332,7 +332,7 @@ export default function GuideBreadcrumbNav({
                                     <span className="truncate">{lang === 'en' ? m.titleEn : m.titleHyd}</span>
                                   </div>
                                   {isCompleted && (
-                                    <CheckCircle2 className="w-4 h-4 text-emerald-500 shrink-0 ml-2" />
+                                    <CheckCircle2 className="w-4 h-4 text-emerald-500 shrink-0 ms-2" />
                                   )}
                                 </button>
                               );
@@ -372,7 +372,7 @@ export default function GuideBreadcrumbNav({
                                     <span className="truncate">{lang === 'en' ? m.titleEn : m.titleHyd}</span>
                                   </div>
                                   {isCompleted && (
-                                    <CheckCircle2 className="w-4 h-4 text-emerald-500 shrink-0 ml-2" />
+                                    <CheckCircle2 className="w-4 h-4 text-emerald-500 shrink-0 ms-2" />
                                   )}
                                 </button>
                               );
@@ -425,7 +425,7 @@ export default function GuideBreadcrumbNav({
                 }`}
                 title={prevModule ? `${t('breadcrumb.prevLesson')}: ${lang === 'en' ? prevModule.titleEn : prevModule.titleHyd}` : t('breadcrumb.prevLesson')}
               >
-                <ArrowLeft className="w-3.5 h-3.5" />
+                <ArrowLeft className="w-3.5 h-3.5 rtl:rotate-180" />
                 <span className="hidden sm:inline">{t('breadcrumb.prevLesson')}</span>
               </button>
 
@@ -449,7 +449,7 @@ export default function GuideBreadcrumbNav({
                 title={nextModule ? `${t('breadcrumb.nextLesson')}: ${lang === 'en' ? nextModule.titleEn : nextModule.titleHyd}` : t('breadcrumb.nextLesson')}
               >
                 <span className="hidden sm:inline">{t('breadcrumb.nextLesson')}</span>
-                <ArrowRight className="w-3.5 h-3.5" />
+                <ArrowRight className="w-3.5 h-3.5 rtl:rotate-180" />
               </button>
             </div>
           ) : (
@@ -519,7 +519,7 @@ export default function GuideBreadcrumbNav({
           </button>
 
           {/* Overall Progress Indicator */}
-          <div className="hidden lg:flex items-center gap-1.5 pl-2 border-l border-slate-200 dark:border-zinc-800 text-[11px] font-mono font-bold text-slate-500 dark:text-zinc-400">
+          <div className="hidden lg:flex items-center gap-1.5 ps-2 border-s border-slate-200 dark:border-zinc-800 text-[11px] font-mono font-bold text-slate-500 dark:text-zinc-400">
             <CheckCircle2 className="w-3.5 h-3.5 text-emerald-500" />
             <span>{progressPercent}% Mastered</span>
           </div>

@@ -74,8 +74,8 @@ export default function LearningHubPage({
       {/* Learning Hub Hero Banner */}
       <div className="max-w-6xl mx-auto px-6 mb-12">
         <div className="relative overflow-hidden rounded-3xl bg-gradient-to-br from-brand-charcoal via-[#23272F] to-[#1A1D23] text-white p-8 sm:p-12 border border-brand-amber/25 shadow-xl">
-          <div className="absolute top-0 right-0 w-96 h-96 bg-brand-amber/15 rounded-full blur-3xl pointer-events-none -mr-20 -mt-20" />
-          <div className="absolute bottom-0 left-0 w-64 h-64 bg-amber-500/10 rounded-full blur-2xl pointer-events-none -ml-20 -mb-20" />
+          <div className="absolute top-0 end-0 w-96 h-96 bg-brand-amber/15 rounded-full blur-3xl pointer-events-none -me-20 -mt-20" />
+          <div className="absolute bottom-0 start-0 w-64 h-64 bg-amber-500/10 rounded-full blur-2xl pointer-events-none -ms-20 -mb-20" />
 
           <div className="relative z-10 max-w-3xl space-y-4">
             <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-brand-amber/20 border border-brand-amber/40 text-brand-amber text-xs font-mono font-black uppercase tracking-wider">

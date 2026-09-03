@@ -344,7 +344,7 @@ export default function IndividualLessonView({
                             <span className="font-mono text-[10px] opacity-70">0{index + 1}</span>
                             <span className="truncate">{lang === 'en' ? topic.titleEn : topic.titleHyd}</span>
                           </div>
-                          <span className="text-[9px] font-mono opacity-60 shrink-0 ml-1">{topic.readMins}</span>
+                          <span className="text-[9px] font-mono opacity-60 shrink-0 ms-1">{topic.readMins}</span>
                         </button>
                       );
                     })}
@@ -354,7 +354,7 @@ export default function IndividualLessonView({
             </div>
 
             {/* Quick Focus Mode & Next/Prev Subtopic Buttons */}
-            <div className="flex items-center gap-1 border-l border-brand-slate/15 pl-2">
+            <div className="flex items-center gap-1 border-s border-brand-slate/15 ps-2">
               <button
                 onClick={handleFocusModeClick}
                 className={`p-1.5 rounded-lg text-xs font-bold transition-all cursor-pointer flex items-center gap-1 ${
