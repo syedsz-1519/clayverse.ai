@@ -1,4 +1,20 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
+import commonEn from '../locales/en/common.json';
+
+function getNestedValue(obj: any, path: string): string | undefined {
+  if (!obj || typeof obj !== 'object') return undefined;
+  if (obj[path] && typeof obj[path] === 'string') return obj[path];
+  const keys = path.split('.');
+  let current = obj;
+  for (const k of keys) {
+    if (current && typeof current === 'object' && k in current) {
+      current = current[k];
+    } else {
+      return undefined;
+    }
+  }
+  return typeof current === 'string' ? current : undefined;
+}
 
 export type Language =
   | 'en'
@@ -569,7 +585,25 @@ const dictionary: Record<string, Record<string, string>> = {
     'tools.subtitle': '40+ سے زائد بہترین اور مفت AI ٹولز کا مجموعہ۔',
     'tools.search': 'ٹولز تلاش کریں...',
     'deeper.title': 'مزید تفصیلی مطالعہ',
-    'deeper.glossary.title': 'فرہنگ اصطلاحات (Glossary)'
+    'deeper.glossary.title': 'فرہنگ اصطلاحات (Glossary)',
+    'breadcrumb.returnToCurriculum': 'نصاب کے جائزے پر واپس جائیں',
+    'breadcrumb.curriculum': 'نصاب',
+    'breadcrumb.syllabus': 'نصاب',
+    'breadcrumb.jumpToLesson': 'کسی سبق پر جائیں (1-9)',
+    'breadcrumb.readingProgress': 'پڑھنے کی پیش رفت',
+    'breadcrumb.scrollThroughLesson': 'اس سبق کو آگے پڑھیں',
+    'breadcrumb.nextLesson': 'اگلا سبق',
+    'breadcrumb.prevLesson': 'پچھلا سبق',
+    'breadcrumb.shareLesson': 'سبق شیئر کریں',
+    'breadcrumb.copiedLink': 'لنک کاپی ہو گیا!',
+    'common.done': 'مکمل',
+    'common.save': 'محفوظ کریں',
+    'common.close': 'بند کریں',
+    'common.back': 'واپس',
+    'common.next': 'اگلا',
+    'common.share': 'شیئر کریں',
+    'common.copy': 'کاپی کریں',
+    'common.copied': 'کاپی ہو گیا!'
   },
 
   // 12. GUJARATI (ગુજરાતી)
@@ -824,8 +858,15 @@ export const LanguageProvider: React.FC<{ children: React.ReactNode }> = ({ chil
     };
   }, [lang]);
 
+  // Synchronize document direction and language attribute dynamically
+  useEffect(() => {
+    const isRtl = lang === 'ur';
+    document.documentElement.setAttribute('dir', isRtl ? 'rtl' : 'ltr');
+    document.documentElement.setAttribute('lang', lang);
+  }, [lang]);
+
   const t = (key: string): string => {
-    // 1. Direct translation
+    // 1. Direct translation in current language dictionary
     if (dictionary[lang]?.[key]) {
       return dictionary[lang][key];
     }
@@ -840,8 +881,19 @@ export const LanguageProvider: React.FC<{ children: React.ReactNode }> = ({ chil
     if (lang === 'tcy' && dictionary['kn']?.[key]) return dictionary['kn'][key];
     if (lang === 'sd' && dictionary['hi']?.[key]) return dictionary['hi'][key];
 
-    // 3. Fallback to English, then the key itself
-    return dictionary['en']?.[key] || key;
+    // 3. Fallback to English dictionary
+    if (dictionary['en']?.[key]) {
+      return dictionary['en'][key];
+    }
+
+    // 4. Nested lookup in master English common.json
+    const fromCommon = getNestedValue(commonEn, key);
+    if (fromCommon) {
+      return fromCommon;
+    }
+
+    // 5. Fallback to the key itself
+    return key;
   };
 
   return (

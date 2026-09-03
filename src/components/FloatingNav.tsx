@@ -164,7 +164,7 @@ export default function FloatingNav() {
     setShowResumeBanner(false);
     
     // Show toast
-    setBookmarkToast(lang === 'en' ? `Bookmark saved at ${sectionTitle}!` : `Bookmark save ho gaya: ${sectionTitle}!`);
+    setBookmarkToast(`${t('nav.bookmarkSaved')} ${sectionTitle}!`);
     setTimeout(() => setBookmarkToast(null), 3000);
   };
 
@@ -181,7 +181,7 @@ export default function FloatingNav() {
     setShowResumeBanner(false);
     setIsExploreOpen(false);
     setIsMenuOpen(false);
-    setBookmarkToast(lang === 'en' ? 'Resumed where you left off!' : 'Wapas wahi pahunch gaye!');
+    setBookmarkToast(t('nav.resumedBookmark'));
     setTimeout(() => setBookmarkToast(null), 2500);
   };
 
@@ -191,7 +191,7 @@ export default function FloatingNav() {
     localStorage.removeItem('clay_scroll_bookmark');
     setSavedBookmark(null);
     setShowResumeBanner(false);
-    setBookmarkToast(lang === 'en' ? 'Bookmark cleared' : 'Bookmark hata diya gaya');
+    setBookmarkToast(t('nav.bookmarkCleared'));
     setTimeout(() => setBookmarkToast(null), 2000);
   };
 

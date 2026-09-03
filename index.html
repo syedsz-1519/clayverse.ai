@@ -13,7 +13,7 @@
     <meta name="robots" content="index, follow" />
     <meta name="theme-color" content="#F8F7F4" />
 
-    <!-- Instant Pre-Hydration Theme Initializer to Prevent Flash on Reload -->
+    <!-- Instant Pre-Hydration Theme & Direction Initializer to Prevent Flash on Reload -->
     <script>
       (function() {
         try {
@@ -28,6 +28,14 @@
           if (hc === 'true') {
             document.documentElement.setAttribute('data-high-contrast', 'true');
             document.documentElement.classList.add('high-contrast');
+          }
+          var lang = localStorage.getItem('app_language') || localStorage.getItem('clayverse_lang') || 'en';
+          if (lang === 'ur') {
+            document.documentElement.setAttribute('dir', 'rtl');
+            document.documentElement.setAttribute('lang', 'ur');
+          } else {
+            document.documentElement.setAttribute('dir', 'ltr');
+            document.documentElement.setAttribute('lang', lang);
           }
         } catch (e) {}
       })();

@@ -320,7 +320,10 @@ export default function App() {
   };
 
   return (
-    <div className="min-h-screen bg-brand-cream text-brand-charcoal selection:bg-brand-amber/10 selection:text-brand-amber font-sans antialiased overflow-x-hidden">
+    <div 
+      dir={lang === 'ur' ? 'rtl' : 'ltr'} 
+      className="min-h-screen bg-brand-cream text-brand-charcoal selection:bg-brand-amber/10 selection:text-brand-amber font-sans antialiased overflow-x-hidden"
+    >
       {/* Accessible Skip to Main Content Link */}
       <a 
         href="#main-content" 
