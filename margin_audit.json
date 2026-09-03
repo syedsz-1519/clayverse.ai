@@ -1,0 +1,562 @@
+[
+  {
+    "file": "src/components/AIArena.tsx",
+    "lineNum": 803,
+    "line": "<div className=\"absolute top-1/4 left-0 w-64 h-64 bg-brand-amber/5 rounded-full blur-3xl -ml-20 pointer-events-none\" />",
+    "mlMatches": [
+      "ml-20"
+    ],
+    "mrMatches": [],
+    "hasDirectionalContext": false
+  },
+  {
+    "file": "src/components/AIArena.tsx",
+    "lineNum": 804,
+    "line": "<div className=\"absolute bottom-1/4 right-0 w-80 h-80 bg-red-500/5 rounded-full blur-3xl -mr-20 pointer-events-none\" />",
+    "mlMatches": [],
+    "mrMatches": [
+      "mr-20"
+    ],
+    "hasDirectionalContext": false
+  },
+  {
+    "file": "src/components/AIArena.tsx",
+    "lineNum": 1028,
+    "line": "<span className=\"ml-1 text-[10px] px-1.5 py-0.5 rounded-full bg-brand-amber/15 text-brand-charcoal font-mono font-bold\">",
+    "mlMatches": [
+      "ml-1"
+    ],
+    "mrMatches": [],
+    "hasDirectionalContext": false
+  },
+  {
+    "file": "src/components/AIArena.tsx",
+    "lineNum": 1617,
+    "line": "<Search className=\"w-4 h-4 text-brand-muted shrink-0 mr-2.5\" />",
+    "mlMatches": [],
+    "mrMatches": [
+      "mr-2.5"
+    ],
+    "hasDirectionalContext": false
+  },
+  {
+    "file": "src/components/AIArena.tsx",
+    "lineNum": 1714,
+    "line": "<span className=\"text-xs font-mono font-black text-brand-charcoal ml-1\">",
+    "mlMatches": [
+      "ml-1"
+    ],
+    "mrMatches": [],
+    "hasDirectionalContext": false
+  },
+  {
+    "file": "src/components/AIMockInterviewer.tsx",
+    "lineNum": 1354,
+    "line": "className={`px-1.5 py-0.5 rounded text-[9px] font-mono font-bold border transition-all cursor-pointer shadow-2xs ml-0.5 ${",
+    "mlMatches": [
+      "ml-0.5"
+    ],
+    "mrMatches": [],
+    "hasDirectionalContext": false
+  },
+  {
+    "file": "src/components/AIMockInterviewer.tsx",
+    "lineNum": 1556,
+    "line": "<span className=\"text-[9px] font-mono text-white/40 uppercase font-bold mr-1\">Focus Areas:</span>",
+    "mlMatches": [],
+    "mrMatches": [
+      "mr-1"
+    ],
+    "hasDirectionalContext": false
+  },
+  {
+    "file": "src/components/AIMockInterviewer.tsx",
+    "lineNum": 2268,
+    "line": "className=\"ml-1 text-white/40 hover:text-white text-xs cursor-pointer p-1\"",
+    "mlMatches": [
+      "ml-1"
+    ],
+    "mrMatches": [],
+    "hasDirectionalContext": false
+  },
+  {
+    "file": "src/components/AIMockInterviewer.tsx",
+    "lineNum": 2300,
+    "line": "className=\"ml-1 text-white/40 hover:text-white text-xs cursor-pointer p-1\"",
+    "mlMatches": [
+      "ml-1"
+    ],
+    "mrMatches": [],
+    "hasDirectionalContext": false
+  },
+  {
+    "file": "src/components/AboutClayverseModal.tsx",
+    "lineNum": 58,
+    "line": "<div className=\"absolute top-0 right-0 w-64 h-64 bg-brand-amber/15 rounded-full blur-3xl pointer-events-none -mr-16 -mt-16\" />",
+    "mlMatches": [],
+    "mrMatches": [
+      "mr-16"
+    ],
+    "hasDirectionalContext": false
+  },
+  {
+    "file": "src/components/AudioNarrationHub.tsx",
+    "lineNum": 548,
+    "line": "<span className=\"font-mono text-brand-muted text-[9px] mr-1\">Presets:</span>",
+    "mlMatches": [],
+    "mrMatches": [
+      "mr-1"
+    ],
+    "hasDirectionalContext": false
+  },
+  {
+    "file": "src/components/AudioNarrationHub.tsx",
+    "lineNum": 721,
+    "line": "<Search className=\"w-4 h-4 text-brand-slate shrink-0 ml-1\" />",
+    "mlMatches": [
+      "ml-1"
+    ],
+    "mrMatches": [],
+    "hasDirectionalContext": false
+  },
+  {
+    "file": "src/components/AudioNarrationHub.tsx",
+    "lineNum": 731,
+    "line": "className=\"w-full bg-transparent text-xs font-bold text-brand-charcoal outline-none placeholder:text-brand-slate/40 border-0 p-0 ml-2 focus:ring-0\"",
+    "mlMatches": [
+      "ml-2"
+    ],
+    "mrMatches": [],
+    "hasDirectionalContext": false
+  },
+  {
+    "file": "src/components/CheckYourKnowledge.tsx",
+    "lineNum": 202,
+    "line": "<div className=\"absolute top-0 right-0 w-32 h-32 bg-brand-amber/5 rounded-full blur-2xl -mr-10 -mt-10 pointer-events-none\" />",
+    "mlMatches": [],
+    "mrMatches": [
+      "mr-10"
+    ],
+    "hasDirectionalContext": false
+  },
+  {
+    "file": "src/components/ClayLogo.tsx",
+    "lineNum": 108,
+    "line": "CLAY<span className=\"font-light italic text-brand-slate ml-1.5\">the explainer</span>",
+    "mlMatches": [
+      "ml-1.5"
+    ],
+    "mrMatches": [],
+    "hasDirectionalContext": false
+  },
+  {
+    "file": "src/components/ClosingAndDeeper.tsx",
+    "lineNum": 654,
+    "line": "className=\"shrink-0 ml-2\"",
+    "mlMatches": [
+      "ml-2"
+    ],
+    "mrMatches": [],
+    "hasDirectionalContext": false
+  },
+  {
+    "file": "src/components/CodeSnippetBlock.tsx",
+    "lineNum": 59,
+    "line": "<div className=\"flex items-center gap-1.5 ml-2 min-w-0\">",
+    "mlMatches": [
+      "ml-2"
+    ],
+    "mrMatches": [],
+    "hasDirectionalContext": false
+  },
+  {
+    "file": "src/components/CodeSnippetBlock.tsx",
+    "lineNum": 76,
+    "line": "<span className=\"font-mono text-[11px] truncate opacity-85 font-medium ml-1\">",
+    "mlMatches": [
+      "ml-1"
+    ],
+    "mrMatches": [],
+    "hasDirectionalContext": false
+  },
+  {
+    "file": "src/components/CommunityPeerReviewFeed.tsx",
+    "lineNum": 152,
+    "line": "<div className=\"absolute top-0 right-0 -mt-10 -mr-10 w-64 h-64 bg-blue-500/15 rounded-full blur-3xl pointer-events-none\" />",
+    "mlMatches": [],
+    "mrMatches": [
+      "mr-10"
+    ],
+    "hasDirectionalContext": false
+  },
+  {
+    "file": "src/components/CommunityPeerReviewFeed.tsx",
+    "lineNum": 341,
+    "line": "<span className=\"text-brand-muted shrink-0 ml-2\">Score: {att.score}%</span>",
+    "mlMatches": [
+      "ml-2"
+    ],
+    "mrMatches": [],
+    "hasDirectionalContext": false
+  },
+  {
+    "file": "src/components/CurriculumRoadmap.tsx",
+    "lineNum": 158,
+    "line": "<div className=\"absolute top-0 right-0 -mt-8 -mr-8 w-64 h-64 bg-brand-amber/20 rounded-full blur-3xl pointer-events-none\" />",
+    "mlMatches": [],
+    "mrMatches": [
+      "mr-8"
+    ],
+    "hasDirectionalContext": false
+  },
+  {
+    "file": "src/components/FloatingNav.tsx",
+    "lineNum": 1073,
+    "line": "<span className=\"font-mono text-[9px] font-bold text-brand-amber mr-1.5\">{sec.number}</span>",
+    "mlMatches": [],
+    "mrMatches": [
+      "mr-1.5"
+    ],
+    "hasDirectionalContext": false
+  },
+  {
+    "file": "src/components/GuideBreadcrumbNav.tsx",
+    "lineNum": 222,
+    "line": "<ChevronRight className=\"w-3.5 h-3.5 text-slate-400 dark:text-zinc-600 shrink-0 ml-0.5\" />",
+    "mlMatches": [
+      "ml-0.5"
+    ],
+    "mrMatches": [],
+    "hasDirectionalContext": true
+  },
+  {
+    "file": "src/components/GuideBreadcrumbNav.tsx",
+    "lineNum": 295,
+    "line": "<CheckCircle2 className=\"w-4 h-4 text-emerald-500 shrink-0 ml-2\" />",
+    "mlMatches": [
+      "ml-2"
+    ],
+    "mrMatches": [],
+    "hasDirectionalContext": false
+  },
+  {
+    "file": "src/components/GuideBreadcrumbNav.tsx",
+    "lineNum": 335,
+    "line": "<CheckCircle2 className=\"w-4 h-4 text-emerald-500 shrink-0 ml-2\" />",
+    "mlMatches": [
+      "ml-2"
+    ],
+    "mrMatches": [],
+    "hasDirectionalContext": false
+  },
+  {
+    "file": "src/components/GuideBreadcrumbNav.tsx",
+    "lineNum": 375,
+    "line": "<CheckCircle2 className=\"w-4 h-4 text-emerald-500 shrink-0 ml-2\" />",
+    "mlMatches": [
+      "ml-2"
+    ],
+    "mrMatches": [],
+    "hasDirectionalContext": false
+  },
+  {
+    "file": "src/components/HistoricalInterviewTable.tsx",
+    "lineNum": 189,
+    "line": "return <ArrowUpDown className=\"w-3 h-3 text-brand-muted/60 ml-1 inline\" />;",
+    "mlMatches": [
+      "ml-1"
+    ],
+    "mrMatches": [],
+    "hasDirectionalContext": true
+  },
+  {
+    "file": "src/components/HistoricalInterviewTable.tsx",
+    "lineNum": 192,
+    "line": "<ChevronUp className=\"w-3.5 h-3.5 text-brand-amber ml-1 inline\" />",
+    "mlMatches": [
+      "ml-1"
+    ],
+    "mrMatches": [],
+    "hasDirectionalContext": true
+  },
+  {
+    "file": "src/components/HistoricalInterviewTable.tsx",
+    "lineNum": 194,
+    "line": "<ChevronDown className=\"w-3.5 h-3.5 text-brand-amber ml-1 inline\" />",
+    "mlMatches": [
+      "ml-1"
+    ],
+    "mrMatches": [],
+    "hasDirectionalContext": true
+  },
+  {
+    "file": "src/components/HistoricalInterviewTable.tsx",
+    "lineNum": 204,
+    "line": "<div className=\"flex items-center gap-1 text-[11px] font-mono font-bold text-brand-slate mr-1\">",
+    "mlMatches": [],
+    "mrMatches": [
+      "mr-1"
+    ],
+    "hasDirectionalContext": false
+  },
+  {
+    "file": "src/components/IndividualLessonView.tsx",
+    "lineNum": 347,
+    "line": "<span className=\"text-[9px] font-mono opacity-60 shrink-0 ml-1\">{topic.readMins}</span>",
+    "mlMatches": [
+      "ml-1"
+    ],
+    "mrMatches": [],
+    "hasDirectionalContext": false
+  },
+  {
+    "file": "src/components/InterviewAudioReplayModal.tsx",
+    "lineNum": 278,
+    "line": "<Play className=\"w-5 h-5 fill-current ml-0.5\" />",
+    "mlMatches": [
+      "ml-0.5"
+    ],
+    "mrMatches": [],
+    "hasDirectionalContext": false
+  },
+  {
+    "file": "src/components/InterviewAudioReplayModal.tsx",
+    "lineNum": 359,
+    "line": "{isPlaying ? <Pause className=\"w-4 h-4 fill-current\" /> : <Play className=\"w-4 h-4 fill-current ml-0.5\" />}",
+    "mlMatches": [
+      "ml-0.5"
+    ],
+    "mrMatches": [],
+    "hasDirectionalContext": false
+  },
+  {
+    "file": "src/components/InterviewComparisonModal.tsx",
+    "lineNum": 549,
+    "line": "<span className={`ml-1 text-[9px] ${subDiff >= 0 ? 'text-emerald-400' : 'text-rose-400'}`}>",
+    "mlMatches": [
+      "ml-1"
+    ],
+    "mrMatches": [],
+    "hasDirectionalContext": false
+  },
+  {
+    "file": "src/components/InterviewConsistencyCalendar.tsx",
+    "lineNum": 398,
+    "line": "<span className=\"font-black shrink-0 ml-1\">{score}%</span>",
+    "mlMatches": [
+      "ml-1"
+    ],
+    "mrMatches": [],
+    "hasDirectionalContext": false
+  },
+  {
+    "file": "src/components/InterviewConsistencyCalendar.tsx",
+    "lineNum": 482,
+    "line": "<div className=\"text-right mr-2\">",
+    "mlMatches": [],
+    "mrMatches": [
+      "mr-2"
+    ],
+    "hasDirectionalContext": false
+  },
+  {
+    "file": "src/components/KnowledgeGapDiagnosticQuiz.tsx",
+    "lineNum": 256,
+    "line": "<div className=\"absolute top-0 right-0 w-36 h-36 bg-amber-500/10 rounded-full blur-2xl pointer-events-none -mr-12 -mt-12\" />",
+    "mlMatches": [],
+    "mrMatches": [
+      "mr-12"
+    ],
+    "hasDirectionalContext": false
+  },
+  {
+    "file": "src/components/LearningHubPage.tsx",
+    "lineNum": 77,
+    "line": "<div className=\"absolute top-0 right-0 w-96 h-96 bg-brand-amber/15 rounded-full blur-3xl pointer-events-none -mr-20 -mt-20\" />",
+    "mlMatches": [],
+    "mrMatches": [
+      "mr-20"
+    ],
+    "hasDirectionalContext": false
+  },
+  {
+    "file": "src/components/LearningHubPage.tsx",
+    "lineNum": 78,
+    "line": "<div className=\"absolute bottom-0 left-0 w-64 h-64 bg-amber-500/10 rounded-full blur-2xl pointer-events-none -ml-20 -mb-20\" />",
+    "mlMatches": [
+      "ml-20"
+    ],
+    "mrMatches": [],
+    "hasDirectionalContext": false
+  },
+  {
+    "file": "src/components/OfflineManagerModal.tsx",
+    "lineNum": 182,
+    "line": "<CheckCircle2 className=\"w-4 h-4 text-emerald-500 shrink-0 ml-2\" />",
+    "mlMatches": [
+      "ml-2"
+    ],
+    "mrMatches": [],
+    "hasDirectionalContext": false
+  },
+  {
+    "file": "src/components/PostInterviewReflectionModal.tsx",
+    "lineNum": 229,
+    "line": "<span className=\"text-xs font-mono font-bold text-brand-charcoal ml-2\">",
+    "mlMatches": [
+      "ml-2"
+    ],
+    "mrMatches": [],
+    "hasDirectionalContext": false
+  },
+  {
+    "file": "src/components/QuizPerformanceBarChart.tsx",
+    "lineNum": 930,
+    "line": "<span className=\"text-[10px] font-mono text-brand-muted uppercase mr-1\">Metric:</span>",
+    "mlMatches": [],
+    "mrMatches": [
+      "mr-1"
+    ],
+    "hasDirectionalContext": false
+  },
+  {
+    "file": "src/components/ReadSectionButton.tsx",
+    "lineNum": 129,
+    "line": "<Pause className=\"w-3 h-3 ml-0.5\" />",
+    "mlMatches": [
+      "ml-0.5"
+    ],
+    "mrMatches": [],
+    "hasDirectionalContext": false
+  },
+  {
+    "file": "src/components/RecommendedNextLessonCard.tsx",
+    "lineNum": 529,
+    "line": "<span className=\"text-[11px] font-mono text-brand-muted font-bold mr-1\">",
+    "mlMatches": [],
+    "mrMatches": [
+      "mr-1"
+    ],
+    "hasDirectionalContext": false
+  },
+  {
+    "file": "src/components/ScrollProgressIndicator.tsx",
+    "lineNum": 401,
+    "line": "className=\"p-1 rounded-lg hover:bg-brand-sand text-brand-slate hover:text-brand-charcoal cursor-pointer transition-colors ml-1\"",
+    "mlMatches": [
+      "ml-1"
+    ],
+    "mrMatches": [],
+    "hasDirectionalContext": false
+  },
+  {
+    "file": "src/components/SearchModal.tsx",
+    "lineNum": 268,
+    "line": "<SlidersHorizontal className=\"w-3.5 h-3.5 text-brand-slate shrink-0 mr-1 hidden sm:block\" />",
+    "mlMatches": [],
+    "mrMatches": [
+      "mr-1"
+    ],
+    "hasDirectionalContext": false
+  },
+  {
+    "file": "src/components/SessionInlineReflectionEditor.tsx",
+    "lineNum": 175,
+    "line": "<span className=\"text-[10px] font-mono text-brand-slate mr-1\">Self Rating:</span>",
+    "mlMatches": [],
+    "mrMatches": [
+      "mr-1"
+    ],
+    "hasDirectionalContext": false
+  },
+  {
+    "file": "src/components/SessionInlineReflectionEditor.tsx",
+    "lineNum": 268,
+    "line": "<span className=\"text-[10px] font-mono text-brand-muted font-bold uppercase mr-1\">",
+    "mlMatches": [],
+    "mrMatches": [
+      "mr-1"
+    ],
+    "hasDirectionalContext": false
+  },
+  {
+    "file": "src/components/SocialShareSection.tsx",
+    "lineNum": 92,
+    "line": "<div className=\"absolute top-0 right-0 w-80 h-80 bg-brand-amber/10 rounded-full blur-3xl pointer-events-none -mr-20 -mt-20\" />",
+    "mlMatches": [],
+    "mrMatches": [
+      "mr-20"
+    ],
+    "hasDirectionalContext": false
+  },
+  {
+    "file": "src/components/SocialShareSection.tsx",
+    "lineNum": 93,
+    "line": "<div className=\"absolute bottom-0 left-0 w-60 h-60 bg-amber-500/10 rounded-full blur-2xl pointer-events-none -ml-20 -mb-20\" />",
+    "mlMatches": [
+      "ml-20"
+    ],
+    "mrMatches": [],
+    "hasDirectionalContext": false
+  },
+  {
+    "file": "src/components/StudentDashboard.tsx",
+    "lineNum": 1004,
+    "line": "className=\"ml-2 text-white/40 hover:text-white text-xs p-1\"",
+    "mlMatches": [
+      "ml-2"
+    ],
+    "mrMatches": [],
+    "hasDirectionalContext": false
+  },
+  {
+    "file": "src/components/StudentOverviewBentoContent.tsx",
+    "lineNum": 752,
+    "line": "<span className=\"text-[10px] font-mono font-bold uppercase text-brand-muted mr-1 hidden sm:inline\">",
+    "mlMatches": [],
+    "mrMatches": [
+      "mr-1"
+    ],
+    "hasDirectionalContext": false
+  },
+  {
+    "file": "src/components/StudentOverviewBentoContent.tsx",
+    "lineNum": 773,
+    "line": "<div className=\"flex items-center gap-1 text-[10px] font-mono font-bold uppercase text-brand-muted mr-1\">",
+    "mlMatches": [],
+    "mrMatches": [
+      "mr-1"
+    ],
+    "hasDirectionalContext": false
+  },
+  {
+    "file": "src/components/StudentOverviewBentoContent.tsx",
+    "lineNum": 1075,
+    "line": "<span className=\"font-bold text-brand-amber mr-1.5\">Q{attIdx + 1}:</span>",
+    "mlMatches": [],
+    "mrMatches": [
+      "mr-1.5"
+    ],
+    "hasDirectionalContext": false
+  },
+  {
+    "file": "src/components/TTSReaderModal.tsx",
+    "lineNum": 405,
+    "line": "<span className=\"text-[10px] font-plex-mono uppercase text-[#8a7d68] mr-1\">",
+    "mlMatches": [],
+    "mrMatches": [
+      "mr-1"
+    ],
+    "hasDirectionalContext": false
+  },
+  {
+    "file": "src/components/TTSReaderModal.tsx",
+    "lineNum": 523,
+    "line": "<Play className=\"w-5 h-5 fill-current ml-0.5\" />",
+    "mlMatches": [
+      "ml-0.5"
+    ],
+    "mrMatches": [],
+    "hasDirectionalContext": false
+  }
+]
