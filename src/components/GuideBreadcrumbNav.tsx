@@ -38,7 +38,12 @@ export default function GuideBreadcrumbNav({
 }: GuideBreadcrumbNavProps) {
   const { lang, t } = useLanguage();
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+  const [scrollProgress, setScrollProgress] = useState(0);
+  const [isBarHovered, setIsBarHovered] = useState(false);
+  const [hoverPercentage, setHoverPercentage] = useState<number | null>(null);
+  const [hoverPositionX, setHoverPositionX] = useState<number>(0);
   const dropdownRef = useRef<HTMLDivElement>(null);
+  const progressBarRef = useRef<HTMLDivElement>(null);
 
   // Close dropdown on outside click
   useEffect(() => {
@@ -50,6 +55,52 @@ export default function GuideBreadcrumbNav({
     document.addEventListener('mousedown', handleClickOutside);
     return () => document.removeEventListener('mousedown', handleClickOutside);
   }, []);
+
+  // Track scroll position for the active lesson reading progress
+  useEffect(() => {
+    const calculateScrollProgress = () => {
+      const totalScrollable = document.documentElement.scrollHeight - window.innerHeight;
+      if (totalScrollable > 0) {
+        const currentScroll = window.scrollY;
+        const progress = Math.min(100, Math.max(0, (currentScroll / totalScrollable) * 100));
+        setScrollProgress(progress);
+      } else {
+        setScrollProgress(0);
+      }
+    };
+
+    window.addEventListener('scroll', calculateScrollProgress, { passive: true });
+    window.addEventListener('resize', calculateScrollProgress, { passive: true });
+    calculateScrollProgress();
+
+    return () => {
+      window.removeEventListener('scroll', calculateScrollProgress);
+      window.removeEventListener('resize', calculateScrollProgress);
+    };
+  }, [currentLessonId, isContinuousGuide]);
+
+  // Click on progress bar track to smoothly scrub / jump to that part of the lesson
+  const handleProgressTrackClick = (e: React.MouseEvent<HTMLDivElement>) => {
+    const rect = e.currentTarget.getBoundingClientRect();
+    const clickX = e.clientX - rect.left;
+    const ratio = Math.max(0, Math.min(1, clickX / rect.width));
+    const totalScrollable = document.documentElement.scrollHeight - window.innerHeight;
+    if (totalScrollable > 0) {
+      window.scrollTo({
+        top: ratio * totalScrollable,
+        behavior: 'smooth'
+      });
+    }
+  };
+
+  const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
+    if (!progressBarRef.current) return;
+    const rect = progressBarRef.current.getBoundingClientRect();
+    const x = e.clientX - rect.left;
+    const ratio = Math.max(0, Math.min(1, x / rect.width));
+    setHoverPercentage(Math.round(ratio * 100));
+    setHoverPositionX(x);
+  };
 
   const currentModule = LESSON_MODULES.find(m => m.id === currentLessonId) || null;
   const currentIndex = currentModule ? LESSON_MODULES.findIndex(m => m.id === currentModule.id) : -1;
@@ -74,7 +125,7 @@ export default function GuideBreadcrumbNav({
   return (
     <nav 
       aria-label="Breadcrumb navigation"
-      className="sticky top-14 sm:top-16 z-35 bg-white/95 dark:bg-zinc-900/95 backdrop-blur-md border-b border-slate-200 dark:border-zinc-800 shadow-2xs transition-all"
+      className="sticky top-14 sm:top-16 z-35 bg-white/95 dark:bg-zinc-900/95 backdrop-blur-md border-b border-slate-200 dark:border-zinc-800 shadow-2xs transition-all relative select-none"
     >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 py-2 flex items-center justify-between gap-3">
         
@@ -363,6 +414,34 @@ export default function GuideBreadcrumbNav({
             </button>
           )}
 
+          {/* Active Lesson / Continuous Mode Reading Progress Percentage Badge */}
+          {(currentModule || isContinuousGuide) && (
+            <div 
+              className={`flex items-center gap-1.5 px-2 py-0.5 rounded-lg text-xs font-mono font-bold transition-all border shrink-0 ${
+                scrollProgress >= 98
+                  ? 'bg-emerald-500/10 dark:bg-emerald-500/20 text-emerald-700 dark:text-emerald-300 border-emerald-500/30'
+                  : 'bg-amber-500/10 dark:bg-amber-500/20 text-amber-700 dark:text-amber-300 border-amber-500/30'
+              }`}
+              title={
+                lang === 'en'
+                  ? `Reading progress: ${Math.round(scrollProgress)}% scrolled`
+                  : `Sabaq progress: ${Math.round(scrollProgress)}% padha gaya`
+              }
+            >
+              {scrollProgress >= 98 ? (
+                <CheckCircle2 className="w-3.5 h-3.5 text-emerald-500 shrink-0" />
+              ) : (
+                <span className="w-1.5 h-1.5 rounded-full bg-amber-500 animate-pulse shrink-0" />
+              )}
+              <span className="tabular-nums">{Math.round(scrollProgress)}%</span>
+              <span className="text-[10px] font-sans font-semibold text-slate-500 dark:text-zinc-400 hidden sm:inline">
+                {scrollProgress >= 98 
+                  ? (lang === 'en' ? 'Completed' : 'Mukammal') 
+                  : (lang === 'en' ? 'Read' : 'Padha')}
+              </span>
+            </div>
+          )}
+
           {/* Overall Progress Indicator */}
           <div className="hidden lg:flex items-center gap-1.5 pl-2 border-l border-slate-200 dark:border-zinc-800 text-[11px] font-mono font-bold text-slate-500 dark:text-zinc-400">
             <CheckCircle2 className="w-3.5 h-3.5 text-emerald-500" />
@@ -371,6 +450,66 @@ export default function GuideBreadcrumbNav({
         </div>
 
       </div>
+
+      {/* Visual Reading Progress Percentage Bar at the Bottom of Breadcrumb Container */}
+      <div 
+        ref={progressBarRef}
+        onMouseEnter={() => setIsBarHovered(true)}
+        onMouseLeave={() => {
+          setIsBarHovered(false);
+          setHoverPercentage(null);
+        }}
+        onMouseMove={handleMouseMove}
+        onClick={handleProgressTrackClick}
+        role="progressbar"
+        aria-valuenow={Math.round(scrollProgress)}
+        aria-valuemin={0}
+        aria-valuemax={100}
+        aria-label={
+          lang === 'en' 
+            ? `Lesson scroll progress: ${Math.round(scrollProgress)}%` 
+            : `Sabaq scroll progress: ${Math.round(scrollProgress)}%`
+        }
+        title={
+          lang === 'en'
+            ? `Lesson scroll progress: ${Math.round(scrollProgress)}% (click to jump)`
+            : `Sabaq scroll progress: ${Math.round(scrollProgress)}% (jump karne ke liye click karein)`
+        }
+        className="absolute bottom-0 left-0 right-0 h-1 sm:h-[4.5px] hover:h-2 bg-slate-200/60 dark:bg-zinc-800/80 cursor-pointer overflow-hidden transition-all duration-200 group/bar z-20"
+      >
+        {/* Animated Progress Fill */}
+        <div 
+          className={`h-full transition-all duration-150 ease-out relative ${
+            scrollProgress >= 98
+              ? 'bg-gradient-to-r from-emerald-500 via-teal-400 to-emerald-400 shadow-[0_0_10px_rgba(16,185,129,0.9)]'
+              : 'bg-gradient-to-r from-amber-500 via-orange-500 to-amber-600 shadow-[0_0_8px_rgba(245,158,11,0.7)]'
+          }`}
+          style={{ width: `${scrollProgress}%` }}
+        >
+          {/* Subtle glowing leading pulse head */}
+          {scrollProgress > 1 && scrollProgress < 99 && (
+            <span className="absolute right-0 top-1/2 -translate-y-1/2 w-2.5 h-2.5 rounded-full bg-white shadow-[0_0_6px_rgba(255,255,255,1)] animate-pulse" />
+          )}
+        </div>
+      </div>
+
+      {/* Floating Hover Percentage Tooltip along the bar */}
+      <AnimatePresence>
+        {isBarHovered && hoverPercentage !== null && (
+          <motion.div
+            initial={{ opacity: 0, y: 4 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: 4 }}
+            transition={{ duration: 0.12 }}
+            className="pointer-events-none absolute bottom-3 z-50 transform -translate-x-1/2 px-2 py-0.5 rounded-md bg-slate-900/90 dark:bg-zinc-100/90 text-white dark:text-zinc-900 text-[10px] font-mono font-bold shadow-lg backdrop-blur-xs whitespace-nowrap"
+            style={{ 
+              left: `${Math.max(28, Math.min(progressBarRef.current ? progressBarRef.current.clientWidth - 28 : 50, hoverPositionX))}px` 
+            }}
+          >
+            {hoverPercentage}%
+          </motion.div>
+        )}
+      </AnimatePresence>
     </nav>
   );
 }
