@@ -13,7 +13,9 @@ import {
   LayoutGrid,
   Clock,
   Compass,
-  FileText
+  FileText,
+  Share2,
+  Check
 } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
 import { useLanguage } from '../hooks/useLanguage';
@@ -42,6 +44,7 @@ export default function GuideBreadcrumbNav({
   const [isBarHovered, setIsBarHovered] = useState(false);
   const [hoverPercentage, setHoverPercentage] = useState<number | null>(null);
   const [hoverPositionX, setHoverPositionX] = useState<number>(0);
+  const [isCopiedOrShared, setIsCopiedOrShared] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
   const progressBarRef = useRef<HTMLDivElement>(null);
 
@@ -120,6 +123,64 @@ export default function GuideBreadcrumbNav({
     if (stage === 1) return lang === 'en' ? 'Stage 1: Core Foundations' : 'Marhala 1: Buniyaad';
     if (stage === 2) return lang === 'en' ? 'Stage 2: Applied AI & RAG' : 'Marhala 2: Applied AI';
     return lang === 'en' ? 'Stage 3: Mastery & Certification' : 'Marhala 3: Mastery';
+  };
+
+  // Web Share API handler to share the current lesson's URL and title
+  const handleShareLesson = async () => {
+    audioEngine.playPop();
+
+    const lessonTitle = currentModule 
+      ? (lang === 'en' ? currentModule.titleEn : currentModule.titleHyd)
+      : (lang === 'en' ? 'Complete AI Curriculum' : 'Mukammal AI Syllabus');
+
+    const shareTitle = currentModule 
+      ? `Lesson 0${currentModule.lessonNum}: ${lessonTitle} — Clayverse AI`
+      : `Clayverse AI — Master Artificial Intelligence`;
+
+    const shareUrl = typeof window !== 'undefined'
+      ? `${window.location.origin}${window.location.pathname}#${currentModule ? currentModule.id : 'guide'}`
+      : '';
+
+    const shareText = currentModule
+      ? (lang === 'en'
+          ? `Explore Lesson 0${currentModule.lessonNum}: "${currentModule.titleEn}" with zero-math interactive visual models on Clayverse AI.`
+          : `Seekhein Sabaq 0${currentModule.lessonNum}: "${currentModule.titleHyd}" Clayverse AI par.`)
+      : (lang === 'en'
+          ? 'Learn Artificial Intelligence with zero-math interactive mental models on Clayverse AI.'
+          : 'Seekhein Artificial Intelligence Clayverse AI par.');
+
+    const shareData = {
+      title: shareTitle,
+      text: shareText,
+      url: shareUrl,
+    };
+
+    const copyToClipboard = (urlToCopy: string) => {
+      if (typeof navigator !== 'undefined' && navigator.clipboard?.writeText) {
+        navigator.clipboard.writeText(urlToCopy).then(() => {
+          setIsCopiedOrShared(true);
+          setTimeout(() => setIsCopiedOrShared(false), 2500);
+        }).catch(() => {
+          // If clipboard access is restricted
+        });
+      }
+    };
+
+    if (typeof navigator !== 'undefined' && navigator.share) {
+      try {
+        await navigator.share(shareData);
+        setIsCopiedOrShared(true);
+        setTimeout(() => setIsCopiedOrShared(false), 2500);
+      } catch (err: any) {
+        // Only fallback to clipboard if not intentionally aborted/cancelled by user
+        if (err?.name !== 'AbortError') {
+          copyToClipboard(shareUrl);
+        }
+      }
+    } else {
+      // Fallback if Web Share API is not supported in this browser
+      copyToClipboard(shareUrl);
+    }
   };
 
   return (
@@ -441,6 +502,31 @@ export default function GuideBreadcrumbNav({
               </span>
             </div>
           )}
+
+          {/* Share Lesson Button (uses Web Share API with clipboard fallback) */}
+          <button
+            id="guide-share-lesson-btn"
+            onClick={handleShareLesson}
+            className="px-2 sm:px-2.5 py-1 rounded-lg text-xs font-bold flex items-center gap-1.5 transition-all bg-slate-100 hover:bg-slate-200 dark:bg-zinc-800 dark:hover:bg-zinc-700 text-slate-700 dark:text-zinc-300 border border-slate-200 dark:border-zinc-700 cursor-pointer shadow-2xs group shrink-0"
+            title={
+              lang === 'en' 
+                ? (currentModule ? `Share Lesson: ${currentModule.titleEn}` : 'Share Lesson') 
+                : 'Sabaq Share Karein'
+            }
+            aria-label="Share Lesson"
+          >
+            {isCopiedOrShared ? (
+              <>
+                <Check className="w-3.5 h-3.5 text-emerald-500 shrink-0" />
+                <span className="text-emerald-600 dark:text-emerald-400 font-semibold">{lang === 'en' ? 'Link Copied!' : 'Copied!'}</span>
+              </>
+            ) : (
+              <>
+                <Share2 className="w-3.5 h-3.5 text-slate-600 dark:text-zinc-300 group-hover:text-amber-600 dark:group-hover:text-amber-400 shrink-0 transition-colors" />
+                <span className="hidden xs:inline">Share Lesson</span>
+              </>
+            )}
+          </button>
 
           {/* Overall Progress Indicator */}
           <div className="hidden lg:flex items-center gap-1.5 pl-2 border-l border-slate-200 dark:border-zinc-800 text-[11px] font-mono font-bold text-slate-500 dark:text-zinc-400">
