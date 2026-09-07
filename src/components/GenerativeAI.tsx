@@ -2,13 +2,13 @@ import { useState } from 'react';
 import { motion } from 'motion/react';
 import { Pencil, Image as ImageIcon, Music, Cpu, MessageSquare, Sparkles, Code2, Terminal } from 'lucide-react';
 import TechTooltip from './TechTooltip';
-import { useLanguage } from '../hooks/useLanguage';
+import { useLanguageMultilingual } from '../hooks/useLanguageMultilingual';
 import ReadSectionButton from './ReadSectionButton';
 import CopyCodeButton from './CopyCodeButton';
 import CodeSnippetBlock from './CodeSnippetBlock';
 
 export default function GenerativeAI() {
-  const { lang, t } = useLanguage();
+  const { lang, t } = useLanguageMultilingual();
   const [activeOutput, setActiveOutput] = useState<string>('text');
 
   const genExamples = [
