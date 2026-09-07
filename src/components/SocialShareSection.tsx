@@ -14,6 +14,7 @@ import {
 import { motion, AnimatePresence } from 'motion/react';
 import { useLanguage } from '../hooks/useLanguage';
 import ClayLogo from './ClayLogo';
+import Confetti from './Confetti';
 
 interface SocialShareSectionProps {
   currentChapterTitle?: string;
@@ -24,6 +25,14 @@ export default function SocialShareSection({ currentChapterTitle }: SocialShareS
   const [isCopied, setIsCopied] = useState(false);
   const [streakCount, setStreakCount] = useState<number>(3);
   const [completedLessons, setCompletedLessons] = useState<number>(5);
+  const [showConfetti, setShowConfetti] = useState(false);
+
+  const triggerConfetti = () => {
+    setShowConfetti(true);
+    setTimeout(() => {
+      setShowConfetti(false);
+    }, 3000);
+  };
 
   useEffect(() => {
     // Read cached learner metrics
@@ -50,11 +59,13 @@ export default function SocialShareSection({ currentChapterTitle }: SocialShareS
   const handleCopyLink = () => {
     navigator.clipboard.writeText(shareUrl).then(() => {
       setIsCopied(true);
+      triggerConfetti();
       setTimeout(() => setIsCopied(false), 2500);
     });
   };
 
   const handleShareTwitter = () => {
+    triggerConfetti();
     const tweetText = encodeURIComponent(
       `🚀 Exploring modern Artificial Intelligence with @ClayverseAI!\n\nZero jargon, tactile visual sandboxes, and hands-on LLM drills.\n🔥 Current Streak: ${streakCount} Days | 📚 ${completedLessons}/9 Lessons\n\nTry it here:`
     );
@@ -62,10 +73,12 @@ export default function SocialShareSection({ currentChapterTitle }: SocialShareS
   };
 
   const handleShareLinkedIn = () => {
+    triggerConfetti();
     window.open(`https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(shareUrl)}`, '_blank', 'noopener,noreferrer');
   };
 
   const handleShareWhatsApp = () => {
+    triggerConfetti();
     const text = encodeURIComponent(
       `Hey! Check out Clayverse AI — a hands-on, zero-jargon interactive guide to mastering AI, Neural Networks & Prompt Engineering:\n${shareUrl}`
     );
@@ -73,6 +86,7 @@ export default function SocialShareSection({ currentChapterTitle }: SocialShareS
   };
 
   const handleShareTelegram = () => {
+    triggerConfetti();
     const text = encodeURIComponent(
       `Check out Clayverse AI — an interactive, beginner-safe guide to Artificial Intelligence with tactile simulations!`
     );
@@ -258,6 +272,7 @@ export default function SocialShareSection({ currentChapterTitle }: SocialShareS
           </div>
         </div>
       </motion.div>
+      {showConfetti && <Confetti />}
     </section>
   );
 }

@@ -50,6 +50,8 @@ import AIArena from './AIArena';
 import QuickTakeaway from './QuickTakeaway';
 import CheckYourKnowledge from './CheckYourKnowledge';
 import SocialShareSection from './SocialShareSection';
+import FruitPatternPredictor from './FruitPatternPredictor';
+import ClayMentorSidebar from './ClayMentorSidebar';
 
 export interface SubTopic {
   id: string;
@@ -60,11 +62,10 @@ export interface SubTopic {
 
 export const LESSON_SUBTOPICS: Record<string, SubTopic[]> = {
   'what-is-ai': [
-    { id: 'sub-foundations', titleEn: 'Pattern Logic vs Code', titleHyd: 'Pattern Logic vs Coding', readMins: '1 min' },
-    { id: 'sub-analogizer', titleEn: 'Pocket AI Analogies', titleHyd: 'Rozmarra Misaalein', readMins: '1 min' },
-    { id: 'sub-clay-host', titleEn: 'Meet Clay (AI Bot)', titleHyd: 'Clay se Milein', readMins: '1 min' },
-    { id: 'sub-takeaways', titleEn: 'Key Takeaways', titleHyd: 'Aham Nuqaat', readMins: '30s' },
-    { id: 'sub-quiz', titleEn: 'Knowledge Check', titleHyd: 'Chota Imtehan', readMins: '1 min' },
+    { id: 'sub-concept', titleEn: '1. Concept', titleHyd: '1. Tasawwur', readMins: '1 min' },
+    { id: 'sub-sandbox', titleEn: '2. Interactive Sandbox', titleHyd: '2. Interactive Sandbox', readMins: '2 min' },
+    { id: 'sub-analogy', titleEn: '3. Real-World Analogy', titleHyd: '3. Rozmarra Misaal', readMins: '1 min' },
+    { id: 'sub-quiz', titleEn: '4. Quiz', titleHyd: '4. Imtehan', readMins: '1 min' },
   ],
   'family-tree': [
     { id: 'sub-tree-overview', titleEn: 'AI & ML Family Tree', titleHyd: 'AI aur ML ka Shijra', readMins: '1 min' },
@@ -434,42 +435,94 @@ export default function IndividualLessonView({
             
             {/* Top Control Header & Breadcrumbs */}
             <div>
-              <div className="flex flex-wrap items-center justify-between gap-4 pb-4 border-b border-brand-slate/10">
-                <div className="flex items-center gap-2 text-xs text-brand-muted">
+              <div className="flex flex-wrap items-center justify-between gap-4 pb-4 border-b border-[#EFE7DC]">
+                <div className="flex items-center gap-2 text-xs sm:text-sm text-neutral-600 font-medium">
                   <button
                     onClick={onBackToHome}
-                    className="flex items-center gap-1 hover:text-brand-amber font-bold transition-colors cursor-pointer"
+                    className="hover:text-[#A8481F] transition-colors cursor-pointer"
                   >
-                    <Home className="w-3.5 h-3.5" />
-                    <span>{lang === 'en' ? "Home" : "Ghar"}</span>
+                    Foundations
                   </button>
-                  <span>/</span>
-                  <span className="font-semibold text-brand-slate">
-                    {lang === 'en' ? "Lessons" : "Asbaaq"}
-                  </span>
-                  <span>/</span>
-                  <span className="font-mono font-bold text-brand-amber bg-brand-amber/10 px-2 py-0.5 rounded-md">
-                    Lesson 0{currentModule.lessonNum}
+                  <span className="text-neutral-400">›</span>
+                  <button
+                    onClick={() => onSelectLesson('what-is-ai')}
+                    className="hover:text-[#A8481F] transition-colors cursor-pointer"
+                  >
+                    {lang === 'en' ? currentModule.titleEn : currentModule.titleHyd}
+                  </button>
+                  <span className="text-neutral-400">›</span>
+                  <span className="font-semibold text-neutral-900">
+                    Part 1: How Machines Learn
                   </span>
                 </div>
 
                 <div className="flex items-center gap-2">
                   <button
                     onClick={handleOpenAudioReader}
-                    className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-brand-amber/15 hover:bg-brand-amber/25 border border-brand-amber/35 text-brand-charcoal dark:text-amber-200 text-xs font-bold shadow-2xs hover:shadow-xs transition-all cursor-pointer group"
+                    className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-[#FDF0EB] hover:bg-[#FAE4DA] border border-[#F6D3C5] text-[#A8481F] text-xs font-semibold shadow-2xs transition-all cursor-pointer group"
                     title={lang === 'en' ? "Listen to this lesson using TTS Reader" : "Is sabaq ko TTS Reader se sunein"}
                   >
-                    <Volume2 className="w-3.5 h-3.5 text-brand-amber group-hover:scale-110 transition-transform" />
-                    <span>{lang === 'en' ? "Audio" : "Audio"}</span>
+                    <span className="w-2 h-2 rounded-full bg-[#A8481F] animate-pulse" />
+                    <span>Audio narration active (हिन्दी / EN)</span>
+                    <Volume2 className="w-3.5 h-3.5 text-[#A8481F] ms-0.5 group-hover:scale-110 transition-transform" />
                   </button>
 
                   <button
                     onClick={onBackToHome}
-                    className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-white hover:bg-brand-sand border border-brand-slate/20 text-brand-charcoal text-xs font-bold shadow-2xs hover:shadow-sm transition-all cursor-pointer"
+                    className="hidden sm:flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-white hover:bg-[#F5F0E8] border border-[#E0E0E0] text-neutral-700 text-xs font-semibold shadow-2xs transition-all cursor-pointer"
                   >
-                    <ArrowLeft className="w-3.5 h-3.5" />
-                    <span>{lang === 'en' ? "Back to All Lessons" : "Saare Sabaq Dekhein"}</span>
+                    <ArrowLeft className="w-3 h-3" />
+                    <span>{lang === 'en' ? "All Lessons" : "Sabaq"}</span>
                   </button>
+                </div>
+              </div>
+
+              {/* Subtopic Stepper & Progress Bar */}
+              <div className="mt-4 pb-4 border-b border-[#EFE7DC]">
+                <div className="flex flex-wrap items-center justify-between gap-3 text-xs sm:text-sm">
+                  <div className="flex items-center gap-3 sm:gap-5 flex-wrap font-bold">
+                    <button 
+                      onClick={() => scrollToSubTopic('sub-concept')}
+                      className="flex items-center gap-1.5 text-[#A8481F] hover:underline cursor-pointer"
+                    >
+                      <CheckCircle2 className="w-4 h-4 text-[#A8481F]" />
+                      <span>1. Concept</span>
+                    </button>
+
+                    <button 
+                      onClick={() => scrollToSubTopic('sub-sandbox')}
+                      className="flex items-center gap-1.5 text-[#A8481F] font-extrabold cursor-pointer"
+                    >
+                      <span className="w-3.5 h-3.5 rounded-full border-2 border-[#A8481F] flex items-center justify-center">
+                        <span className="w-1.5 h-1.5 rounded-full bg-[#A8481F]" />
+                      </span>
+                      <span>2. Interactive Sandbox</span>
+                    </button>
+
+                    <button 
+                      onClick={() => scrollToSubTopic('sub-analogy')}
+                      className="flex items-center gap-1.5 text-neutral-500 hover:text-neutral-700 cursor-pointer font-medium"
+                    >
+                      <span className="w-3.5 h-3.5 rounded-full border border-neutral-400" />
+                      <span>3. Real-World Analogy</span>
+                    </button>
+
+                    <button 
+                      onClick={() => scrollToSubTopic('sub-quiz')}
+                      className="flex items-center gap-1.5 text-neutral-400 cursor-pointer font-medium"
+                    >
+                      <span>🔒 4. Quiz</span>
+                    </button>
+                  </div>
+
+                  <span className="font-display font-bold text-neutral-800 text-xs sm:text-sm">
+                    65% Complete
+                  </span>
+                </div>
+
+                {/* Terracotta progress bar directly underneath */}
+                <div className="w-full h-1.5 bg-[#EAE0D5] rounded-full overflow-hidden mt-2.5">
+                  <div className="h-full w-[65%] bg-gradient-to-r from-[#A8481F] to-[#C1622D] rounded-full transition-all duration-300" />
                 </div>
               </div>
 
@@ -614,18 +667,58 @@ export default function IndividualLessonView({
             <div className="space-y-12">
               {lessonId === 'what-is-ai' && (
                 <div className="space-y-10">
-                  <div id="sub-foundations" className="scroll-mt-24">
+                  {/* 1. Theory Card: What Actually is Artificial Intelligence? */}
+                  <div id="sub-concept" className="bg-white rounded-3xl p-6 sm:p-8 border border-[#EFE7DC] shadow-xs text-left scroll-mt-24 space-y-4">
+                    <div className="flex items-center gap-2">
+                      <span className="px-3 py-1 rounded-full bg-[#E8F5E9] text-[#2E7D32] border border-[#C8E6C9] font-medium text-xs">
+                        Lesson 1.1
+                      </span>
+                      <span className="text-xs text-neutral-500 font-medium">
+                        • 4 min read & tinker
+                      </span>
+                    </div>
+
+                    <h2 className="font-display text-2xl sm:text-3xl md:text-4xl font-black text-[#1E1E1E] tracking-tight">
+                      What Actually is Artificial Intelligence?
+                    </h2>
+
+                    <p className="text-sm sm:text-base text-neutral-700 leading-relaxed">
+                      In traditional programming, you act like a strict master chef writing down every single rule:{' '}
+                      <code className="font-mono text-xs bg-[#F5F5F5] border border-[#E0E0E0] px-2 py-0.5 rounded text-[#C1622D] font-bold">
+                        IF weight &gt; 250g AND color == #FFB800
+                      </code>.
+                    </p>
+
+                    {/* Highlight Box: The Alphonso Mango Metaphor */}
+                    <div className="bg-[#FFF5EE] border border-[#FAD9C3] rounded-2xl p-5 sm:p-6 my-4">
+                      <div className="flex items-center gap-2 text-[#A8481F] font-bold text-base mb-2">
+                        <Sparkles className="w-4 h-4 text-[#A8481F]" />
+                        <span>The Alphonso Mango Metaphor</span>
+                      </div>
+                      <p className="text-xs sm:text-sm text-[#424242] leading-relaxed">
+                        Think of AI like teaching your friend to recognize ripe mangoes: instead of memorizing 10,000 complicated botanical rules, you simply place{' '}
+                        <strong className="font-bold text-[#1E1E1E]">100 sweet mangoes</strong> in front of them. With every single fruit, their brain detects tiny subtle patterns—the gentle softness, honeyed fragrance, and saffron hue.
+                      </p>
+                    </div>
+
+                    <p className="text-sm sm:text-base text-neutral-700 leading-relaxed">
+                      That's machine learning in pure desi terms! No rigid code handcrafting, just statistical intuition molded by sheer experience.
+                    </p>
+                  </div>
+
+                  {/* 2. Interactive Sandbox: The Fruit Pattern Predictor */}
+                  <div id="sub-sandbox" className="scroll-mt-24">
+                    <FruitPatternPredictor />
+                  </div>
+
+                  {/* 3. Real-World Analogy */}
+                  <div id="sub-analogy" className="scroll-mt-24 space-y-8">
                     <WhatIsAI />
-                  </div>
-                  <div id="sub-analogizer" className="scroll-mt-24">
-                    {/* Anchor wrapper for analogizer section */}
-                  </div>
-                  <div id="sub-clay-host" className="scroll-mt-24">
                     <ClayExplainer />
-                  </div>
-                  <div id="sub-takeaways" className="scroll-mt-24">
                     <QuickTakeaway sectionId="what-is-ai" />
                   </div>
+
+                  {/* 4. Quiz */}
                   <div id="sub-quiz" className="scroll-mt-24">
                     <CheckYourKnowledge sectionId="basics" />
                   </div>
@@ -883,6 +976,9 @@ export default function IndividualLessonView({
 
           {/* 2. Desktop Sticky Sidebar (TOC & Real-time Progress Monitor) */}
           <aside className="hidden lg:block lg:col-span-4 xl:col-span-3 sticky top-28 self-start space-y-4">
+            {/* Clay Mentor Voice & Jargon Buster Sidebar Card */}
+            <ClayMentorSidebar onOpenTTS={handleOpenAudioReader} />
+
             <div className="p-5 rounded-3xl bg-white border border-brand-slate/15 shadow-sm space-y-4">
               
               {/* Sidebar Header */}

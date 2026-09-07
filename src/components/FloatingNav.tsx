@@ -356,131 +356,121 @@ export default function FloatingNav() {
 
   return (
     <nav className="fixed top-0 left-0 right-0 z-50 glass-nav transition-all duration-300 pt-[4.5px]">
-      <div className="max-w-5xl mx-auto px-4 sm:px-6 h-16 flex items-center justify-between gap-2">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 h-16 flex items-center justify-between gap-3">
         
-        {/* Left: Brand Name & Reading Progress Badge */}
-        <div className="flex items-center gap-2 sm:gap-3 shrink-0">
-          {/* Brand Name */}
+        {/* Left: Brand Name & Multilingual Badge */}
+        <div className="flex items-center gap-2.5 shrink-0">
           <button 
-            onClick={() => scrollToSection('hero')}
-            className="flex items-center gap-2 cursor-pointer font-display text-base sm:text-lg font-extrabold text-brand-charcoal hover:text-brand-amber transition-colors shrink-0"
-          >
-            <ClayLogo size={30} />
-            <span className="tracking-tight hidden xs:inline font-black">CLAYVERSE <span className="text-brand-amber font-black">AI</span></span>
-          </button>
-
-          {/* Progress Indicator Pill */}
-          <button
-            onClick={() => setIsExploreOpen(!isExploreOpen)}
-            className={`flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-bold border transition-all cursor-pointer select-none shadow-xs ${
-              isGuideComplete
-                ? 'bg-emerald-50 text-emerald-700 border-emerald-300'
-                : 'bg-white/90 hover:bg-brand-sand text-brand-charcoal border-brand-amber/30'
-            }`}
-            title="Click to open Explore & Table of Contents"
-          >
-            <div className="relative w-3.5 h-3.5 flex items-center justify-center shrink-0">
-              {isGuideComplete ? (
-                <CheckCircle2 className="w-3.5 h-3.5 text-emerald-600" />
-              ) : (
-                <svg className="w-3.5 h-3.5 transform -rotate-90" viewBox="0 0 36 36">
-                  <path
-                    className="text-brand-slate/15"
-                    strokeWidth="4"
-                    stroke="currentColor"
-                    fill="none"
-                    d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831"
-                  />
-                  <path
-                    className="text-brand-amber"
-                    strokeDasharray={`${Math.round(scrollProgress)}, 100`}
-                    strokeWidth="4"
-                    strokeLinecap="round"
-                    stroke="currentColor"
-                    fill="none"
-                    d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831"
-                  />
-                </svg>
-              )}
-            </div>
-
-            <div className="flex items-center gap-1 text-[11px]">
-              <span className={`font-mono font-black ${isGuideComplete ? 'text-emerald-700' : 'text-brand-amber-dark'}`}>
-                {Math.round(scrollProgress)}%
-              </span>
-              <span className="text-brand-slate/40 hidden sm:inline">•</span>
-              <span className="text-brand-slate font-semibold truncate max-w-[120px] md:max-w-[160px] hidden sm:inline">
-                {isGuideComplete 
-                  ? (lang === 'en' ? 'Completed 🎉' : 'Mukammal 🎉') 
-                  : (lang === 'en' ? `Sec ${currentSectionNum}/${totalSections}: ${currentSectionObj.shortEn}` : `Hissa ${currentSectionNum}/${totalSections}: ${currentSectionObj.titleHyd}`)}
-              </span>
-            </div>
-          </button>
-
-          {/* Reading Time Pill (Desktop) */}
-          <div 
-            className="group relative glass-panel px-2 py-0.5 rounded-full text-[10px] font-bold text-brand-amber border border-brand-amber/30 hidden md:flex items-center gap-1 shadow-2xs shrink-0 cursor-help transition-all duration-200 hover:bg-white/80"
-            title={`${wordCount.toLocaleString()} words`}
-          >
-            <BookOpen className="w-3 h-3 text-brand-amber shrink-0" />
-            <span className="tracking-tight">{readingTime} min read</span>
-          </div>
-        </div>
-
-        {/* Right: Streak Indicator, Ask Clay, Ambient Audio, and Explore Button */}
-        <div className="flex items-center gap-1.5 sm:gap-2 shrink-0">
-          
-          {/* Daily Learning Streak Badge */}
-          <button
-            onClick={() => setIsAuthModalOpen(true)}
-            className="flex items-center gap-1 px-2.5 py-1.5 rounded-full bg-gradient-to-r from-amber-500/15 via-orange-500/15 to-amber-500/10 hover:from-amber-500/25 hover:to-orange-500/20 text-brand-charcoal border border-amber-500/30 text-xs font-mono font-bold transition-all cursor-pointer shadow-2xs hover:scale-105 active:scale-95 group"
-            title={`${streakCount}-Day Learning Streak Active! Click to view Scholar Profile & Stats.`}
-          >
-            <Flame className="w-3.5 h-3.5 text-amber-500 fill-amber-500/40 group-hover:scale-110 transition-transform animate-pulse" />
-            <span className="font-black text-amber-700 text-[11px]">{streakCount}d</span>
-          </button>
-
-          {/* Ambient Sound Button */}
-          <button
-            onClick={toggleAmbient}
-            className={`flex items-center gap-1.5 px-2.5 py-1.5 rounded-full text-xs font-bold border transition-all cursor-pointer select-none ${isAmbientOn ? 'bg-brand-amber/15 text-brand-amber border-brand-amber/30 shadow-[0_0_12px_rgba(217,119,6,0.15)]' : 'bg-white/80 hover:bg-brand-sand text-brand-slate border-brand-slate/15'}`}
-            title="Warm lo-fi study beats (procedurally synthesized)"
-          >
-            {isAmbientOn ? <Volume2 className="w-3.5 h-3.5 text-brand-amber animate-pulse" /> : <VolumeX className="w-3.5 h-3.5 text-brand-slate" />}
-            <span className="hidden lg:inline text-[11px] font-bold">{lang === 'en' ? 'Lo-Fi' : 'Lo-Fi'}: {isAmbientOn ? 'ON' : 'OFF'}</span>
-          </button>
-
-          {/* Learning Hub Direct Nav Button (Desktop) */}
-          <button
             onClick={() => {
-              window.dispatchEvent(new CustomEvent('clay_navigate_view', { detail: 'learning-hub' }));
-              setIsExploreOpen(false);
+              window.dispatchEvent(new CustomEvent('clay_navigate_view', { detail: 'guide' }));
             }}
-            className="hidden sm:flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-brand-amber/10 hover:bg-brand-amber/20 text-brand-charcoal border border-brand-amber/30 text-xs font-black transition-all cursor-pointer select-none shadow-2xs hover:scale-105 active:scale-95 group"
-            title="Open all 9 AI Lessons, Tools, Quizzes & Flashcards in the Learning Hub"
+            className="flex items-center gap-2 cursor-pointer font-display text-base sm:text-lg font-extrabold text-neutral-900 hover:text-[#A8481F] transition-colors shrink-0"
           >
-            <GraduationCap className="w-3.5 h-3.5 text-brand-amber group-hover:scale-110 transition-transform" />
-            <span className="text-[11px] font-extrabold tracking-tight">
-              {lang === 'en' ? 'Learning Hub' : lang === 'te' ? 'లెర్నింగ్ హబ్' : 'Learning Hub'}
+            <ClayLogo size={32} />
+            <span className="tracking-tight font-black text-neutral-900">
+              Clayverse <span className="text-[#A8481F]">AI</span>
             </span>
           </button>
 
-          {/* EXPLORE BUTTON - Placed in the position of the 3-lined menu button */}
+          <span className="hidden sm:inline-block px-2.5 py-0.5 rounded-full bg-[#FDF0EB] text-[#C1622D] border border-[#F6D3C5] font-semibold text-xs shadow-2xs">
+            Multilingual AI
+          </span>
+        </div>
+
+        {/* Center: Navigation Pill Container */}
+        <div className="hidden md:flex items-center gap-1 bg-[#F5F0E8]/80 border border-[#EFE7DC] p-1 rounded-full shadow-2xs">
+          <button
+            onClick={() => setIsExploreOpen(!isExploreOpen)}
+            className={`px-3.5 py-1.5 rounded-full text-xs font-semibold transition-all cursor-pointer ${
+              isExploreOpen ? 'bg-neutral-800 text-white' : 'text-neutral-700 hover:text-neutral-900'
+            }`}
+          >
+            Explore
+          </button>
+
+          <button
+            onClick={() => {
+              window.dispatchEvent(new CustomEvent('clay_open_lesson', { detail: 'what-is-ai' }));
+            }}
+            className="px-4 py-1.5 rounded-full bg-[#A8481F] text-white text-xs font-bold shadow-xs transition-all cursor-pointer"
+          >
+            Lessons
+          </button>
+
+          <button
+            onClick={() => {
+              window.dispatchEvent(new CustomEvent('clay_open_lesson', { detail: 'arena' }));
+            }}
+            className="px-3.5 py-1.5 rounded-full text-xs font-semibold text-neutral-700 hover:text-neutral-900 transition-all cursor-pointer"
+          >
+            AI Arena
+          </button>
+
+          <button
+            onClick={() => {
+              window.dispatchEvent(new CustomEvent('clay_navigate_view', { detail: 'dashboard' }));
+            }}
+            className="px-3.5 py-1.5 rounded-full text-xs font-semibold text-neutral-700 hover:text-neutral-900 transition-all cursor-pointer"
+          >
+            Dashboard
+          </button>
+        </div>
+
+        {/* Right: Language, Streak, Audio, and User Profile */}
+        <div className="flex items-center gap-2 sm:gap-2.5 shrink-0">
+          {/* Language Selector Pill */}
+          <button
+            onClick={() => {
+              setLang(lang === 'en' ? 'hyd' : 'en');
+            }}
+            className="flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-white hover:bg-[#F5F0E8] text-neutral-700 border border-[#E0E0E0] text-xs font-semibold shadow-2xs transition-all cursor-pointer"
+            title="Switch Language (हिन्दी / EN)"
+          >
+            <Languages className="w-3.5 h-3.5 text-neutral-500" />
+            <span>हिन्दी / EN</span>
+            <ChevronDown className="w-3 h-3 text-neutral-400" />
+          </button>
+
+          {/* Daily Learning Streak Badge */}
+          <button
+            onClick={() => setIsAuthModalOpen(true)}
+            className="flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-[#FDF0EB] hover:bg-[#FAE4DA] text-[#A8481F] border border-[#F6D3C5] text-xs font-bold transition-all cursor-pointer shadow-2xs"
+            title={`${streakCount}-Day Learning Streak Active!`}
+          >
+            <Flame className="w-3.5 h-3.5 text-[#A8481F] fill-[#A8481F]/30 animate-pulse" />
+            <span>{streakCount > 0 ? `${streakCount} Day Streak` : '5 Day Streak'}</span>
+          </button>
+
+          {/* Audio Ambient Button */}
+          <button
+            onClick={toggleAmbient}
+            className="w-8 h-8 rounded-full bg-[#E6F4F1] hover:bg-teal-100 text-[#0D6E6E] flex items-center justify-center transition-colors cursor-pointer shadow-2xs"
+            title={isAmbientOn ? "Mute Study Beats" : "Play Study Audio"}
+          >
+            {isAmbientOn ? <Volume2 className="w-4 h-4 animate-pulse" /> : <Headphones className="w-4 h-4" />}
+          </button>
+
+          {/* User Profile Avatar */}
+          <button
+            onClick={() => setIsAuthModalOpen(true)}
+            className="w-8 h-8 rounded-full bg-[#8C3A16] hover:bg-[#722E10] text-white flex items-center justify-center transition-colors cursor-pointer shadow-2xs font-bold text-xs"
+            title="Learner Profile & Settings"
+          >
+            <User className="w-4 h-4" />
+          </button>
+
+          {/* Explore Dropdown Anchor Button */}
           <div className="relative" ref={exploreRef}>
             <button
               onClick={() => setIsExploreOpen(!isExploreOpen)}
-              className={`flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-black transition-all cursor-pointer select-none border shadow-xs active:scale-95 group ${
+              className={`md:hidden flex items-center gap-1 p-2 rounded-full text-xs font-bold border transition-all cursor-pointer shadow-xs ${
                 isExploreOpen 
-                  ? 'bg-brand-charcoal text-white border-brand-charcoal shadow-md' 
-                  : 'bg-white/90 hover:bg-brand-sand text-brand-charcoal border-brand-amber/30 hover:border-brand-amber/60'
+                  ? 'bg-neutral-900 text-white border-neutral-900' 
+                  : 'bg-white text-neutral-700 border-neutral-300'
               }`}
-              title="Explore Apps, Guide, Bookmarks & Table of Contents"
+              title="Explore Menu"
             >
-              <Compass className={`w-3.5 h-3.5 transition-transform duration-300 ${isExploreOpen ? 'rotate-90 text-brand-amber' : 'text-brand-amber'}`} />
-              <span className="text-[11px] font-extrabold tracking-tight">
-                {lang === 'en' ? 'Explore' : lang === 'te' ? 'ఎక్స్‌ప్లోర్' : 'Explore'}
-              </span>
-              <ChevronDown className={`w-3 h-3 text-inherit transition-transform duration-200 ${isExploreOpen ? 'rotate-180' : ''}`} />
+              <Menu className="w-4 h-4" />
             </button>
 
             {/* Consolidated Quick Navigation Dropdown Panel */}
