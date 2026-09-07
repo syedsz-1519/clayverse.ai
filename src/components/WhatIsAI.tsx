@@ -1,323 +1,203 @@
 import { useState } from 'react';
-import { motion, AnimatePresence } from 'motion/react';
+import { motion } from 'motion/react';
 import { 
-  Tv, 
-  MapPin, 
-  MessageSquareCode, 
-  Mic, 
-  Mail, 
-  Smile, 
   BrainCircuit, 
   Sparkles, 
-  Zap, 
-  Info,
-  Smartphone,
-  Compass,
+  Lightbulb,
   Target,
-  History,
-  Languages
+  CheckCircle,
+  ArrowRight
 } from 'lucide-react';
-import { PocketExample, AIType } from '../types';
-import TechTooltip from './TechTooltip';
-import AITimeline from './AITimeline';
 import { useLanguage } from '../hooks/useLanguage';
-import ReadSectionButton from './ReadSectionButton';
-import { getLessonContent } from '../lib/lessonContent';
+import Card, { CardHeader, CardTitle, CardDescription, CardContent } from './ui/Card';
 
 export default function WhatIsAI() {
   const { lang } = useLanguage();
-  const [selectedExample, setSelectedExample] = useState<string | null>(null);
-  const [showTimeline, setShowTimeline] = useState(false);
 
-  const lessonData = getLessonContent('what-is-ai', lang);
-  const hero = lessonData?.sections.hero;
-  const analogy = lessonData?.sections.analogy;
-  const patternMatcher = lessonData?.sections.patternMatcher;
-  const pocketSection = lessonData?.sections.pocketExamples;
-  const pocketExamples = pocketSection?.items || [];
-  const threeHorizons = lessonData?.sections.threeHorizons;
-  const aiTypes = threeHorizons?.items || [];
-
-  const renderIcon = (name: string) => {
-    switch (name) {
-      case 'Tv': return <Tv className="w-5 h-5 text-brand-amber" />;
-      case 'MapPin': return <MapPin className="w-5 h-5 text-brand-amber" />;
-      case 'MessageSquareCode': return <MessageSquareCode className="w-5 h-5 text-brand-amber" />;
-      case 'Mic': return <Mic className="w-5 h-5 text-brand-amber" />;
-      case 'Mail': return <Mail className="w-5 h-5 text-brand-amber" />;
-      case 'Smile': return <Smile className="w-5 h-5 text-brand-amber" />;
-      default: return <BrainCircuit className="w-5 h-5 text-brand-amber" />;
+  const content = {
+    en: {
+      badge: 'Lesson 01',
+      title: 'What Actually is AI?',
+      description: 'Artificial Intelligence is not magic or a thinking creature. It\'s a powerful tool that detects patterns in massive amounts of data.',
+      analogy: {
+        title: 'A Simple Analogy',
+        text: 'Teaching AI is like teaching a child what a "dog" is. You don\'t hand them a biology textbook. You show them thousands of dog pictures until their brain naturally recognizes the patterns: floppy ears, tail, four legs, and barking!'
+      },
+      keyPoints: [
+        'AI learns from examples, not pre-written rules',
+        'It finds patterns humans might miss',
+        'Used daily in recommendations, voice assistants, and maps'
+      ]
+    },
+    hi: {
+      badge: 'पाठ 01',
+      title: 'AI वास्तव में क्या है?',
+      description: 'आर्टिफिशियल इंटेलिजेंस कोई जादू या सोचने वाला प्राणी नहीं है। यह एक शक्तिशाली उपकरण है जो बड़ी मात्रा में डेटा में पैटर्न खोजता है।',
+      analogy: {
+        title: 'एक सरल उदाहरण',
+        text: 'AI को सिखाना एक बच्चे को "कुत्ता" क्या है सिखाने जैसा है। आप उन्हें बायोलॉजी की किताब नहीं देते। आप उन्हें हजारों कुत्तों की तस्वीरें दिखाते हैं जब तक उनका दिमाग स्वाभाविक रूप से पैटर्न को पहचान नहीं लेता!'
+      },
+      keyPoints: [
+        'AI उदाहरणों से सीखता है, पहले से लिखे नियमों से नहीं',
+        'यह ऐसे पैटर्न खोजता है जो मनुष्य चूक सकते हैं',
+        'दैनिक रूप से सिफारिशों, वॉयस असिस्टेंट और मैप्स में उपयोग किया जाता है'
+      ]
+    },
+    te: {
+      badge: 'పాఠం 01',
+      title: 'AI నిజంగా ఏమిటి?',
+      description: 'ఆర్టిఫిషియల్ ఇంటెలిజెన్స్ మాయా జాలం లేదా ఆలోచించే జీవి కాదు. ఇది భారీ మొత్తంలో డేటాలో నమూనాలను కనుగొనే శక్తివంతమైన సాధనం.',
+      analogy: {
+        title: 'ఒక సరళమైన ఉపమానం',
+        text: 'AIకి నేర్పించడం ఒక చిన్నారికి "కుక్క" అంటే ఏమిటో నేర్పించడం లాంటిది. మీరు వారికి జీవశాస్త్ర పుస్తకం ఇవ్వరు. వారి మెదడు సహజంగా నమూనాలను గుర్తించే వరకు మీరు వేలాది కుక్కల చిత్రాలను చూపిస్తారు!'
+      },
+      keyPoints: [
+        'AI ఉదాహరణల నుండి నేర్చుకుంటుంది, ముందుగా వ్రాసిన నియమాల నుండి కాదు',
+        'ఇది మానవులు కోల్పోయే నమూనాలను కనుగొంటుంది',
+        'సిఫార్సులు, వాయిస్ అసిస్టెంట్‌లు మరియు మ్యాప్‌లలో ప్రతిరోజూ ఉపయోగించబడుతుంది'
+      ]
     }
   };
 
+  const t = content[lang as keyof typeof content] || content.en;
+
   return (
-    <div id="what-is-ai" className="scroll-mt-16 py-12">
-      {/* 1. What is AI? Explanation Section */}
-      <section className="max-w-5xl mx-auto px-6 mb-16">
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-stretch">
-          
-          {/* Bento Card 1: Main Text Explanation (Col Span 8) */}
-          <motion.div
-            initial={{ opacity: 0, y: 30 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true, margin: '-100px' }}
-            transition={{ duration: 0.6 }}
-            className="lg:col-span-8 flex flex-col justify-between p-8 bg-white border border-brand-slate/10 rounded-3xl skeuo-raised relative overflow-hidden"
-          >
-            <div className="absolute top-0 right-0 w-32 h-32 bg-brand-amber/5 rounded-full blur-2xl pointer-events-none" />
-            
-            <div>
-              {/* Top Row with Icon, Lesson Badge, and Dynamic Translation */}
-              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-5">
-                {/* 3D-style Tactile Icon Tile */}
-                <div className="relative w-12 h-12 rounded-2xl bg-gradient-to-br from-white to-[#F4EFE6] border border-t-white border-l-white border-b-4 border-r border-brand-amber/20 shadow-[0_6px_12px_-3px_rgba(211,98,64,0.12),0_10px_20px_-5px_rgba(211,98,64,0.06),inset_0_2px_4px_rgba(255,255,255,0.95)] flex items-center justify-center shrink-0 text-brand-amber">
-                  <BrainCircuit className="w-5 h-5 drop-shadow-[0_1.5px_2px_rgba(211,98,64,0.15)]" />
-                </div>
-                <ReadSectionButton sectionId="what-is-ai" />
-              </div>
-
-              <span className="text-xs font-bold uppercase tracking-wider text-brand-amber mb-2 block font-mono">
-                {hero?.badge}
-              </span>
-
-              {lang === 'en' ? (
-                <>
-                  <h2 className="font-display text-3xl font-extrabold text-brand-charcoal mb-4">
-                    {hero?.heading}
-                  </h2>
-                  <p className="font-sans text-brand-charcoal leading-relaxed mb-6 text-[15px]">
-                    <TechTooltip term="Artificial Intelligence">Artificial Intelligence</TechTooltip> — <span className="text-brand-slate italic">the capability of computer systems to perform tasks that historically required human thinking or reasoning</span> — is not an independent thinking creature. Instead, it is a tool that detects recurring structures in huge sets of data.
-                  </p>
-                </>
-              ) : (
-                <>
-                  <h2 className="font-display text-3xl font-extrabold text-brand-charcoal mb-4">
-                    {hero?.heading}
-                  </h2>
-                  <p className="font-sans text-brand-charcoal leading-relaxed mb-6 text-[15px]">
-                    <strong className="text-brand-amber">AI yaane Artificial Intelligence</strong> bole to <span className="text-brand-slate italic">computer'aa ko dimaag dena</span>. Iska matlab ye nahi hai ki computer khud ba khud sochra. Khali usko bohot saara data (jaise photo’aa, likhe so baataan) dikha ke seekha dete. Uske baad, computer naye cheezon ko pehchanta aur jawaab deta, bilkul ek dimaag wale ke jaisa! Asal mein ye khali ek tool hai jo bade data mein se patterns dhoond leta hai.
-                  </p>
-                </>
-              )}
-
-              {/* AI Timeline Button */}
-              <div className="mb-6">
-                <button
-                  onClick={() => setShowTimeline(!showTimeline)}
-                  className={`inline-flex items-center gap-2 px-5 py-2.5 rounded-xl font-display text-xs font-bold cursor-pointer transition-all active:scale-95 shadow-sm border ${showTimeline ? 'bg-brand-charcoal text-white border-brand-charcoal' : 'bg-[#E07A5F] text-white border-[#C55937] hover:bg-[#C55937]'}`}
-                >
-                  <History className="w-4 h-4" />
-                  <span>{showTimeline ? hero?.timelineHideButton : hero?.timelineButton}</span>
-                </button>
-              </div>
-            </div>
-
-            {/* Analogy callout - glassmorphic overlay */}
-            <div className="glass-panel p-5 rounded-2xl border-l-4 border-brand-amber relative overflow-hidden bg-brand-sand/20">
-              <span className="font-mono text-xs font-bold text-brand-amber uppercase block mb-1">
-                {analogy?.label}
-              </span>
-              <p className="text-brand-charcoal text-xs leading-relaxed italic">
-                "{analogy?.text}"
-              </p>
-            </div>
-          </motion.div>
-
-          {/* Bento Card 2: Tactical Illustration (Col Span 4) */}
-          <motion.div
-            initial={{ opacity: 0, scale: 0.95 }}
-            whileInView={{ opacity: 1, scale: 1 }}
-            viewport={{ once: true, margin: '-100px' }}
-            transition={{ duration: 0.8 }}
-            className="lg:col-span-4 skeuo-raised bg-[#F9F7F3] border border-brand-slate/10 p-8 rounded-3xl flex flex-col justify-between items-center overflow-hidden min-h-[340px]"
-          >
-            {/* Decorative rotating gears or circles */}
-            <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,rgba(217,119,6,0.03),transparent)] pointer-events-none" />
-            <div className="flex-grow flex items-center justify-center">
-              <motion.div 
-                animate={{ rotate: 360 }}
-                transition={{ repeat: Infinity, duration: 25, ease: 'linear' }}
-                className="w-40 h-40 rounded-full border border-dashed border-brand-amber/25 flex items-center justify-center relative"
-              >
-                <div className="w-28 h-28 rounded-full border border-dashed border-brand-slate/20 flex items-center justify-center">
-                  <div className="w-14 h-14 rounded-full bg-brand-amber/10 flex items-center justify-center shadow-inner">
-                    <BrainCircuit className="w-6 h-6 text-brand-amber" />
-                  </div>
-                </div>
-                {/* Moving node dots on the boundary */}
-                <div className="absolute top-0 left-1/2 -translate-x-1/2 w-3 h-3 rounded-full bg-brand-amber shadow-sm" />
-                <div className="absolute bottom-4 left-4 w-2 h-2 rounded-full bg-brand-slate shadow-sm" />
-              </motion.div>
-            </div>
-
-             <div className="text-center mt-4">
-              <span className="font-display text-sm font-bold text-brand-charcoal">
-                {patternMatcher?.title}
-              </span>
-              <p className="text-[11px] text-brand-muted mt-1 max-w-[200px] mx-auto leading-relaxed">
-                {patternMatcher?.subtitle}
-              </p>
-            </div>
-          </motion.div>
-
-        </div>
-
-        {/* Dynamic Timeline Section Container */}
-        <AnimatePresence>
-          {showTimeline && (
-            <motion.div
-              initial={{ opacity: 0, height: 0, marginTop: 0 }}
-              animate={{ opacity: 1, height: 'auto', marginTop: 24 }}
-              exit={{ opacity: 0, height: 0, marginTop: 0 }}
-              transition={{ duration: 0.4, ease: "easeInOut" }}
-              className="overflow-hidden"
-            >
-              <AITimeline />
-            </motion.div>
-          )}
-        </AnimatePresence>
-      </section>
-
-      {/* 2. Pocket Examples Grid Section */}
-      <section className="py-12 bg-brand-sand/15 border-y border-brand-slate/5">
-        <div className="max-w-5xl mx-auto px-6">
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-stretch">
-            
-            {/* Bento Card 1: Title Card (Col Span 4) */}
-            <div className="lg:col-span-4 p-8 bg-white border border-brand-slate/10 rounded-3xl flex flex-col justify-center relative overflow-hidden skeuo-raised">
-              <div className="absolute -top-12 -left-12 w-32 h-32 bg-brand-amber/5 rounded-full blur-2xl pointer-events-none" />
-              
-              {/* 3D-style Tactile Icon Tile */}
-              <div className="relative w-12 h-12 rounded-2xl bg-gradient-to-br from-white to-[#F4EFE6] border border-t-white border-l-white border-b-4 border-r border-brand-amber/20 shadow-[0_6px_12px_-3px_rgba(211,98,64,0.12),0_10px_20px_-5px_rgba(211,98,64,0.06),inset_0_2px_4px_rgba(255,255,255,0.95)] flex items-center justify-center shrink-0 mb-5 text-brand-amber">
-                <Smartphone className="w-5 h-5 drop-shadow-[0_1.5px_2px_rgba(211,98,64,0.15)]" />
-              </div>
-
-              <span className="text-xs font-bold uppercase tracking-wider text-brand-amber font-mono">
-                {pocketSection?.badge}
-              </span>
-              <h2 className="font-display text-2xl font-extrabold text-brand-charcoal mt-1 mb-4">
-                {pocketSection?.title}
-              </h2>
-              <p className="font-sans text-xs leading-relaxed text-brand-muted">
-                {pocketSection?.subtitle}
-                <span className="block mt-4 text-[#E07A5F] font-bold font-mono">
-                  {pocketSection?.hint}
-                </span>
-              </p>
-            </div>
-
-            {/* Bento Card 2: 6 Pocket Examples (Col Span 8) */}
-            <div className="lg:col-span-8 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-              {pocketExamples.map((example) => (
-                <motion.div
-                  key={example.id}
-                  onClick={() => setSelectedExample(selectedExample === example.id ? null : example.id)}
-                  whileHover={{ y: -2 }}
-                  whileTap={{ scale: 0.98 }}
-                  className="skeuo-raised bg-white p-5 cursor-pointer relative overflow-hidden group select-none flex flex-col justify-between border border-brand-slate/10 rounded-2xl min-h-[150px]"
-                >
-                  <div>
-                    <div className="flex items-center justify-between mb-3">
-                      <div className="w-9 h-9 rounded-xl bg-brand-sand/60 flex items-center justify-center border border-brand-slate/5 shadow-inner">
-                        {renderIcon(example.iconName)}
-                      </div>
-                      <span className="text-[10px] font-mono text-brand-muted group-hover:text-brand-amber transition-colors">
-                        {selectedExample === example.id 
-                          ? (pocketSection?.closeLabel || 'Close') 
-                          : (pocketSection?.revealLabel || 'Reveal')
-                        }
-                      </span>
-                    </div>
-                    <h3 className="font-display text-sm font-bold text-brand-charcoal mb-0.5">
-                      {example.title}
-                    </h3>
-                    <p className="text-[11px] text-brand-muted leading-snug">
-                      {example.description}
-                    </p>
-                  </div>
-
-                  {/* Animated disclosure layer */}
-                  <motion.div
-                    initial={{ height: 0, opacity: 0 }}
-                    animate={{ 
-                      height: selectedExample === example.id ? 'auto' : 0, 
-                      opacity: selectedExample === example.id ? 1 : 0 
-                    }}
-                    transition={{ duration: 0.25 }}
-                    className="overflow-hidden mt-3 pt-3 border-t border-brand-slate/5"
-                  >
-                    <p className="text-[10px] leading-relaxed text-brand-charcoal bg-brand-sand/30 p-2 rounded-lg border border-brand-amber/10 flex items-start gap-1.5">
-                      <Info className="w-3 h-3 text-brand-amber shrink-0 mt-0.5" />
-                      <span>{example.explanation}</span>
-                    </p>
-                  </motion.div>
-                </motion.div>
-              ))}
-            </div>
-
+    <section id="what-is-ai" className="py-16 px-6 bg-gradient-to-b from-white to-slate-50">
+      <div className="max-w-6xl mx-auto space-y-8">
+        
+        {/* Section Header */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.6 }}
+          className="text-center space-y-3"
+        >
+          <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-gradient-to-r from-blue-50 to-cyan-50 border border-blue-200">
+            <Sparkles className="w-4 h-4 text-blue-600" />
+            <span className="text-sm font-bold text-blue-700">{t.badge}</span>
           </div>
-        </div>
-      </section>
-
-      {/* 3. Types of AI capability Section */}
-      <section className="py-16 max-w-5xl mx-auto px-6">
-        <div className="text-center max-w-2xl mx-auto mb-10">
-          <span className="text-xs font-bold uppercase tracking-wider text-brand-amber font-mono">
-            {threeHorizons?.badge}
-          </span>
-          <h2 className="font-display text-3xl font-extrabold text-brand-charcoal mt-1 mb-3">
-            {threeHorizons?.title}
+          <h2 className="text-4xl md:text-5xl font-black text-slate-900 font-display">
+            {t.title}
           </h2>
-          <p className="font-sans text-xs sm:text-sm text-brand-muted leading-relaxed">
-            {threeHorizons?.subtitle}
-          </p>
-        </div>
+        </motion.div>
 
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 items-stretch">
-          {aiTypes.map((type, i) => (
-            <motion.div
-              key={type.title}
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.5, delay: i * 0.1 }}
-              className="skeuo-raised p-6 bg-white border border-brand-slate/10 rounded-3xl flex flex-col justify-between"
-            >
-              <div>
-                <div className="flex justify-between items-start mb-4">
-                  {/* 3D-style Tactile Icon Tile */}
-                  <div className="relative w-10 h-10 rounded-xl bg-gradient-to-br from-white to-[#F4EFE6] border border-t-white border-l-white border-b-[3px] border-r border-brand-amber/15 shadow-[0_4px_8px_-2px_rgba(211,98,64,0.1),inset_0_1.5px_2px_rgba(255,255,255,0.95)] flex items-center justify-center shrink-0 text-brand-amber">
-                    {i === 0 ? <Target className="w-4.5 h-4.5" /> : i === 1 ? <Compass className="w-4.5 h-4.5" /> : <Sparkles className="w-4.5 h-4.5" />}
+        {/* Main Content Grid */}
+        <div className="grid md:grid-cols-2 gap-6">
+          
+          {/* Definition Card */}
+          <motion.div
+            initial={{ opacity: 0, x: -20 }}
+            whileInView={{ opacity: 1, x: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.6, delay: 0.1 }}
+          >
+            <Card variant="elevated" hover className="h-full">
+              <CardHeader>
+                <div className="flex items-start gap-4">
+                  <div className="w-12 h-12 rounded-2xl bg-gradient-to-br from-blue-500 to-cyan-500 flex items-center justify-center shadow-lg shadow-blue-500/20 flex-shrink-0">
+                    <BrainCircuit className="w-6 h-6 text-white" />
                   </div>
-
-                  <div className="flex flex-col items-end gap-1">
-                    <span className="px-2 py-0.5 bg-brand-sand text-brand-slate rounded-full text-[10px] font-bold font-mono tracking-wider border border-brand-slate/5">
-                      {type.short}
-                    </span>
-                    <span className="text-[9px] font-bold text-brand-amber bg-brand-amber/10 px-2 py-0.5 rounded-full border border-brand-amber/10">
-                      {type.badge}
-                    </span>
+                  <div>
+                    <CardTitle>
+                      {lang === 'en' ? 'The Definition' : lang === 'hi' ? 'परिभाषा' : 'నిర్వచనం'}
+                    </CardTitle>
+                    <CardDescription className="mt-2 text-base leading-relaxed">
+                      {t.description}
+                    </CardDescription>
                   </div>
                 </div>
-                <h3 className="font-display text-base font-bold text-brand-charcoal mb-2">
-                  {type.title}
-                </h3>
-                <p className="text-xs text-brand-muted leading-relaxed">
-                  {type.description}
-                </p>
-              </div>
+              </CardHeader>
+            </Card>
+          </motion.div>
 
-              {/* Visual structural accent */}
-              <div className="h-1 bg-brand-sand mt-6 rounded-full overflow-hidden">
-                <div 
-                  className="h-full bg-brand-amber"
-                  style={{ width: i === 0 ? '100%' : i === 1 ? '33%' : '5%' }}
-                />
-              </div>
-            </motion.div>
-          ))}
+          {/* Analogy Card */}
+          <motion.div
+            initial={{ opacity: 0, x: 20 }}
+            whileInView={{ opacity: 1, x: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.6, delay: 0.2 }}
+          >
+            <Card variant="elevated" hover className="h-full bg-gradient-to-br from-amber-50 to-orange-50 border-amber-200">
+              <CardHeader>
+                <div className="flex items-start gap-4">
+                  <div className="w-12 h-12 rounded-2xl bg-gradient-to-br from-amber-500 to-orange-500 flex items-center justify-center shadow-lg shadow-amber-500/20 flex-shrink-0">
+                    <Lightbulb className="w-6 h-6 text-white" />
+                  </div>
+                  <div>
+                    <CardTitle className="text-amber-900">
+                      {t.analogy.title}
+                    </CardTitle>
+                    <CardDescription className="mt-2 text-base leading-relaxed text-amber-800/90">
+                      {t.analogy.text}
+                    </CardDescription>
+                  </div>
+                </div>
+              </CardHeader>
+            </Card>
+          </motion.div>
         </div>
-      </section>
-    </div>
+
+        {/* Key Points Section */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.6, delay: 0.3 }}
+        >
+          <Card variant="glass" className="overflow-hidden">
+            <CardContent className="p-8">
+              <div className="flex items-center gap-3 mb-6">
+                <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-purple-500 to-pink-500 flex items-center justify-center shadow-lg shadow-purple-500/20">
+                  <Target className="w-5 h-5 text-white" />
+                </div>
+                <h3 className="text-xl font-bold text-slate-900">
+                  {lang === 'en' ? 'Key Takeaways' : lang === 'hi' ? 'मुख्य बातें' : 'ముఖ్య విషయాలు'}
+                </h3>
+              </div>
+              <div className="grid gap-4">
+                {t.keyPoints.map((point, idx) => (
+                  <motion.div
+                    key={idx}
+                    initial={{ opacity: 0, x: -20 }}
+                    whileInView={{ opacity: 1, x: 0 }}
+                    viewport={{ once: true }}
+                    transition={{ delay: 0.4 + idx * 0.1 }}
+                    className="flex items-start gap-3 p-4 rounded-2xl bg-gradient-to-r from-slate-50 to-slate-100 border border-slate-200 hover:border-slate-300 transition-all group"
+                  >
+                    <div className="flex-shrink-0 w-6 h-6 rounded-full bg-gradient-to-br from-emerald-500 to-teal-500 flex items-center justify-center mt-0.5">
+                      <CheckCircle className="w-4 h-4 text-white" />
+                    </div>
+                    <p className="text-slate-700 font-medium leading-relaxed flex-1">
+                      {point}
+                    </p>
+                    <ArrowRight className="w-5 h-5 text-slate-400 opacity-0 group-hover:opacity-100 transition-opacity flex-shrink-0" />
+                  </motion.div>
+                ))}
+              </div>
+            </CardContent>
+          </Card>
+        </motion.div>
+
+        {/* Bottom CTA */}
+        <motion.div
+          initial={{ opacity: 0 }}
+          whileInView={{ opacity: 1 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.6, delay: 0.7 }}
+          className="text-center pt-4"
+        >
+          <p className="text-slate-600 font-medium">
+            {lang === 'en' 
+              ? 'Ready to dive deeper into AI concepts?' 
+              : lang === 'hi'
+              ? 'AI अवधारणाओं में गहराई से जाने के लिए तैयार हैं?'
+              : 'AI భావనలలో లోతుగా వెళ్లడానికి సిద్ధంగా ఉన్నారా?'
+            }
+          </p>
+        </motion.div>
+
+      </div>
+    </section>
   );
 }

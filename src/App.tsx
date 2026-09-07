@@ -322,7 +322,7 @@ export default function App() {
   return (
     <div 
       dir={lang === 'ur' ? 'rtl' : 'ltr'} 
-      className="min-h-screen bg-brand-cream text-brand-charcoal selection:bg-brand-amber/10 selection:text-brand-amber font-sans antialiased overflow-x-hidden"
+      className="min-h-screen bg-white text-brand-charcoal selection:bg-brand-amber/10 selection:text-brand-amber font-sans antialiased overflow-x-hidden"
     >
       {/* Accessible Skip to Main Content Link */}
       <a 
@@ -332,8 +332,7 @@ export default function App() {
         Skip to main content
       </a>
 
-      {/* Persistent Scroll Progress Indicator at the Top of Screen */}
-      <ScrollProgressIndicator />
+      {/* Removed Scroll Progress Indicator for cleaner professional design */}
 
       {/* Fullscreen Focus Lockdown & Anti-Distraction Manager */}
       <FocusLockdownManager
