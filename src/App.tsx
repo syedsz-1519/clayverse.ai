@@ -34,6 +34,8 @@ import OfflineStatusBanner from './components/OfflineStatusBanner';
 import OfflineManagerModal from './components/OfflineManagerModal';
 import FocusLockdownManager from './components/FocusLockdownManager';
 import TTSReaderModal from './components/TTSReaderModal';
+import MindMapLearning from './components/MindMapLearning';
+import InteractiveVisualization from './components/InteractiveVisualization';
 import { LESSON_MODULES } from './components/HomeCurriculumGrid';
 import { useGlobalKeyboardShortcuts } from './hooks/useGlobalKeyboardShortcuts';
 import { useTheme, type Theme } from './hooks/useTheme';
@@ -565,6 +567,22 @@ export default function App() {
                 <WhatIsAI />
                 <QuickTakeaway sectionId="what-is-ai" />
                 <CheckYourKnowledge sectionId="basics" />
+              </motion.div>
+
+              {/* Interactive Mind Map Learning */}
+              <motion.div initial="hidden" whileInView="visible" viewport={{ once: true, margin: "-100px" }} variants={sectionAnimation}>
+                <MindMapLearning initialFocusId="what-is-ai" />
+              </motion.div>
+
+              {/* Interactive Visualization for Pattern Matching */}
+              <motion.div initial="hidden" whileInView="visible" viewport={{ once: true, margin: "-100px" }} variants={sectionAnimation}>
+                <div className="max-w-5xl mx-auto px-6">
+                  <InteractiveVisualization
+                    title={lang === 'en' ? 'Pattern Matching Explained' : 'पैटर्न मिलान समझाया गया'}
+                    description={lang === 'en' ? 'Watch how AI learns to recognize patterns in data through interactive visualization' : 'देखें कि AI इंटरैक्टिव विज़ुअलाइज़ेशन के माध्यम से डेटा में पैटर्न कैसे सीखता है'}
+                    type="pattern-matching"
+                  />
+                </div>
               </motion.div>
 
               {/* Interactive Host: Clay, the AI Explainer Bot */}
