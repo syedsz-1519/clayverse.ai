@@ -28,7 +28,7 @@ interface ClayVoiceAssistantProps {
   showButton?: boolean;
 }
 
-export default function ClayVoiceAssistant({
+function ClayVoiceAssistant({
   text,
   label,
   size = 'md',
