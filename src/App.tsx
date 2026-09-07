@@ -1,6 +1,11 @@
 import { useState, useEffect } from 'react';
 import FloatingNav from './components/FloatingNav';
 // Removed ScrollProgressIndicator for cleaner design
+
+// Firebase initialization disabled until environment variables are configured
+// Uncomment after setting up .env with Firebase credentials
+// import { isFirebaseReady } from './lib/firebaseConfig';
+
 import Hero from './components/Hero';
 import WhatIsAI from './components/WhatIsAI';
 import ClayExplainer from './components/ClayExplainer';

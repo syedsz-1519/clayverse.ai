@@ -8,6 +8,9 @@
  * - Session persistence
  * - Profile management
  * - Logout & account deletion
+ * 
+ * NOTE: This hook is optional. If Firebase is not configured,
+ * the app will work with local authentication only.
  */
 
 import { useState, useEffect, useCallback, useRef } from 'react';
@@ -15,6 +18,7 @@ import {
   auth,
   firestore,
   logClayverseEvent,
+  isFirebaseReady,
 } from '../lib/firebaseConfig';
 import {
   createUserWithEmailAndPassword,
@@ -82,7 +86,13 @@ export function useFirebaseAuth() {
    */
   const fetchUserProfile = useCallback(
     async (uid: string): Promise<UserProfile | null> => {
+      if (!isFirebaseReady() || !firestore) {
+        console.warn('Firebase not configured - cannot fetch user profile');
+        return null;
+      }
+
       try {
+        const { doc, getDoc } = await import('firebase/firestore');
         const userDocRef = doc(firestore, 'users', uid);
         const userDocSnap = await getDoc(userDocRef);
 
@@ -380,10 +390,15 @@ export function useFirebaseAuth() {
     }
   }, []);
 
-  /**
-   * Monitor auth state changes
-   */
+/**
+ * Monitor auth state changes
+ */
   useEffect(() => {
+    if (!isFirebaseReady() || !auth) {
+      console.warn('Firebase not ready - skipping auth state monitoring');
+      return;
+    }
+
     setAuthState((prev) => ({ ...prev, isLoading: true }));
 
     const unsubscribe = onAuthStateChanged(auth, async (user) => {
