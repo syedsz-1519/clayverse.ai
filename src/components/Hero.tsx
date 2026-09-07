@@ -1,10 +1,14 @@
 import React from 'react';
 import { motion, useMotionValue, useSpring, useTransform } from 'motion/react';
-import { ArrowDown } from 'lucide-react';
-import ClayLogo from './ClayLogo';
+import { ArrowDown, ArrowRight, BookOpen, Volume2, Sparkles } from 'lucide-react';
 import { useLanguage } from '../hooks/useLanguage';
 
-export default function Hero() {
+interface HeroProps {
+  onStartFirstLesson?: () => void;
+  onExploreCurriculum?: () => void;
+}
+
+export default function Hero({ onStartFirstLesson, onExploreCurriculum }: HeroProps) {
   const { t, lang } = useLanguage();
 
   // Mouse parallax motion values for subtle ambient glow
@@ -50,19 +54,6 @@ export default function Hero() {
 
       {/* Main Hero Content */}
       <div className="max-w-4xl mx-auto text-center z-10 flex flex-col items-center relative">
-        
-        {/* Crisp Pill Badge */}
-        <motion.div
-          initial={{ opacity: 0, y: -12 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5 }}
-          className="inline-flex items-center gap-2 px-4 py-1.5 bg-white/95 dark:bg-zinc-900/95 backdrop-blur-md border border-brand-amber/35 rounded-full text-xs font-bold text-brand-amber shadow-xs mb-5 hover:border-brand-amber/60 transition-all hover:scale-[1.02]"
-        >
-          <ClayLogo size={20} />
-          <span className="tracking-tight">{t('hero.badge')}</span>
-          <span className="w-1.5 h-1.5 rounded-full bg-brand-amber animate-pulse" />
-        </motion.div>
-
         {/* Master Hook Heading */}
         <motion.h1
           initial={{ opacity: 0, y: 16 }}
@@ -95,28 +86,64 @@ export default function Hero() {
           {t('hero.subtitle')}
         </motion.p>
 
-        {/* Subtle Scroll Indicator */}
-        <motion.button
-          onClick={() => {
-            const el = document.getElementById('curriculum') || document.getElementById('main-content');
-            if (el) el.scrollIntoView({ behavior: 'smooth' });
-          }}
+        {/* Action CTAs */}
+        <motion.div
+          initial={{ opacity: 0, y: 12 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6, delay: 0.35 }}
+          className="flex flex-wrap items-center justify-center gap-3.5 mb-6"
+        >
+          <button
+            onClick={() => {
+              if (onStartFirstLesson) {
+                onStartFirstLesson();
+              } else {
+                const el = document.getElementById('curriculum') || document.getElementById('main-content');
+                if (el) el.scrollIntoView({ behavior: 'smooth' });
+              }
+            }}
+            className="inline-flex items-center gap-2 px-6 py-3.5 rounded-2xl bg-[#A8481F] hover:bg-[#8C3A16] text-white text-sm font-bold shadow-md hover:shadow-lg transition-all cursor-pointer group hover:-translate-y-0.5"
+          >
+            <BookOpen className="w-4 h-4 text-white/90" />
+            <span>{lang === 'en' ? "Start Lesson 1: How Machines Learn" : "Sabaq 1 Shuru Karein"}</span>
+            <ArrowRight className="w-4 h-4 text-white/90 group-hover:translate-x-1 transition-transform" />
+          </button>
+
+          <button
+            onClick={() => {
+              if (onExploreCurriculum) {
+                onExploreCurriculum();
+              } else {
+                const el = document.getElementById('curriculum') || document.getElementById('main-content');
+                if (el) el.scrollIntoView({ behavior: 'smooth' });
+              }
+            }}
+            className="inline-flex items-center gap-2 px-5 py-3.5 rounded-2xl bg-white hover:bg-neutral-50 text-neutral-800 text-sm font-semibold border border-neutral-300 shadow-xs hover:border-neutral-400 transition-all cursor-pointer"
+          >
+            <span>{lang === 'en' ? "Browse All 9 Lessons" : "Tamam 9 Sabaq"}</span>
+          </button>
+        </motion.div>
+
+        {/* Feature Value Highlights */}
+        <motion.div
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
-          transition={{ delay: 0.4, duration: 0.5 }}
-          className="flex flex-col items-center gap-1.5 text-xs font-semibold text-brand-slate hover:text-brand-amber transition-colors group cursor-pointer mt-2"
+          transition={{ duration: 0.6, delay: 0.45 }}
+          className="flex flex-wrap items-center justify-center gap-3 text-xs text-neutral-500 font-medium"
         >
-          <span className="text-[11px] font-mono tracking-wider uppercase text-brand-muted group-hover:text-brand-amber">
-            {lang === 'en' ? "Explore Curriculum" : "Syllabus Dekhein"}
+          <span className="flex items-center gap-1.5 bg-white/90 border border-neutral-200/90 px-3 py-1.5 rounded-full shadow-2xs">
+            <span className="w-2 h-2 rounded-full bg-emerald-500" />
+            Zero Math Required
           </span>
-          <motion.div
-            animate={{ y: [0, 4, 0] }}
-            transition={{ repeat: Infinity, duration: 1.5, ease: 'easeInOut' }}
-            className="w-7 h-7 rounded-full bg-white dark:bg-zinc-800 border border-black/10 dark:border-white/15 flex items-center justify-center shadow-2xs group-hover:border-brand-amber/40 transition-all"
-          >
-            <ArrowDown className="w-3.5 h-3.5 text-brand-slate group-hover:text-brand-amber" />
-          </motion.div>
-        </motion.button>
+          <span className="flex items-center gap-1.5 bg-white/90 border border-neutral-200/90 px-3 py-1.5 rounded-full shadow-2xs">
+            <Volume2 className="w-3.5 h-3.5 text-[#A8481F]" />
+            Vernacular Audio Voice
+          </span>
+          <span className="flex items-center gap-1.5 bg-white/90 border border-neutral-200/90 px-3 py-1.5 rounded-full shadow-2xs">
+            <Sparkles className="w-3.5 h-3.5 text-amber-600" />
+            Hands-on Sandboxes
+          </span>
+        </motion.div>
       </div>
     </section>
   );

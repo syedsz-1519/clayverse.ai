@@ -362,7 +362,7 @@ export default function App() {
         )}
       </AnimatePresence>
 
-      {/* Offline Status & Reconnection Banner (Hidden in Focus Mode) */}
+      {/* Offline Status Banner (Shows only when connection drops) */}
       <AnimatePresence>
         {!isFocusMode && (
           <motion.div
@@ -370,10 +370,8 @@ export default function App() {
             animate={{ opacity: 1, height: 'auto' }}
             exit={{ opacity: 0, height: 0 }}
             transition={{ duration: 0.22 }}
-            className="pt-16"
           >
             <OfflineStatusBanner onOpenOfflineManager={() => setIsOfflineModalOpen(true)} />
-            <GuestModeBanner onOpenAuth={() => setIsAuthModalOpen(true)} />
           </motion.div>
         )}
       </AnimatePresence>
@@ -493,8 +491,8 @@ export default function App() {
 
       {currentView === 'guide' && (
         <div className="min-h-screen">
-          {/* Breadcrumb Navigation Bar for Guide View */}
-          {!isFocusMode && (
+          {/* Breadcrumb Navigation Bar for Continuous Guide Mode */}
+          {!isFocusMode && isContinuousGuide && (
             <GuideBreadcrumbNav
               currentLessonId={currentLessonId}
               isContinuousGuide={isContinuousGuide}
@@ -636,7 +634,16 @@ export default function App() {
             <main id="main-content" className="relative z-10 flex flex-col gap-10">
               {/* 1. Hero: Ethos, Title, Subtitle and Explore indicator */}
               <motion.div initial="hidden" whileInView="visible" viewport={{ once: true, margin: "-100px" }} variants={sectionAnimation}>
-                <Hero />
+                <Hero 
+                  onStartFirstLesson={() => {
+                    setCurrentLessonId('what-is-ai');
+                    window.scrollTo({ top: 0, behavior: 'smooth' });
+                  }}
+                  onExploreCurriculum={() => {
+                    const el = document.getElementById('curriculum');
+                    if (el) el.scrollIntoView({ behavior: 'smooth' });
+                  }}
+                />
               </motion.div>
 
               {/* 2. Trust Signals: Zero-math, 25+ Languages, Key Verified Pedagogy */}
