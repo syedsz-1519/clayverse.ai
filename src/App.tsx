@@ -36,6 +36,7 @@ import FocusLockdownManager from './components/FocusLockdownManager';
 import TTSReaderModal from './components/TTSReaderModal';
 import MindMapLearning from './components/MindMapLearning';
 import InteractiveVisualization from './components/InteractiveVisualization';
+import ClaybotIntroduction from './components/ClaybotIntroduction';
 import { LESSON_MODULES } from './components/HomeCurriculumGrid';
 import { useGlobalKeyboardShortcuts } from './hooks/useGlobalKeyboardShortcuts';
 import { useTheme, type Theme } from './hooks/useTheme';
@@ -588,6 +589,11 @@ export default function App() {
               {/* Interactive Host: Clay, the AI Explainer Bot */}
               <motion.div initial="hidden" whileInView="visible" viewport={{ once: true, margin: "-100px" }} variants={sectionAnimation}>
                 <ClayExplainer />
+              </motion.div>
+
+              {/* Talking Claybot Introduction */}
+              <motion.div initial="hidden" whileInView="visible" viewport={{ once: true, margin: "-100px" }} variants={sectionAnimation}>
+                <ClaybotIntroduction autoPlay={false} />
               </motion.div>
 
               {/* Educational Value Proposition Comparison */}
