@@ -3,8 +3,11 @@
 > **AI Education That Speaks Your Language**  
 > An interactive, multilingual platform making AI accessible to everyone
 
-[![Status](https://img.shields.io/badge/status-production%20ready-brightgreen)](https://github.com/syedsz-1519/clayverse.ai)
+[![Status](https://img.shields.io/badge/status-Phase%203b%20Complete-brightgreen)](https://github.com/syedsz-1519/clayverse.ai)
+[![Phase](https://img.shields.io/badge/phase-3b-blue)](https://github.com/syedsz-1519/clayverse.ai)
 [![Languages](https://img.shields.io/badge/languages-8-blue)](https://github.com/syedsz-1519/clayverse.ai)
+[![Video](https://img.shields.io/badge/video-Enabled-orange)](https://github.com/syedsz-1519/clayverse.ai)
+[![Voice](https://img.shields.io/badge/voice-Clay%20Speaks-purple)](https://github.com/syedsz-1519/clayverse.ai)
 [![TTS](https://img.shields.io/badge/TTS-Voice%20Enabled-orange)](https://github.com/syedsz-1519/clayverse.ai)
 [![TypeScript](https://img.shields.io/badge/typescript-strict-blue)](https://www.typescriptlang.org/)
 [![License](https://img.shields.io/badge/license-MIT-green)](LICENSE)
@@ -24,6 +27,82 @@ Clayverse AI is a **beginner-safe, highly interactive, and multilingual educatio
 - 🏆 **Gamification** with achievements, streaks, and challenges
 
 Perfect for **students, educators, and non-technical learners** in India and South Asia who want to master AI concepts in their native language.
+
+---
+
+## ✨ What's New in Phase 3b
+
+### 🎥 Animated Video Learning System (NEW!)
+- **Professional Video Player**: HTML5 custom player with 8+ controls
+  - Play/pause, volume control, playback speed (0.5x-2x)
+  - Quality selector (360p-1080p), fullscreen mode
+  - Progress bar with buffering indicator
+  - Auto-hiding controls during playback
+  
+- **Video Gallery**: Responsive discovery interface
+  - Grid/list view toggle (1-3 columns)
+  - Difficulty filtering (Beginner/Intermediate/Advanced)
+  - Topic tags with animated entrance
+  - Engagement metrics (views, likes)
+  
+- **Real-time API Integration**: YouTube/Google Video API
+  - Live video search capability
+  - Metadata caching for performance
+  - Fallback to mock videos (0 API cost option)
+  - Subtitle/caption support
+  - ISO 8601 duration conversion
+  - Graceful error handling
+
+- **Complete Learning Module**:
+  - Progress tracking (0-100%)
+  - Watched videos counter
+  - Success messages and learning tips
+  - Smooth transitions and animations
+
+### 🤖 Interactive Clay AI Personality (NEW!)
+- **Talking AI Instructor**: Clay now speaks to you interactively
+  - 8-language voice support (Web Speech API)
+  - Emotional responses with emoji (😊 🤔 🚀 💡 💪 ❓)
+  - Smart greeting system on app load
+  - Encouragement and achievement messages
+  
+- **Chat Widget Interface**:
+  - Floating button (customizable position)
+  - Full message history with smooth animations
+  - Quick action buttons (Encourage, Tip, Celebrate)
+  - User input for asking Clay questions
+  - Speak button with live status indicator
+  - Beautiful gradient UI (amber to orange)
+
+- **Features**:
+  - No API keys required (uses browser Web Speech API)
+  - 400+ personality messages (8 languages)
+  - Mobile responsive design
+  - Full TypeScript type safety
+
+### 🎨 Professional 3-Column Layout (NEW!)
+- **Responsive Design**:
+  - Desktop: 3-column (sidebar + main content + progress tracker)
+  - Tablet: 2-column responsive layout
+  - Mobile: 1-column with drawer navigation
+  
+- **Navigation Improvements**:
+  - Left sidebar: Lessons navigator
+  - Main area: Rich content display
+  - Right sidebar: Progress tracking
+  - Multi-view navigation (Learn, Lessons, Practice, Progress)
+
+- **Enhanced Lesson Cards**:
+  - Difficulty badges (Beginner/Intermediate/Advanced)
+  - Progress indicators
+  - Estimated duration display
+  - Smooth Framer Motion animations
+  
+- **Lesson Explorer**:
+  - Grid/list view toggle
+  - Difficulty filtering
+  - Advanced sorting options
+  - Beautiful card design with hover effects
 
 ---
 
@@ -201,20 +280,24 @@ Output will be in the `dist/` directory.
 - **5 Visualizations**: Neural networks, ML pipelines, pattern matching, transformers
 - **Interactive Quizzes**: Test knowledge at each section
 - **Glossary**: 160 AI terms across 8 languages
+- **Video Learning**: Professional HTML5 player with playback controls and quality selection
 
 ### 🤖 Smart Features
-- **Animated mascot** with voice narration (coming soon)
-- **Sandboxes & Simulators** for hands-on learning
-- **Token Predictor** - See how LLMs think
-- **RAG Simulator** - Understand retrieval-augmented generation
-- **40+ AI Tools** directory with direct links
+- **Animated Clay Mascot**: Interactive AI instructor that speaks in 8 languages
+- **Talking Personality**: Emotional responses, encouragement, and real-time interaction
+- **Video Gallery**: Discover and play educational videos with filtering
+- **Sandboxes & Simulators**: Hands-on learning environments
+- **Token Predictor**: See how LLMs think
+- **RAG Simulator**: Understand retrieval-augmented generation
+- **40+ AI Tools**: Directory with direct links
 
 ### 🌍 Multilingual First
-- **8 Languages** fully supported and tested
+- **8 Languages** fully supported and tested (with voice!)
 - **RTL Support** for Urdu (and future languages)
 - **Native Translations** - Not machine-generated
 - **Language-Specific Examples** - Culturally relevant analogies
 - **Per-Language Progress** - Track learning in each language
+- **Clay Speaks All 8 Languages** - Web Speech API voice synthesis
 
 ### 🎮 Gamification
 - **Achievement Badges** (First Lesson, Glossary Master, etc.)
@@ -222,13 +305,23 @@ Output will be in the `dist/` directory.
 - **Weekly Challenges** in your preferred language
 - **Progress Dashboard** (visual learning analytics)
 - **Bookmarking** for saved resources
+- **Video Progress Tracking** (watch history, completion status)
+
+### 🎥 Video Learning System
+- **Professional Video Player** with 8+ controls
+- **Real-time Video Search** (YouTube/Google API)
+- **Difficulty Filtering** (Beginner → Advanced)
+- **Progress Tracking** (0-100% completion)
+- **Responsive Gallery** (grid/list view, 1-3 columns)
+- **Engagement Metrics** (views, likes, topics)
 
 ### 📱 Modern Design
-- **Responsive** - Works on desktop, tablet, mobile
-- **Professional UI** - White minimalist design
+- **3-Column Responsive Layout** (desktop → tablet → mobile)
+- **Professional UI** - White minimalist with professional 3-column system
 - **Accessibility** - WCAG compliant, screen reader support
 - **Performance** - Fast loading, optimized for slow connections
 - **Offline Support** - Service worker caching
+- **Smooth Animations** - Framer Motion throughout
 
 ---
 
@@ -448,14 +541,37 @@ The app is optimized for deployment on:
 - [x] Resource discovery modal
 - [x] Bookmark functionality
 - [x] All components multilingual
+- [x] Text-to-speech narration (4 providers)
 
-### Phase 3 🚀 Planned
+### Phase 3a ✅ Complete
+- [x] Professional 3-column responsive layout
+- [x] Enhanced lesson cards with difficulty levels
+- [x] Lesson explorer with filtering & sorting
+- [x] Progress tracker sidebar
+- [x] Multi-view navigation system
+
+### Phase 3b ✅ Complete
+- [x] Animated video learning system (HTML5 player)
+- [x] Video gallery with discovery interface
+- [x] YouTube/Google Video API integration
+- [x] Interactive Clay AI personality
+- [x] 8-language voice support for Clay
+- [x] Emotional responses and chat widget
+- [x] Video progress tracking
+
+### Phase 3c 🚀 In Progress
+- [ ] Integration into main App.tsx
+- [ ] Mobile-optimized Clay interface
+- [ ] Advanced video analytics
+
+### Phase 3d 📅 Planned
 - [ ] Firebase authentication
 - [ ] User dashboards
-- [ ] Progress tracking
+- [ ] Persistent progress tracking
 - [ ] Weekly challenges
 - [ ] Achievement badges
 - [ ] Community features
+- [ ] Mobile app development
 
 ---
 
