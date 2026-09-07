@@ -3,13 +3,13 @@ import { motion, AnimatePresence, useScroll, useTransform, useSpring } from 'mot
 import { Network, HelpCircle, Layers, Fingerprint, Cpu, Sparkles, Activity, Zap } from 'lucide-react';
 import { MLType } from '../types';
 import TechTooltip from './TechTooltip';
-import { useLanguage } from '../hooks/useLanguage';
+import { useLanguageMultilingual } from '../hooks/useLanguageMultilingual';
 import ReadSectionButton from './ReadSectionButton';
 import CopyCodeButton from './CopyCodeButton';
 import CodeSnippetBlock from './CodeSnippetBlock';
 
 export default function AIFamilyTree() {
-  const { lang, t } = useLanguage();
+  const { lang, t } = useLanguageMultilingual();
   const [activeNestingLevel, setActiveNestingLevel] = useState<number>(0);
   const [isFlipped, setIsFlipped] = useState<boolean>(false);
   const [flippedMLCards, setFlippedMLCards] = useState<Record<number, boolean>>({});

@@ -48,6 +48,62 @@
     "point2": "Yeh aese namoone talash karta hai jo insaan chhod sakte hain",
     "point3": "Sifarishen, Aavaaz Ke Yaar Aur Nakshon Mein Rozmarrah Istemal"
   },
+  "familyTree": {
+    "badge": "Sabaq 02",
+    "title": "AI Khaandaan Darakht",
+    "subtitle": "Mausnoee Zehani sirf ek hi technology nahi hai. Yeh ek nested hierarchy hai tasawwuron ki. Rings par hover karein ya neeche diye gaye cards par click karein taki dekha ja sake ke ye ek dusre mein kaise fit hote hain.",
+    "hint": "Nested system mein iska position highlight karne ke liye card par click karein",
+    "levels": {
+      "ai": {
+        "title": "Mausnoee Zehani (AI)",
+        "description": "Sabse wasi chhatra. Koi bhi technology jo machines ko human-jaise taark, milan, ya paheliyan solve karne ki nakal karne deti hai."
+      },
+      "ml": {
+        "title": "Masheen Sikhna (ML)",
+        "description": "AI ka ek subset jahan computer systems tareekhi misaalon se seedha niyam seekhte hain, hath se likhe gaye code niyamon ko daghal karke."
+      },
+      "dl": {
+        "title": "Gahra Sikhna (DL)",
+        "description": "ML ki gahra tah jo stacked artificial 'neural networks' istemal karke human aavaaz ya chehra jaise complex sanrchnaon mein khud-ba-khud maharat hasil karte hain."
+      },
+      "genai": {
+        "title": "Janreyto AI (GenAI)",
+        "description": "Sabse naya andar-core. AI systems jo bade content maps par training hasil karte hain bilkul nayi tasweerein, likna, ya audio tracks banate hain."
+      }
+    },
+    "mlTypes": {
+      "supervised": {
+        "title": "Nigrani Shuda Sikhna",
+        "analogy": "Guide ke sath sikhna",
+        "description": "Aap machine ko labeled pictures dete hain (jaise 'kutta' ya 'billi') jab tak woh seekh jata hai ke kaun se visual clues kaun se label se match karte hain."
+      },
+      "unsupervised": {
+        "title": "Begunah Nigrani Sikhna",
+        "analogy": "Jangli dher ko sort karna",
+        "description": "Machine unlabeled data ko khud se groups mein divide karta hai, chhupi hui structures ya similarities talash karta hai jo aap miss kar sakte hain."
+      },
+      "reinforcement": {
+        "title": "Mazboot Sikhna",
+        "analogy": "Koshish, galti, aur inaam",
+        "description": "Machine trial-and-error loop mein kaam karta hai, sahi qadam ke liye points kamate hain (kute ko treat deke sikhane jaise)."
+      }
+    },
+    "deeperDetails": {
+      "aiConcepts": "Qaidah-based expert systems, static decision trees, aur custom pattern matchers. AI ko hamesha khud se seekhne ki zaroorat nahi; woh hath se likhe gaye, smart logical pathways follow kar sakta hai.",
+      "aiExamples": "Chess computers (IBM Deep Blue), automated route planning, logic solver programs.",
+      "aiTip": "Basic AI ko ek bada, pehle se likha hua map samjhiye. Computer map par roads talash karne mein bohot tez hai, lekin khud ek nayi road nahi bana sakta.",
+      "mlConcepts": "Feature vectors, weights, linear regression, aur classifiers. ML systems ko zyada training files parse karte waqt algorithms ko dynamically optimize karne deta hai.",
+      "mlExamples": "Email spam detection, credit scoring, product recommendation engines.",
+      "mlTip": "ML ek kute ko acche behavior ke liye treats dene jaise hai. Algorithm ko sahi predictions ke liye 'points' milte hain jab tak woh skill mein mahir na ho jaye.",
+      "dlConcepts": "Artificial Neural Networks (ANNs) deep hidden layers ke sath. Activations forward propagate hote hain, errors wapas bheje jate hain neural weights adjust karne ke liye.",
+      "dlExamples": "Face recognition (Apple FaceID), real-time speech translation, autonomous vehicle vision.",
+      "dlTip": "Deep Learning virtual filters ki ek hierarchy istemal karta hai. Pehli layers basic lines aur edges pakdte hain, middle layers unhe shapes mein group karte hain, aur final layers poora object dekhte hain.",
+      "genaiConcepts": "Generative models, Large Language Models (LLMs), attention mechanisms, aur Transformers. Woh world content ko totally naye combinations synthesize karne ke liye map karte hain.",
+      "genaiExamples": "Gemini, ChatGPT, Midjourney, DALL-E, GitHub Copilot.",
+      "genaiTip": "GenAI sirf copy-paste nahi karta! Woh human creation ke deep grammatical ya visual 'recipes' seekhta hai taki woh aapke instructions se bilkul nayi outputs bake kar sake."
+    },
+    "quickTakeaway": "AI ek technology nahi balke nested hierarchy hai: AI (sabse wasi) mein ML hai, jisme DL hai, jo GenAI ko shakti deta hai. Har layer apne se pehle wale par banaya hua aur specialized hai."
+  },
   "common": {
     "save": "Bacha Do",
     "cancel": "Mansookh Karein",

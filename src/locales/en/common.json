@@ -298,5 +298,61 @@
     "noResults": "No matching keyboard shortcuts found.",
     "footerTip": "Press ? anywhere to open this menu",
     "gotIt": "Got it"
+  },
+  "familyTree": {
+    "badge": "Lesson 02",
+    "title": "The AI Family Tree",
+    "subtitle": "Artificial Intelligence isn't just one single technology. It's a nested hierarchy of concepts. Hover over the rings or click the cards below to see how they fit inside each other.",
+    "hint": "Click a card to highlight its position in the nested system",
+    "levels": {
+      "ai": {
+        "title": "Artificial Intelligence (AI)",
+        "description": "The broadest umbrella. Any technology that lets machines simulate human-like reasoning, matching, or puzzle-solving."
+      },
+      "ml": {
+        "title": "Machine Learning (ML)",
+        "description": "A subset of AI where computer systems learn rules directly from historical examples, bypassing hand-written code rules."
+      },
+      "dl": {
+        "title": "Deep Learning (DL)",
+        "description": "A deeper layer of ML using stacked artificial \"neural networks\" to automatically master complex structures like human voices or faces."
+      },
+      "genai": {
+        "title": "Generative AI (GenAI)",
+        "description": "The newest inner-core. AI systems trained on massive content maps to create entirely fresh images, writings, or audio tracks."
+      }
+    },
+    "mlTypes": {
+      "supervised": {
+        "title": "Supervised Learning",
+        "analogy": "Learning with a guide",
+        "description": "You feed the machine labeled pictures (like \"dog\" or \"cat\") until it learns which visual clues match which label."
+      },
+      "unsupervised": {
+        "title": "Unsupervised Learning",
+        "analogy": "Sorting a wild pile",
+        "description": "The machine groups unlabeled data by itself, spotting hidden structures or similarities you might have missed."
+      },
+      "reinforcement": {
+        "title": "Reinforcement Learning",
+        "analogy": "Trial, error, and treats",
+        "description": "The machine operates in a trial-and-error loop, earning points for correct moves (like teaching a dog with treats)."
+      }
+    },
+    "deeperDetails": {
+      "aiConcepts": "Rule-based expert systems, static decision trees, and custom pattern matchers. AI doesn't always have to learn on its own; it can follow hand-written, smart logical pathways.",
+      "aiExamples": "Chess computers (IBM Deep Blue), automated route planning, logic solver programs.",
+      "aiTip": "Think of basic AI as a massive, pre-drawn map. The computer is super fast at finding roads on the map, but it cannot draw a single new road by itself.",
+      "mlConcepts": "Feature vectors, weights, linear regression, and classifiers. ML allows systems to optimize algorithms dynamically as more training files are parsed.",
+      "mlExamples": "Email spam detection, credit scoring, product recommendation engines.",
+      "mlTip": "ML is like training a dog by giving it treats for good behavior. The algorithm gets 'points' for correct predictions until it masters the skill.",
+      "dlConcepts": "Artificial Neural Networks (ANNs) with deep hidden layers. Activations propagate forward, errors are sent back to adjust neural weights automatically.",
+      "dlExamples": "Face recognition (Apple FaceID), real-time speech translation, autonomous vehicle vision.",
+      "dlTip": "Deep Learning uses a hierarchy of virtual filters. Early layers spot basic lines and edges, middle layers group them into shapes, and final layers see full objects.",
+      "genaiConcepts": "Generative models, Large Language Models (LLMs), attention mechanisms, and Transformers. They map world content to synthesize entirely new combinations.",
+      "genaiExamples": "Gemini, ChatGPT, Midjourney, DALL-E, GitHub Copilot.",
+      "genaiTip": "GenAI does not just copy-paste! It learns the deep grammatical or visual 'recipes' of human creation so it can bake entirely fresh outputs from your instructions."
+    },
+    "quickTakeaway": "AI is not one technology but a nested hierarchy: AI (broadest) contains ML, which contains DL, which powers GenAI. Each layer builds on and specializes the one before it."
   }
 }
