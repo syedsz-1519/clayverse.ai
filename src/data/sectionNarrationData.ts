@@ -246,6 +246,12 @@ export const SECTION_NARRATION_ITEMS: SectionNarrationItem[] = [
 ];
 
 export function getNarrationForSection(sectionId: string): SectionNarrationItem {
-  const found = SECTION_NARRATION_ITEMS.find(s => s.id === sectionId || s.targetElementId === sectionId);
+  const normalizedId = 
+    sectionId === 'tools' ? 'ai-tools-directory' :
+    sectionId === 'arena' ? 'ai-arena' :
+    sectionId;
+  const found = SECTION_NARRATION_ITEMS.find(s => 
+    s.id === normalizedId || s.targetElementId === normalizedId || s.id === sectionId || s.targetElementId === sectionId
+  );
   return found || SECTION_NARRATION_ITEMS[0];
 }

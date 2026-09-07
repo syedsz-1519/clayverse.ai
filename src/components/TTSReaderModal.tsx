@@ -88,7 +88,7 @@ export default function TTSReaderModal({
 
   // Sync initialText if passed from external source (e.g. lesson reader)
   useEffect(() => {
-    if (initialText && initialText.trim().length > 0) {
+    if (isOpen && initialText && initialText.trim().length > 0) {
       setDisplayText(initialText.trim());
       setCurrentWordIndex(0);
       setStatus('idle');
@@ -97,7 +97,7 @@ export default function TTSReaderModal({
         window.speechSynthesis.cancel();
       }
     }
-  }, [initialText]);
+  }, [initialText, isOpen]);
 
   // Load and cache browser TTS voices
   useEffect(() => {
@@ -396,9 +396,16 @@ export default function TTSReaderModal({
           <h1 className="font-instrument text-3xl sm:text-4xl text-[#2c2416] font-normal leading-tight">
             Listen to <em className="italic text-[#c05c1a]">anything</em>.
           </h1>
-          <p className="text-xs sm:text-sm text-[#8a7d68] mt-1">
-            Paste your notes, articles, or research — press play.
-          </p>
+          {initialTitle && initialTitle !== "Listen to anything" ? (
+            <div className="mt-2 inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-[#c05c1a]/10 border border-[#c05c1a]/25 text-[#c05c1a] text-xs font-plex-mono font-bold">
+              <Volume2 className="w-3.5 h-3.5 shrink-0" />
+              <span className="truncate max-w-[320px] sm:max-w-md">{initialTitle}</span>
+            </div>
+          ) : (
+            <p className="text-xs sm:text-sm text-[#8a7d68] mt-1">
+              Paste your notes, articles, or research — press play.
+            </p>
+          )}
 
           {/* Quick Preset Selector */}
           <div className="mt-3 flex items-center justify-center gap-1.5 flex-wrap">

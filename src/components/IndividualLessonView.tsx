@@ -25,12 +25,14 @@ import {
   Trophy,
   PartyPopper,
   Focus,
-  Minimize2
+  Minimize2,
+  Volume2
 } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
 import { useLanguage } from '../hooks/useLanguage';
 import { LESSON_MODULES, type LessonModule } from './HomeCurriculumGrid';
 import { streakManager } from '../lib/streakManager';
+import { getLessonTTSContent } from '../lib/lessonContentHelper';
 import TakeawaysNotesExportModal from './TakeawaysNotesExportModal';
 import LessonCompletionCelebration from './LessonCompletionCelebration';
 
@@ -119,6 +121,7 @@ interface IndividualLessonViewProps {
   onSelectLesson: (id: string) => void;
   isFocusMode?: boolean;
   onToggleFocusMode?: () => void;
+  onOpenTTSReader?: (text?: string, title?: string) => void;
 }
 
 export default function IndividualLessonView({
@@ -126,7 +129,8 @@ export default function IndividualLessonView({
   onBackToHome,
   onSelectLesson,
   isFocusMode = false,
-  onToggleFocusMode
+  onToggleFocusMode,
+  onOpenTTSReader
 }: IndividualLessonViewProps) {
   const { lang } = useLanguage();
 
@@ -227,6 +231,19 @@ export default function IndividualLessonView({
       onToggleFocusMode();
     } else {
       window.dispatchEvent(new CustomEvent('clay_toggle_focus_mode'));
+    }
+  };
+
+  const handleOpenAudioReader = () => {
+    const { title, text } = getLessonTTSContent(lessonId, lang);
+    if (onOpenTTSReader) {
+      onOpenTTSReader(text, title);
+    } else {
+      window.dispatchEvent(
+        new CustomEvent('clay_open_tts_reader', {
+          detail: { text, title }
+        })
+      );
     }
   };
 
@@ -353,8 +370,18 @@ export default function IndividualLessonView({
               </AnimatePresence>
             </div>
 
-            {/* Quick Focus Mode & Next/Prev Subtopic Buttons */}
+            {/* Quick Focus Mode, Audio & Next/Prev Subtopic Buttons */}
             <div className="flex items-center gap-1 border-s border-brand-slate/15 ps-2">
+              <button
+                onClick={handleOpenAudioReader}
+                className="p-1.5 rounded-lg text-xs font-bold transition-all cursor-pointer flex items-center gap-1 text-brand-slate hover:text-brand-charcoal hover:bg-brand-sand dark:text-zinc-300 dark:hover:text-white dark:hover:bg-zinc-800 border border-transparent hover:border-brand-slate/15"
+                title={lang === 'en' ? "Listen to Lesson with TTS Reader" : "Sabaq ko TTS Reader se Sunein"}
+                aria-label="Listen to Lesson Audio"
+              >
+                <Volume2 className="w-3.5 h-3.5 text-brand-amber" />
+                <span className="text-[11px] font-mono font-bold">{lang === 'en' ? 'Audio' : 'Audio'}</span>
+              </button>
+
               <button
                 onClick={handleFocusModeClick}
                 className={`p-1.5 rounded-lg text-xs font-bold transition-all cursor-pointer flex items-center gap-1 ${
@@ -426,13 +453,24 @@ export default function IndividualLessonView({
                   </span>
                 </div>
 
-                <button
-                  onClick={onBackToHome}
-                  className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-white hover:bg-brand-sand border border-brand-slate/20 text-brand-charcoal text-xs font-bold shadow-2xs hover:shadow-sm transition-all cursor-pointer"
-                >
-                  <ArrowLeft className="w-3.5 h-3.5" />
-                  <span>{lang === 'en' ? "Back to All Lessons" : "Saare Sabaq Dekhein"}</span>
-                </button>
+                <div className="flex items-center gap-2">
+                  <button
+                    onClick={handleOpenAudioReader}
+                    className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-brand-amber/15 hover:bg-brand-amber/25 border border-brand-amber/35 text-brand-charcoal dark:text-amber-200 text-xs font-bold shadow-2xs hover:shadow-xs transition-all cursor-pointer group"
+                    title={lang === 'en' ? "Listen to this lesson using TTS Reader" : "Is sabaq ko TTS Reader se sunein"}
+                  >
+                    <Volume2 className="w-3.5 h-3.5 text-brand-amber group-hover:scale-110 transition-transform" />
+                    <span>{lang === 'en' ? "Audio" : "Audio"}</span>
+                  </button>
+
+                  <button
+                    onClick={onBackToHome}
+                    className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-white hover:bg-brand-sand border border-brand-slate/20 text-brand-charcoal text-xs font-bold shadow-2xs hover:shadow-sm transition-all cursor-pointer"
+                  >
+                    <ArrowLeft className="w-3.5 h-3.5" />
+                    <span>{lang === 'en' ? "Back to All Lessons" : "Saare Sabaq Dekhein"}</span>
+                  </button>
+                </div>
               </div>
 
               {/* Lesson Hero Banner */}
@@ -962,6 +1000,17 @@ export default function IndividualLessonView({
 
               {/* Fast Jump Card / Shortcuts */}
               <div className="pt-3 border-t border-brand-slate/10 flex flex-col gap-2">
+                <button
+                  onClick={handleOpenAudioReader}
+                  className="flex items-center justify-between p-2 rounded-xl bg-brand-amber/10 hover:bg-brand-amber/20 border border-brand-amber/25 text-xs font-bold text-brand-charcoal dark:text-amber-200 transition-colors cursor-pointer"
+                >
+                  <span className="flex items-center gap-1.5">
+                    <Volume2 className="w-3.5 h-3.5 text-brand-amber" />
+                    <span>{lang === 'en' ? "Listen in TTS Reader" : "TTS Reader me Sunein"}</span>
+                  </span>
+                  <span className="text-[10px] font-mono font-bold text-brand-amber uppercase">Audio</span>
+                </button>
+
                 <button
                   onClick={() => setIsExportModalOpen(true)}
                   className="flex items-center justify-between p-2 rounded-xl bg-brand-charcoal hover:bg-black text-xs font-bold text-white transition-colors cursor-pointer shadow-2xs"

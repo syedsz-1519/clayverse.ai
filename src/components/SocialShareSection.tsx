@@ -79,6 +79,61 @@ export default function SocialShareSection({ currentChapterTitle }: SocialShareS
     window.open(`https://t.me/share/url?url=${encodeURIComponent(shareUrl)}&text=${text}`, '_blank', 'noopener,noreferrer');
   };
 
+  const socialChannels = [
+    {
+      id: 'twitter',
+      title: t('socialShare.twitter'),
+      ariaLabel: 'Share on X / Twitter',
+      onClick: handleShareTwitter,
+      hoverBorder: 'hover:border-white/60 hover:bg-white/20',
+      textColor: 'text-white',
+      accentColor: 'rgba(255, 255, 255, 0.35)',
+      renderIcon: () => (
+        <span className="font-bold text-xs group-hover:scale-120 transition-transform duration-200 inline-block select-none">
+          𝕏
+        </span>
+      ),
+    },
+    {
+      id: 'linkedin',
+      title: t('socialShare.linkedin'),
+      ariaLabel: 'Share on LinkedIn',
+      onClick: handleShareLinkedIn,
+      hoverBorder: 'hover:border-blue-400/60 hover:bg-blue-500/20',
+      textColor: 'text-blue-300 group-hover:text-blue-200',
+      accentColor: 'rgba(96, 165, 250, 0.4)',
+      renderIcon: () => (
+        <span className="font-bold text-xs group-hover:scale-120 transition-transform duration-200 inline-block select-none">
+          in
+        </span>
+      ),
+    },
+    {
+      id: 'whatsapp',
+      title: t('socialShare.whatsapp'),
+      ariaLabel: 'Share on WhatsApp',
+      onClick: handleShareWhatsApp,
+      hoverBorder: 'hover:border-emerald-400/60 hover:bg-emerald-500/20',
+      textColor: 'text-emerald-400 group-hover:text-emerald-300',
+      accentColor: 'rgba(52, 211, 153, 0.4)',
+      renderIcon: () => (
+        <Send className="w-4 h-4 group-hover:scale-120 transition-transform duration-200" />
+      ),
+    },
+    {
+      id: 'telegram',
+      title: t('socialShare.telegram'),
+      ariaLabel: 'Share on Telegram',
+      onClick: handleShareTelegram,
+      hoverBorder: 'hover:border-sky-400/60 hover:bg-sky-500/20',
+      textColor: 'text-sky-400 group-hover:text-sky-300',
+      accentColor: 'rgba(56, 189, 248, 0.4)',
+      renderIcon: () => (
+        <ExternalLink className="w-4 h-4 group-hover:scale-120 transition-transform duration-200" />
+      ),
+    },
+  ];
+
   return (
     <section className="max-w-4xl mx-auto px-6 py-12">
       <motion.div 
@@ -130,9 +185,11 @@ export default function SocialShareSection({ currentChapterTitle }: SocialShareS
           {/* Right Action Buttons */}
           <div className="flex flex-col w-full md:w-auto shrink-0 gap-3">
             {/* 1-Click Copy Progress Link */}
-            <button
+            <motion.button
               onClick={handleCopyLink}
-              className="w-full md:w-56 flex items-center justify-center gap-2 px-5 py-3 bg-brand-amber hover:bg-amber-500 text-brand-charcoal rounded-2xl font-black text-xs sm:text-sm shadow-lg hover:shadow-xl active:scale-[0.98] transition-all cursor-pointer group"
+              whileHover={{ scale: 1.02, y: -1 }}
+              whileTap={{ scale: 0.98 }}
+              className="w-full md:w-56 flex items-center justify-center gap-2 px-5 py-3 bg-brand-amber hover:bg-amber-500 text-brand-charcoal rounded-2xl font-black text-xs sm:text-sm shadow-lg hover:shadow-xl transition-all cursor-pointer group"
             >
               {isCopied ? (
                 <>
@@ -145,45 +202,58 @@ export default function SocialShareSection({ currentChapterTitle }: SocialShareS
                   <span>{t('socialShare.copyShareLink')}</span>
                 </>
               )}
-            </button>
+            </motion.button>
 
-            {/* Social Channels Row */}
+            {/* Social Channels Row with Entry Soft Pulse & Hover Scaling */}
             <div className="grid grid-cols-4 gap-2">
-              <button
-                onClick={handleShareTwitter}
-                className="flex items-center justify-center p-3 rounded-xl bg-white/10 hover:bg-white/20 border border-white/15 hover:border-brand-amber/50 text-white transition-all cursor-pointer hover:scale-105 active:scale-95"
-                title={t('socialShare.twitter')}
-                aria-label="Share on X"
-              >
-                <span className="font-bold text-xs">𝕏</span>
-              </button>
+              {socialChannels.map((channel, idx) => (
+                <motion.button
+                  key={channel.id}
+                  onClick={channel.onClick}
+                  initial={{ opacity: 0, y: 12, scale: 0.88 }}
+                  whileInView={{ 
+                    opacity: 1, 
+                    y: 0, 
+                    scale: [0.88, 1.18, 0.95, 1.08, 1],
+                  }}
+                  viewport={{ once: true, amount: 0.3 }}
+                  transition={{
+                    duration: 0.9,
+                    delay: 0.25 + idx * 0.1,
+                    ease: [0.22, 1, 0.36, 1],
+                  }}
+                  whileHover={{ 
+                    scale: 1.15, 
+                    y: -3,
+                    transition: { type: 'spring', stiffness: 450, damping: 17 }
+                  }}
+                  whileTap={{ scale: 0.92 }}
+                  className={`group relative flex items-center justify-center p-3 rounded-xl bg-white/10 hover:bg-white/20 border border-white/15 ${channel.hoverBorder} ${channel.textColor} transition-colors cursor-pointer shadow-sm hover:shadow-lg`}
+                  title={channel.title}
+                  aria-label={channel.ariaLabel}
+                >
+                  {/* Soft pulse aura radiating when scrolled into view */}
+                  <motion.span
+                    initial={{ opacity: 0, scale: 0.8 }}
+                    whileInView={{
+                      opacity: [0, 0.55, 0],
+                      scale: [0.85, 1.35, 1.65],
+                    }}
+                    viewport={{ once: true, amount: 0.3 }}
+                    transition={{
+                      duration: 1.3,
+                      delay: 0.3 + idx * 0.1,
+                      ease: 'easeOut',
+                    }}
+                    style={{ backgroundColor: channel.accentColor }}
+                    className="absolute inset-0 rounded-xl pointer-events-none"
+                  />
 
-              <button
-                onClick={handleShareLinkedIn}
-                className="flex items-center justify-center p-3 rounded-xl bg-white/10 hover:bg-white/20 border border-white/15 hover:border-brand-amber/50 text-white transition-all cursor-pointer hover:scale-105 active:scale-95"
-                title={t('socialShare.linkedin')}
-                aria-label="Share on LinkedIn"
-              >
-                <span className="font-bold text-xs">in</span>
-              </button>
-
-              <button
-                onClick={handleShareWhatsApp}
-                className="flex items-center justify-center p-3 rounded-xl bg-white/10 hover:bg-white/20 border border-white/15 hover:border-brand-amber/50 text-emerald-400 transition-all cursor-pointer hover:scale-105 active:scale-95"
-                title={t('socialShare.whatsapp')}
-                aria-label="Share on WhatsApp"
-              >
-                <Send className="w-4 h-4" />
-              </button>
-
-              <button
-                onClick={handleShareTelegram}
-                className="flex items-center justify-center p-3 rounded-xl bg-white/10 hover:bg-white/20 border border-white/15 hover:border-brand-amber/50 text-sky-400 transition-all cursor-pointer hover:scale-105 active:scale-95"
-                title={t('socialShare.telegram')}
-                aria-label="Share on Telegram"
-              >
-                <ExternalLink className="w-4 h-4" />
-              </button>
+                  <span className="relative z-10 flex items-center justify-center">
+                    {channel.renderIcon()}
+                  </span>
+                </motion.button>
+              ))}
             </div>
           </div>
         </div>

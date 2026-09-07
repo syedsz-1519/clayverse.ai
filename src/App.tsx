@@ -277,10 +277,10 @@ export default function App() {
           return;
         }
 
-        const lessonKeys = ['what-is-ai', 'family-tree', 'generative-ai', 'prompting-rag', 'tools', 'ai-tools-directory', 'deeper', 'flashcards', 'classroom-hub', 'ai-arena', 'arena'];
+        const lessonKeys = ['what-is-ai', 'family-tree', 'generative-ai', 'prompting-rag', 'tools', 'ai-tools-directory', 'deeper', 'flashcards', 'classroom-hub', 'ai-arena'];
         
         if (lessonKeys.includes(targetId)) {
-          const normalized = targetId === 'ai-tools-directory' ? 'tools' : targetId === 'ai-arena' ? 'arena' : targetId;
+          const normalized = targetId === 'ai-tools-directory' ? 'tools' : targetId;
           setCurrentView('guide');
           setCurrentLessonId(normalized);
           window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -529,6 +529,11 @@ export default function App() {
               }}
               isFocusMode={isFocusMode}
               onToggleFocusMode={() => handleToggleFocusMode()}
+              onOpenTTSReader={(text, title) => {
+                if (text) setTtsReaderText(text);
+                if (title) setTtsReaderTitle(title);
+                setIsTTSReaderOpen(true);
+              }}
             />
           ) : isContinuousGuide ? (
             /* 2. Full Continuous Guide Mode */
