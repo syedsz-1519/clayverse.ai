@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import FloatingNav from './components/FloatingNav';
-import ScrollProgressIndicator from './components/ScrollProgressIndicator';
+// Removed ScrollProgressIndicator for cleaner design
 import Hero from './components/Hero';
 import WhatIsAI from './components/WhatIsAI';
 import ClayExplainer from './components/ClayExplainer';

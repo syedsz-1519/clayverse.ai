@@ -1,7 +1,8 @@
 import React from 'react';
 import { motion, useMotionValue, useSpring, useTransform } from 'motion/react';
-import { ArrowDown, ArrowRight, BookOpen, Volume2, Sparkles } from 'lucide-react';
+import { ArrowDown, ArrowRight, BookOpen, Volume2, Sparkles, Play, Zap } from 'lucide-react';
 import { useLanguage } from '../hooks/useLanguage';
+import Button from './ui/Button';
 
 interface HeroProps {
   onStartFirstLesson?: () => void;

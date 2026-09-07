@@ -1,45 +1,145 @@
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Sora:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Sora:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600&display=swap');
 @import "tailwindcss";
 
 :root {
-  /* Default Sand Theme */
-  --brand-cream: #F8F7F4;
-  --brand-sand: #EFECE6;
-  --brand-amber: #D97706; 
-  --brand-amber-dark: #B45309;
-  --brand-amber-light: #FEF3C7;
-  --brand-slate: #52525B; 
-  --brand-slate-light: #F4F4F5;
-  --brand-charcoal: #18181B; 
-  --brand-muted: #71717A;
+  /* Professional White Theme - Designer's Choice */
+  --brand-cream: #FFFFFF;
+  --brand-sand: #FAFAFA;
+  --brand-amber: #FF6B35; 
+  --brand-amber-dark: #E8553E;
+  --brand-amber-light: #FFE5DD;
+  --brand-slate: #475569; 
+  --brand-slate-light: #F8FAFC;
+  --brand-charcoal: #0F172A; 
+  --brand-muted: #64748B;
   
+  /* Accent Colors for Cards */
+  --card-accent-blue: #3B82F6;
+  --card-accent-purple: #8B5CF6;
+  --card-accent-green: #10B981;
+  --card-accent-orange: #F97316;
+  --card-accent-pink: #EC4899;
+  --card-accent-teal: #14B8A6;
+  
+  /* Professional Shadows */
+  --shadow-xs: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+  --shadow-sm: 0 1px 3px 0 rgba(0, 0, 0, 0.08), 0 1px 2px -1px rgba(0, 0, 0, 0.08);
+  --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.08), 0 2px 4px -2px rgba(0, 0, 0, 0.08);
+  --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.08), 0 4px 6px -4px rgba(0, 0, 0, 0.08);
+  --shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.08), 0 8px 10px -6px rgba(0, 0, 0, 0.08);
+  
+  /* Backgrounds */
   --skeuo-bg: #FFFFFF;
-  --skeuo-shadow-1: rgba(0, 0, 0, 0.04);
-  --skeuo-shadow-2: rgba(255, 255, 255, 0.9);
-  
-  --glass-bg: rgba(255, 255, 255, 0.85);
-  --glass-border: rgba(0, 0, 0, 0.08);
-  --glass-nav-bg: rgba(248, 247, 244, 0.92);
+  --glass-bg: rgba(255, 255, 255, 0.95);
+  --glass-border: rgba(15, 23, 42, 0.08);
+  --glass-nav-bg: rgba(255, 255, 255, 0.98);
 }
 
 [data-theme="sand"] {
-  --brand-cream: #F8F7F4;
-  --brand-sand: #EFECE6;
-  --brand-amber: #D97706; 
-  --brand-amber-dark: #B45309;
-  --brand-amber-light: #FEF3C7;
-  --brand-slate: #52525B; 
-  --brand-slate-light: #F4F4F5;
-  --brand-charcoal: #18181B; 
-  --brand-muted: #71717A;
-  
-  --skeuo-bg: #FFFFFF;
-  --skeuo-shadow-1: rgba(0, 0, 0, 0.04);
-  --skeuo-shadow-2: rgba(255, 255, 255, 0.9);
-  
-  --glass-bg: rgba(255, 255, 255, 0.85);
-  --glass-border: rgba(0, 0, 0, 0.08);
-  --glass-nav-bg: rgba(248, 247, 244, 0.92);
+  --brand-cream: #FFFFFF;
+  --brand-sand: #FAFAFA;
+  --brand-amber: #FF6B35; 
+  --brand-amber-dark: #E8553E;
+  --brand-amber-light: #FFE5DD;
+  --brand-slate: #475569; 
+  --brand-slate-light: #F8FAFC;
+  --brand-charcoal: #0F172A; 
+  --brand-muted: #64748B;
+}
+
+/* Professional Base Styles */
+* {
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+body {
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  background-color: #FFFFFF;
+  color: var(--brand-charcoal);
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-family: 'Sora', sans-serif;
+  letter-spacing: -0.02em;
+}
+
+/* Custom Scrollbar */
+::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+
+::-webkit-scrollbar-track {
+  background: #F8FAFC;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #CBD5E1;
+  border-radius: 5px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #94A3B8;
+}
+
+/* Selection */
+::selection {
+  background-color: rgba(255, 107, 53, 0.15);
+  color: var(--brand-charcoal);
+}
+
+/* Focus Visible */
+*:focus-visible {
+  outline: 2px solid var(--brand-amber);
+  outline-offset: 2px;
+  border-radius: 4px;
+}
+
+/* Smooth Transitions */
+button, a, .interactive {
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Card Hover Effects */
+.card-hover {
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.card-hover:hover {
+  transform: translateY(-4px);
+  box-shadow: var(--shadow-xl);
+}
+
+/* Professional Gradients */
+.gradient-orange {
+  background: linear-gradient(135deg, #FF6B35 0%, #F97316 100%);
+}
+
+.gradient-blue {
+  background: linear-gradient(135deg, #3B82F6 0%, #2563EB 100%);
+}
+
+.gradient-purple {
+  background: linear-gradient(135deg, #8B5CF6 0%, #7C3AED 100%);
+}
+
+.gradient-green {
+  background: linear-gradient(135deg, #10B981 0%, #059669 100%);
+}
+
+/* Text Gradient */
+.text-gradient {
+  background-clip: text;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+/* Backdrop Blur Support */
+@supports (backdrop-filter: blur(10px)) {
+  .glass-effect {
+    backdrop-filter: blur(10px) saturate(180%);
+  }
 }
 
 [data-theme="deep-blue"] {
