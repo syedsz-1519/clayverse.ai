@@ -1,0 +1,63 @@
+{
+  "nav": {
+    "home": "Home",
+    "curriculum": "Nisaab",
+    "lessons": "Sabaq",
+    "concepts": "12 Tasawwuraat",
+    "tools": "AI Tools",
+    "dashboard": "Dashboard",
+    "search": "Talash"
+  },
+  "hero": {
+    "badge": "✨ 100% Shuruat Karnay Walon Ke Liye • Hisaab Nahi • Insani Neshan",
+    "title": "AI koi jadoo nahi hai.\nYeh bade paimane par namoona se musalat hai.",
+    "description": "Jadeed Mausnoee Zehani, ChatGPT aur Machine Learning ko samjhein - ulghan ke bagher. Purasar, chunchne wali safar.",
+    "startLearning": "Abhi Sikhna Shuru Karein",
+    "browseCurriculum": "Nisaab Dekhein",
+    "zeroMath": "Hisaab Nahi",
+    "audioNarration": "Audio Bayaan",
+    "interactive": "Muassar"
+  },
+  "curriculum": {
+    "title": "6 Sabqon Mein AI Seekhein",
+    "subtitle": "Mukammil Shuruat Se Itmaad Ke Saath AI Maalik Tak - Hisaab Ki Zaroorat Nahi.",
+    "lesson1": "AI Kya Hai?",
+    "lesson1Desc": "Mausnoee Zehani Ki Buniyaadon Aur Mashinen Namooron Se Kaise Seekhti Hain.",
+    "lesson2": "AI Khaandaan Darakht",
+    "lesson2Desc": "AI, Machine Learning, Gahra Sikhna Aur Janreyto AI Ki Darjabandi Ka Naksha.",
+    "lesson3": "Janreyto AI",
+    "lesson3Desc": "Bade Zabaan Ke Maadal Muhtawa Kaise Banate Hain Aur Ihtimaal Ki Buniyad Par Agle Lafz Ka Andaza.",
+    "lesson4": "Targheeb Dehnda Aur RAG",
+    "lesson4Desc": "Mausser Targheeb Techniques Aur RAG Kaise AI Ke Waham Ko Rokta Hai.",
+    "lesson5": "AI Tools Directory",
+    "lesson5Desc": "40+ Muft AI Tools Text, Tasaveer, Audio Aur Bohat Kuch Ke Liye.",
+    "lesson6": "12 Buniyadi Tasawwuraat",
+    "lesson6Desc": "12 Zaruri AI Tasawwuron Mein Gahra Ghoota Lagaen.",
+    "learners": "Sikhne Wale",
+    "concepts": "Tasawwuraat",
+    "free": "Muft"
+  },
+  "whatIsAI": {
+    "badge": "Sabaq 01",
+    "title": "AI Wakayyan Kya Hai?",
+    "definition": "Mausnoee Zehani koi jadoo ya sochne wala makhluq nahi hai. Yeh ek takatwar tool hai jo bade andaze mein data mein namoona talash karta hai.",
+    "analogy": "Ek Sada Misaal",
+    "analogyText": "AI ko sikhana bacche ko sikhane jesa hai ke 'kutta' kya hai. Aap unhe Biology ki kitaab nahi dete. Aap unhe hazaron kutto ki tasweerein dikhate ho jab tak un ka dimagh fatahari taur par namoona ko na samajh le!",
+    "keyTakeaways": "Kaliday Naqat",
+    "point1": "AI misaalon se seekhta hai, pehle se likhe hue ausul se nahi",
+    "point2": "Yeh aese namoone talash karta hai jo insaan chhod sakte hain",
+    "point3": "Sifarishen, Aavaaz Ke Yaar Aur Nakshon Mein Rozmarrah Istemal"
+  },
+  "common": {
+    "save": "Bacha Do",
+    "cancel": "Mansookh Karein",
+    "close": "Band Karein",
+    "next": "Agle",
+    "back": "Peeche",
+    "search": "Talash...",
+    "loading": "Load Ho Raha Hai...",
+    "error": "Kharabi",
+    "retry": "Dobara Koshish Karein",
+    "done": "Mukammil"
+  }
+}

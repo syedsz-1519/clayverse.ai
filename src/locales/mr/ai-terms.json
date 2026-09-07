@@ -1,0 +1,164 @@
+{
+  "terms": [
+    {
+      "id": "ai_basic",
+      "term_en": "Artificial Intelligence",
+      "term_mr": "कृत्रिम बुद्धिमत्ता",
+      "definition_en": "The capability of computer systems to perform tasks that require human intelligence, such as learning from patterns and making decisions.",
+      "definition_mr": "संगणक प्रणालींची क्षमता मानवी बुद्धिमत्ता आवश्यक कार्य पूर्ण करण्याची, जसे की नमुने शिखणे आणि निर्णय घेणे.",
+      "section": 1
+    },
+    {
+      "id": "algorithm",
+      "term_en": "Algorithm",
+      "term_mr": "अल्गोरिदम",
+      "definition_en": "A step-by-step procedure or formula for solving a problem or accomplishing a task.",
+      "definition_mr": "समस्या सोडवण्यासाठी किंवा कार्य पूर्ण करण्यासाठी चरण-दर-चरण प्रक्रिया किंवा सूत्र.",
+      "section": 1
+    },
+    {
+      "id": "pattern_matching",
+      "term_en": "Pattern Matching",
+      "term_mr": "नमुना जुळवणे",
+      "definition_en": "The ability to identify recurring structures or regularities in data.",
+      "definition_mr": "डेटामध्ये पुनरावृत्ती होणारे संरचना किंवा नियमितता ओळखण्याची क्षमता.",
+      "section": 1
+    },
+    {
+      "id": "machine_learning",
+      "term_en": "Machine Learning",
+      "term_mr": "मशीन लर्निंग",
+      "definition_en": "A subset of AI where systems learn and improve from experience without being explicitly programmed.",
+      "definition_mr": "AI चा एक उपसंच जेथे प्रणाली अनुभवातून शिखते आणि सुधारते बिना स्पष्टपणे प्रोग्राम केले जाता.",
+      "section": 2
+    },
+    {
+      "id": "neural_network",
+      "term_en": "Neural Network",
+      "term_mr": "न्यूरल नेटवर्क",
+      "definition_en": "A computing system inspired by biological neural networks that constitute animal brains.",
+      "definition_mr": "जैविक न्यूरल नेटवर्कच्या आधारे प्रेरित एक संगणन प्रणाली जी प्राण्यांचे मेंदू तयार करते.",
+      "section": 3
+    },
+    {
+      "id": "deep_learning",
+      "term_en": "Deep Learning",
+      "term_mr": "डीप लर्निंग",
+      "definition_en": "A subset of machine learning using multiple layers of artificial neural networks.",
+      "definition_mr": "कृत्रिम न्यूरल नेटवर्कच्या अनेक स्तरांचा वापर करून मशीन लर्निंग चा एक उपसंच.",
+      "section": 3
+    },
+    {
+      "id": "training_data",
+      "term_en": "Training Data",
+      "term_mr": "प्रशिक्षण डेटा",
+      "definition_en": "The dataset used to train a machine learning model to recognize patterns.",
+      "definition_mr": "नमुने ओळखण्यासाठी मशीन लर्निंग मॉडेल प्रशिक्षित करण्यासाठी वापरलेला डेटासेट.",
+      "section": 2
+    },
+    {
+      "id": "model",
+      "term_en": "Model",
+      "term_mr": "मॉडेल",
+      "definition_en": "A mathematical representation of learned patterns from training data.",
+      "definition_mr": "प्रशिक्षण डेटातून शिकलेल्या नमुन्यांचे गणितीय प्रतिनिधित्व.",
+      "section": 2
+    },
+    {
+      "id": "generative_ai",
+      "term_en": "Generative AI",
+      "term_mr": "जनरेटिव्ह AI",
+      "definition_en": "AI systems that can create new, original content such as text, images, or code.",
+      "definition_mr": "AI प्रणाली जी नई, मूळ सामग्री तयार करू शकते जसे की मजकूर, प्रतिमा किंवा कोड.",
+      "section": 4
+    },
+    {
+      "id": "llm",
+      "term_en": "Large Language Model (LLM)",
+      "term_mr": "मोठे भाषा मॉडेल",
+      "definition_en": "A neural network model trained on massive amounts of text data to understand and generate human language.",
+      "definition_mr": "मानवी भाषा समजणे आणि निर्माण करण्यासाठी मोठ्या प्रमाणात मजकूर डेटापर प्रशिक्षित न्यूरल नेटवर्क मॉडेल.",
+      "section": 5
+    },
+    {
+      "id": "transformer",
+      "term_en": "Transformer",
+      "term_mr": "ट्रान्सफॉर्मर",
+      "definition_en": "A neural network architecture that uses attention mechanisms to process sequences of data.",
+      "definition_mr": "डेटा सिक्वेंस प्रक्रिया करण्यासाठी ध्यान तंत्र वापरणारी न्यूरल नेटवर्क आर्किटेक्चर.",
+      "section": 5
+    },
+    {
+      "id": "token",
+      "term_en": "Token",
+      "term_mr": "टोकन",
+      "definition_en": "A small unit of text, often a word or part of a word, that an AI model processes.",
+      "definition_mr": "मजकूरचे एक लहान एकक, बहुतेक वेळा एक शब्द किंवा शब्दाचा भाग, जो AI मॉडेल प्रक्रिया करतो.",
+      "section": 5
+    },
+    {
+      "id": "prompt",
+      "term_en": "Prompt",
+      "term_mr": "प्रॉम्प्ट",
+      "definition_en": "An input or instruction given to an AI model to generate a desired output.",
+      "definition_mr": "इच्छित आउटपुट तयार करण्यासाठी AI मॉडेलला दिलेला इनपुट किंवा सूचना.",
+      "section": 6
+    },
+    {
+      "id": "rag",
+      "term_en": "Retrieval-Augmented Generation (RAG)",
+      "term_mr": "पुनर्प्राप्ती-संवर्धित निर्माण",
+      "definition_en": "A technique that retrieves relevant information from a database and uses it to enhance AI-generated responses.",
+      "definition_mr": "एक तंत्र जो डेटाबेसमधून प्रासंगिक माहिती पुनर्प्राप्त करते आणि ती AI-निर्माण प्रतिक्रिया सुधारण्यासाठी वापरते.",
+      "section": 7
+    },
+    {
+      "id": "hallucination",
+      "term_en": "Hallucination",
+      "term_mr": "भ्रम",
+      "definition_en": "When an AI model generates incorrect or fabricated information.",
+      "definition_mr": "जेव्हा AI मॉडेल चुकीची किंवा बनावट माहिती निर्माण करते.",
+      "section": 7
+    },
+    {
+      "id": "embeddings",
+      "term_en": "Embeddings",
+      "term_mr": "एंबेडिंग्ज",
+      "definition_en": "Numerical representations of words or concepts that capture their semantic meaning.",
+      "definition_mr": "शब्द किंवा संकल्पनांचे संख्यात्मक प्रतिनिधित्व जे त्यांचा अर्थगत अर्थ कॅप्चर करते.",
+      "section": 7
+    },
+    {
+      "id": "attention_mechanism",
+      "term_en": "Attention Mechanism",
+      "term_mr": "ध्यान तंत्र",
+      "definition_en": "A technique that allows neural networks to focus on the most relevant parts of input data.",
+      "definition_mr": "एक तंत्र जो न्यूरल नेटवर्कला इनपुट डेटाच्या सर्वात प्रासंगिक भागांवर लक्ष केंद्रित करण्यास अनुमती देते.",
+      "section": 5
+    },
+    {
+      "id": "parameters",
+      "term_en": "Parameters",
+      "term_mr": "पॅरामीटर्स",
+      "definition_en": "Learnable variables in a neural network that are adjusted during training.",
+      "definition_mr": "न्यूरल नेटवर्कमधील शिक्षणीय व्हेरिएबल्स जी प्रशिक्षणादरम्यान समायोजित केली जातात.",
+      "section": 2
+    },
+    {
+      "id": "epochs",
+      "term_en": "Epochs",
+      "term_mr": "एपोक्स",
+      "definition_en": "Complete passes through the entire training dataset during model training.",
+      "definition_mr": "मॉडेल प्रशिक्षणादरम्यान संपूर्ण प्रशिक्षण डेटासेटद्वारे संपूर्ण पास.",
+      "section": 2
+    },
+    {
+      "id": "loss_function",
+      "term_en": "Loss Function",
+      "term_mr": "नुकसान कार्य",
+      "definition_en": "A mathematical function that measures how far a model's predictions are from the actual data.",
+      "definition_mr": "एक गणितीय कार्य जो मॉडेलच्या अंदाजे प्रत्यक्ष डेटापासून कितनी दूर आहे हे मोजते.",
+      "section": 2
+    }
+  ]
+}

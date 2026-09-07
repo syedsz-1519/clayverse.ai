@@ -11,12 +11,12 @@ import {
   Home
 } from 'lucide-react';
 import ClayLogo from './ClayLogo';
-import { useLanguage } from '../hooks/useLanguage';
+import { useLanguageMultilingual } from '../hooks/useLanguageMultilingual';
 import { motion, AnimatePresence } from 'motion/react';
 import Button from './ui/Button';
 
 export default function FloatingNav() {
-  const { lang, setLang } = useLanguage();
+  const { lang, setLang } = useLanguageMultilingual();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
 
@@ -116,17 +116,21 @@ export default function FloatingNav() {
             {/* Right Actions */}
             <div className="flex items-center gap-2">
               
-              {/* Language Selector */}
+              {/* Language Selector - All 7 Languages */}
               <div className="hidden sm:block">
                 <select
                   value={lang}
-                  onChange={(e) => setLang(e.target.value)}
+                  onChange={(e) => setLang(e.target.value as any)}
                   className="px-3 py-2 rounded-xl border border-slate-300 text-sm font-semibold text-slate-700 bg-white hover:bg-slate-50 cursor-pointer focus:outline-none focus:ring-2 focus:ring-orange-500 transition-all"
                 >
-                  <option value="en">🇬🇧 EN</option>
-                  <option value="hi">🇮🇳 HI</option>
-                  <option value="te">🇮🇳 TE</option>
-                  <option value="hyd">🇮🇳 HYD</option>
+                  <option value="en">🇬🇧 English</option>
+                  <option value="hi">🇮🇳 हिन्दी (Hindi)</option>
+                  <option value="te">🇮🇳 తెలుగు (Telugu)</option>
+                  <option value="mr">🇮🇳 मराठी (Marathi)</option>
+                  <option value="ta">🇮🇳 தமிழ் (Tamil)</option>
+                  <option value="ur">🇵🇰 اردو (Urdu)</option>
+                  <option value="roman_ur">🇵🇰 Roman Urdu</option>
+                  <option value="hinglish">🇮🇳 Hinglish</option>
                 </select>
               </div>
 
@@ -233,17 +237,21 @@ export default function FloatingNav() {
                 {/* Language Selector */}
                 <div className="pt-4 border-t border-slate-200">
                   <label className="block text-sm font-semibold text-slate-700 mb-2">
-                    {lang === 'en' ? 'Language' : 'भाषा'}
+                    {lang === 'en' ? 'Language' : lang === 'hi' ? 'भाषा' : lang === 'te' ? 'భాష' : lang === 'mr' ? 'भाषा' : lang === 'ta' ? 'மொழி' : 'Language'}
                   </label>
                   <select
                     value={lang}
-                    onChange={(e) => setLang(e.target.value)}
+                    onChange={(e) => setLang(e.target.value as any)}
                     className="w-full px-4 py-3 rounded-xl border border-slate-300 text-sm font-semibold text-slate-700 bg-white focus:outline-none focus:ring-2 focus:ring-orange-500"
                   >
                     <option value="en">🇬🇧 English</option>
                     <option value="hi">🇮🇳 हिन्दी (Hindi)</option>
                     <option value="te">🇮🇳 తెలుగు (Telugu)</option>
-                    <option value="hyd">🇮🇳 Hyderabadi</option>
+                    <option value="mr">🇮🇳 मराठी (Marathi)</option>
+                    <option value="ta">🇮🇳 தமிழ் (Tamil)</option>
+                    <option value="ur">🇵🇰 اردو (Urdu)</option>
+                    <option value="roman_ur">🇵🇰 Roman Urdu</option>
+                    <option value="hinglish">🇮🇳 Hinglish</option>
                   </select>
                 </div>
 

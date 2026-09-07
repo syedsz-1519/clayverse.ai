@@ -1,0 +1,63 @@
+{
+  "nav": {
+    "home": "Home",
+    "curriculum": "Padhai Path",
+    "lessons": "Sabaq",
+    "concepts": "12 Baatein",
+    "tools": "AI Tools",
+    "dashboard": "Dashboard",
+    "search": "Dhundho"
+  },
+  "hero": {
+    "badge": "✨ 100% Shuruat Karnay Walon Ke Liye • Ganit Nahi • Insani Banaya",
+    "title": "AI koi jaadu nahi hai.\nYeh bade paimane par pattern matching hai.",
+    "description": "Aadhunik AI, ChatGPT aur Machine Learning ko samjho - bina confusion ke. Shantipur, chhune wali yatra.",
+    "startLearning": "Abhi Seekhna Shuru Karo",
+    "browseCurriculum": "Padhyakram Dekho",
+    "zeroMath": "Ganit Nahi",
+    "audioNarration": "Audio Kathan",
+    "interactive": "Interactive"
+  },
+  "curriculum": {
+    "title": "6 Sabqon Mein AI Seekho",
+    "subtitle": "Poori Shuruat Se Aatvishwas Ke Saath AI Karya Tak - Ganit Ki Zaroorat Nahi.",
+    "lesson1": "AI Kya Hai?",
+    "lesson1Desc": "Artificial Intelligence Ki Bunyad Aur Machines Pattern Se Kaise Seekhte Hain.",
+    "lesson2": "AI Parivaar Vriksh",
+    "lesson2Desc": "AI, Machine Learning, Deep Learning Aur Generative AI Ka Hierarchy Structure.",
+    "lesson3": "Generative AI",
+    "lesson3Desc": "Bade Language Models Content Kaise Banate Hain Aur Probability Se Agle Word Ka Anumaana.",
+    "lesson4": "Prompting Aur RAG",
+    "lesson4Desc": "Effective Prompting Techniques Aur RAG Kaise AI Ke Bhram Ko Rokta Hai.",
+    "lesson5": "AI Tools Directory",
+    "lesson5Desc": "40+ Free AI Tools Text, Images, Audio Aur Bohot Kuch Ke Liye.",
+    "lesson6": "12 Mukhya Baatein",
+    "lesson6Desc": "12 Zaroori AI Concepts Mein Gehrai Se Utro.",
+    "learners": "Sikhne Wale",
+    "concepts": "Baatein",
+    "free": "Muft"
+  },
+  "whatIsAI": {
+    "badge": "Sabaq 01",
+    "title": "AI Sachmuch Kya Hai?",
+    "definition": "Artificial Intelligence koi jaadu ya soochne wala praani nahi hai. Yeh ek powerful tool hai jo bade data mein patterns dhundta hai.",
+    "analogy": "Ek Asaan Misaal",
+    "analogyText": "AI ko sikhana ek bachche ko 'kutta' kya hai sikhane jaise hai. Tum usse biology ki kitaab nahi dete. Tum usse hazaron kutto ki tasweerein dikhate ho jab tak uska dimagh khud-ba-khud pattern ko samajh na le!",
+    "keyTakeaways": "Mukhya Baatein",
+    "point1": "AI examples se seekhta hai, pehle se likhe rules se nahi",
+    "point2": "Yeh aisse patterns dhundta hai jo manushya chhod sakte hain",
+    "point3": "Recommendations, Voice Assistants Aur Maps Mein Roz Ka Upyog"
+  },
+  "common": {
+    "save": "Bacha Do",
+    "cancel": "Cancel Karo",
+    "close": "Band Karo",
+    "next": "Agle",
+    "back": "Peeche",
+    "search": "Dhundho...",
+    "loading": "Load Ho Raha Hai...",
+    "error": "Galti",
+    "retry": "Dobara Koshish Karo",
+    "done": "Ho Gaya"
+  }
+}

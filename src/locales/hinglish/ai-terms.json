@@ -1,0 +1,164 @@
+{
+  "terms": [
+    {
+      "id": "ai_basic",
+      "term_en": "Artificial Intelligence",
+      "term_hinglish": "Artificial Intelligence (Naqli Budhhimatta)",
+      "definition_en": "The capability of computer systems to perform tasks that require human intelligence, such as learning from patterns and making decisions.",
+      "definition_hinglish": "Computer systems ki capability hai human intelligence ke zaroorat wale tasks perform karne ki, jaise patterns se sikhna aur decisions lena.",
+      "section": 1
+    },
+    {
+      "id": "algorithm",
+      "term_en": "Algorithm",
+      "term_hinglish": "Algorithm (Paddhati)",
+      "definition_en": "A step-by-step procedure or formula for solving a problem or accomplishing a task.",
+      "definition_hinglish": "Kisi problem ko solve karne ya kisi kaam ko complete karne ke liye ek step-by-step process ya formula.",
+      "section": 1
+    },
+    {
+      "id": "pattern_matching",
+      "term_en": "Pattern Matching",
+      "term_hinglish": "Pattern Matching (Naqsha Mila Na)",
+      "definition_en": "The ability to identify recurring structures or regularities in data.",
+      "definition_hinglish": "Data mein aane wali repeated structures ya regularity ko pehchanne ki capability.",
+      "section": 1
+    },
+    {
+      "id": "machine_learning",
+      "term_en": "Machine Learning",
+      "term_hinglish": "Machine Learning (Yantra Shiksha)",
+      "definition_en": "A subset of AI where systems learn and improve from experience without being explicitly programmed.",
+      "definition_hinglish": "AI ka ek subset jahan systems experience se seekhte hain aur khud ko improve karte hain bina explicitly program kiye.",
+      "section": 2
+    },
+    {
+      "id": "neural_network",
+      "term_en": "Neural Network",
+      "term_hinglish": "Neural Network (Twarcha Jaal)",
+      "definition_en": "A computing system inspired by biological neural networks that constitute animal brains.",
+      "definition_hinglish": "Ek computing system jo biological neural networks se inspire hai jo janvaron ke dimag bante hain.",
+      "section": 3
+    },
+    {
+      "id": "deep_learning",
+      "term_en": "Deep Learning",
+      "term_hinglish": "Deep Learning (Gambhir Shiksha)",
+      "definition_en": "A subset of machine learning using multiple layers of artificial neural networks.",
+      "definition_hinglish": "Machine learning ka ek subset jo multiple layers of artificial neural networks use karta hai.",
+      "section": 3
+    },
+    {
+      "id": "training_data",
+      "term_en": "Training Data",
+      "term_hinglish": "Training Data (Prashikshan Ankda)",
+      "definition_en": "The dataset used to train a machine learning model to recognize patterns.",
+      "definition_hinglish": "Wo dataset jo machine learning model ko patterns recognize karne ke liye train karne mein use hota hai.",
+      "section": 2
+    },
+    {
+      "id": "model",
+      "term_en": "Model",
+      "term_hinglish": "Model (Naqsha)",
+      "definition_en": "A mathematical representation of learned patterns from training data.",
+      "definition_hinglish": "Training data se seekhe hue patterns ka mathematical representation.",
+      "section": 2
+    },
+    {
+      "id": "generative_ai",
+      "term_en": "Generative AI",
+      "term_hinglish": "Generative AI (Rachnatmak AI)",
+      "definition_en": "AI systems that can create new, original content such as text, images, or code.",
+      "definition_hinglish": "AI systems jo nai, original content bana sakte hain jaise text, images, ya code.",
+      "section": 4
+    },
+    {
+      "id": "llm",
+      "term_en": "Large Language Model (LLM)",
+      "term_hinglish": "Large Language Model (Bada Bhasha Model)",
+      "definition_en": "A neural network model trained on massive amounts of text data to understand and generate human language.",
+      "definition_hinglish": "Ek neural network model jo bade amount of text data par train hua hai human language samjhne aur generate karne ke liye.",
+      "section": 5
+    },
+    {
+      "id": "transformer",
+      "term_en": "Transformer",
+      "term_hinglish": "Transformer (Roopaantarakari)",
+      "definition_en": "A neural network architecture that uses attention mechanisms to process sequences of data.",
+      "definition_hinglish": "Ek neural network architecture jo attention mechanisms use karta hai data sequences ko process karne ke liye.",
+      "section": 5
+    },
+    {
+      "id": "token",
+      "term_en": "Token",
+      "term_hinglish": "Token (Chinh)",
+      "definition_en": "A small unit of text, often a word or part of a word, that an AI model processes.",
+      "definition_hinglish": "Text ka ek chhota hissa, aksar ek shabd ya shabd ka kuch hissa, jo AI model process karta hai.",
+      "section": 5
+    },
+    {
+      "id": "prompt",
+      "term_en": "Prompt",
+      "term_hinglish": "Prompt (Samuchchana)",
+      "definition_en": "An input or instruction given to an AI model to generate a desired output.",
+      "definition_hinglish": "Ek input ya instruction jo AI model ko desired output generate karne ke liye diya jata hai.",
+      "section": 6
+    },
+    {
+      "id": "rag",
+      "term_en": "Retrieval-Augmented Generation (RAG)",
+      "term_hinglish": "Retrieval-Augmented Generation (Puna-prapti Samvarddhit Utpatti)",
+      "definition_en": "A technique that retrieves relevant information from a database and uses it to enhance AI-generated responses.",
+      "definition_hinglish": "Ek technique jo database se relevant information retrieve karta hai aur use AI-generated responses ko better banana ke liye use karta hai.",
+      "section": 7
+    },
+    {
+      "id": "hallucination",
+      "term_en": "Hallucination",
+      "term_hinglish": "Hallucination (Bhrama)",
+      "definition_en": "When an AI model generates incorrect or fabricated information.",
+      "definition_hinglish": "Jab AI model galat ya jhootha information generate karta hai.",
+      "section": 7
+    },
+    {
+      "id": "embeddings",
+      "term_en": "Embeddings",
+      "term_hinglish": "Embeddings (Antarit Karan)",
+      "definition_en": "Numerical representations of words or concepts that capture their semantic meaning.",
+      "definition_hinglish": "Shabdon ya concepts ka numerical representation jo unka semantic meaning pakde.",
+      "section": 7
+    },
+    {
+      "id": "attention_mechanism",
+      "term_en": "Attention Mechanism",
+      "term_hinglish": "Attention Mechanism (Dhyan Tarika)",
+      "definition_en": "A technique that allows neural networks to focus on the most relevant parts of input data.",
+      "definition_hinglish": "Ek technique jo neural networks ko input data ke sabse important parts par focus karne deta hai.",
+      "section": 5
+    },
+    {
+      "id": "parameters",
+      "term_en": "Parameters",
+      "term_hinglish": "Parameters (Sthapna)",
+      "definition_en": "Learnable variables in a neural network that are adjusted during training.",
+      "definition_hinglish": "Neural network mein seekhne wale variables jo training mein adjust hote hain.",
+      "section": 2
+    },
+    {
+      "id": "epochs",
+      "term_en": "Epochs",
+      "term_hinglish": "Epochs (Yug)",
+      "definition_en": "Complete passes through the entire training dataset during model training.",
+      "definition_hinglish": "Model training mein poore training dataset ke through complete pass karna.",
+      "section": 2
+    },
+    {
+      "id": "loss_function",
+      "term_en": "Loss Function",
+      "term_hinglish": "Loss Function (Kshati Kary)",
+      "definition_en": "A mathematical function that measures how far a model's predictions are from the actual data.",
+      "definition_roman_ur": "Ek mathematical function jo model ke predictions actual data se kitni door hain ye measure karta hai.",
+      "section": 2
+    }
+  ]
+}

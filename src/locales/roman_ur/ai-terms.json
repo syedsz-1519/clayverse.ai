@@ -1,0 +1,164 @@
+{
+  "terms": [
+    {
+      "id": "ai_basic",
+      "term_en": "Artificial Intelligence",
+      "term_roman_ur": "Masnooi Zehanat",
+      "definition_en": "The capability of computer systems to perform tasks that require human intelligence, such as learning from patterns and making decisions.",
+      "definition_roman_ur": "Computer systems ki salahiyat ke leye insani zehanat ki zaroorat hone wale kaam anjam dene ki, jaise patterns se sikhna aur faisle lena.",
+      "section": 1
+    },
+    {
+      "id": "algorithm",
+      "term_en": "Algorithm",
+      "term_roman_ur": "Algorathm",
+      "definition_en": "A step-by-step procedure or formula for solving a problem or accomplishing a task.",
+      "definition_roman_ur": "Masla hal karne ya kaam anjam dene ke leye qadam-dar-qadam tareeka ya formula.",
+      "section": 1
+    },
+    {
+      "id": "pattern_matching",
+      "term_en": "Pattern Matching",
+      "term_roman_ur": "Pattern Milana",
+      "definition_en": "The ability to identify recurring structures or regularities in data.",
+      "definition_roman_ur": "Data mein dubara hone wali sarakht ya niyamitata ko pehchanane ki salahiyat.",
+      "section": 1
+    },
+    {
+      "id": "machine_learning",
+      "term_en": "Machine Learning",
+      "term_roman_ur": "Machine Seekhna",
+      "definition_en": "A subset of AI where systems learn and improve from experience without being explicitly programmed.",
+      "definition_roman_ur": "AI ka ek hissa jahan systems tajarbay se sikhte aur behtar hote hain bina spashtata se program kiye hue.",
+      "section": 2
+    },
+    {
+      "id": "neural_network",
+      "term_en": "Neural Network",
+      "term_roman_ur": "Neural Network",
+      "definition_en": "A computing system inspired by biological neural networks that constitute animal brains.",
+      "definition_roman_ur": "Biological neural networks se ilham hasil karke banaya gaya computing system jo janwaron ke dimaagon ko banta hai.",
+      "section": 3
+    },
+    {
+      "id": "deep_learning",
+      "term_en": "Deep Learning",
+      "term_roman_ur": "Deep Seekhna",
+      "definition_en": "A subset of machine learning using multiple layers of artificial neural networks.",
+      "definition_roman_ur": "Machine learning ka ek hissa jo masnooi neural networks ki kayi tahezon ka istemaal karta hai.",
+      "section": 3
+    },
+    {
+      "id": "training_data",
+      "term_en": "Training Data",
+      "term_roman_ur": "Training Data",
+      "definition_en": "The dataset used to train a machine learning model to recognize patterns.",
+      "definition_roman_ur": "Patterns ko pehchanane ke leye machine learning model ko sakhayati dene mein istemaal hone wala dataset.",
+      "section": 2
+    },
+    {
+      "id": "model",
+      "term_en": "Model",
+      "term_roman_ur": "Model",
+      "definition_en": "A mathematical representation of learned patterns from training data.",
+      "definition_roman_ur": "Training data se seekhe gaye patterns ka ek mathematical representation.",
+      "section": 2
+    },
+    {
+      "id": "generative_ai",
+      "term_en": "Generative AI",
+      "term_roman_ur": "Generative AI",
+      "definition_en": "AI systems that can create new, original content such as text, images, or code.",
+      "definition_roman_ur": "AI systems jo naya, asal content bana sakte hain jaise text, images, ya code.",
+      "section": 4
+    },
+    {
+      "id": "llm",
+      "term_en": "Large Language Model (LLM)",
+      "term_roman_ur": "Bada Language Model",
+      "definition_en": "A neural network model trained on massive amounts of text data to understand and generate human language.",
+      "definition_roman_ur": "Ek neural network model jo insani zaban ko samjhne aur produce karne ke leye bhari matra mein text data par sakhayati diya gaya.",
+      "section": 5
+    },
+    {
+      "id": "transformer",
+      "term_en": "Transformer",
+      "term_roman_ur": "Transformer",
+      "definition_en": "A neural network architecture that uses attention mechanisms to process sequences of data.",
+      "definition_roman_ur": "Ek neural network architecture jo data ke sequences ko process karne ke leye attention mechanisms ka istemaal karta hai.",
+      "section": 5
+    },
+    {
+      "id": "token",
+      "term_en": "Token",
+      "term_roman_ur": "Token",
+      "definition_en": "A small unit of text, often a word or part of a word, that an AI model processes.",
+      "definition_roman_ur": "Text ka ek chhota unit, aksar ek lafz ya lafz ka ek hissa, jo AI model process karta hai.",
+      "section": 5
+    },
+    {
+      "id": "prompt",
+      "term_en": "Prompt",
+      "term_roman_ur": "Prompt",
+      "definition_en": "An input or instruction given to an AI model to generate a desired output.",
+      "definition_roman_ur": "Ek input ya instruction jo required output produce karne ke leye AI model ko diya jaata hai.",
+      "section": 6
+    },
+    {
+      "id": "rag",
+      "term_en": "Retrieval-Augmented Generation (RAG)",
+      "term_roman_ur": "Retrieval-Augmented Generation",
+      "definition_en": "A technique that retrieves relevant information from a database and uses it to enhance AI-generated responses.",
+      "definition_roman_ur": "Ek technique jo database se relevant information retrieve karta hai aur isko AI-generated responses ko behtar banana ke leye istemaal karta hai.",
+      "section": 7
+    },
+    {
+      "id": "hallucination",
+      "term_en": "Hallucination",
+      "term_roman_ur": "Hallucination",
+      "definition_en": "When an AI model generates incorrect or fabricated information.",
+      "definition_roman_ur": "Jab AI model galat ya banaya gaya information produce karta hai.",
+      "section": 7
+    },
+    {
+      "id": "embeddings",
+      "term_en": "Embeddings",
+      "term_roman_ur": "Embeddings",
+      "definition_en": "Numerical representations of words or concepts that capture their semantic meaning.",
+      "definition_roman_ur": "Lafzon ya concepts ki numerical representation jo un ke semantic meaning ko pakde.",
+      "section": 7
+    },
+    {
+      "id": "attention_mechanism",
+      "term_en": "Attention Mechanism",
+      "term_roman_ur": "Attention Mechanism",
+      "definition_en": "A technique that allows neural networks to focus on the most relevant parts of input data.",
+      "definition_roman_ur": "Ek technique jo neural networks ko input data ke sabse relevant parts par focus karne ki ijazat deta hai.",
+      "section": 5
+    },
+    {
+      "id": "parameters",
+      "term_en": "Parameters",
+      "term_roman_ur": "Parameters",
+      "definition_en": "Learnable variables in a neural network that are adjusted during training.",
+      "definition_roman_ur": "Neural network mein seekhne hone wale variables jo training mein adjust kiye jaate hain.",
+      "section": 2
+    },
+    {
+      "id": "epochs",
+      "term_en": "Epochs",
+      "term_roman_ur": "Epochs",
+      "definition_en": "Complete passes through the entire training dataset during model training.",
+      "definition_roman_ur": "Model training mein poore training dataset se complete pass karna.",
+      "section": 2
+    },
+    {
+      "id": "loss_function",
+      "term_en": "Loss Function",
+      "term_roman_ur": "Loss Function",
+      "definition_en": "A mathematical function that measures how far a model's predictions are from the actual data.",
+      "definition_roman_ur": "Ek mathematical function jo model ke predictions ko actual data se kitni door hain ye measure karta hai.",
+      "section": 2
+    }
+  ]
+}

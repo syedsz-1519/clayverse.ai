@@ -41,10 +41,10 @@ import { audioEngine } from './lib/audioEngine';
 import { Compass, Sparkles, BookOpen, Video, TrendingUp, ArrowLeft, LayoutGrid, List, GraduationCap, MessageSquare, Command, Keyboard, WifiOff, HardDriveDownload, Volume2 } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
 import ClayLogo from './components/ClayLogo';
-import { useLanguage } from './hooks/useLanguage';
+import { useLanguageMultilingual } from './hooks/useLanguageMultilingual';
 
 export default function App() {
-  const { lang } = useLanguage();
+  const { lang, t, dir } = useLanguageMultilingual();
   const { theme, setTheme } = useTheme();
   const [currentView, setCurrentView] = useState<'guide' | 'interview' | 'dashboard' | 'learning-hub'>('guide');
   const [currentLessonId, setCurrentLessonId] = useState<string | null>(null);
@@ -71,8 +71,8 @@ export default function App() {
       const next = typeof explicitValue === 'boolean' ? explicitValue : !prev;
       showShortcutToast(
         next 
-          ? (lang === 'te' ? 'ఫోకస్ మోడ్: సక్రియం (అంతరాయం లేని పఠనం)' : lang === 'hi' ? 'फोकस मोड: सक्रिय (एकाग्र अध्ययन)' : lang === 'hyd' || lang === 'ur' ? 'Focus Mode: Shuru ho gaya' : 'Focus Mode: Active (Distraction-Free Reading)')
-          : (lang === 'te' ? 'ఫోకస్ మోడ్: నిష్క్రమించారు' : lang === 'hi' ? 'फोकस मोड: बंद किया गया' : lang === 'hyd' || lang === 'ur' ? 'Focus Mode: Band ho gaya' : 'Focus Mode: Deactivated (Full Navigation)')
+          ? (lang === 'te' ? 'ఫోకస్ మోడ్: సక్రియం (అంతరాయం లేని పఠనం)' : lang === 'hi' ? 'फोकस मोड: सक्रिय (एकाग्र अध्ययन)' : lang === 'ur' || lang === 'roman_ur' ? 'Focus Mode: Shuru ho gaya' : 'Focus Mode: Active (Distraction-Free Reading)')
+          : (lang === 'te' ? 'ఫోకస్ మోడ్: నిష్క్రమించారు' : lang === 'hi' ? 'फोकस मोड: बंद किया गया' : lang === 'ur' || lang === 'roman_ur' ? 'Focus Mode: Band ho gaya' : 'Focus Mode: Deactivated (Full Navigation)')
       );
       return next;
     });

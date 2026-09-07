@@ -1,0 +1,164 @@
+{
+  "terms": [
+    {
+      "id": "ai_basic",
+      "term_en": "Artificial Intelligence",
+      "term_ur": "مصنوعی ذہانت",
+      "definition_en": "The capability of computer systems to perform tasks that require human intelligence, such as learning from patterns and making decisions.",
+      "definition_ur": "کمپیوٹر سسٹم کی صلاحیت انسانی ذہانت کی ضرورت والے کام انجام دینے کی، جیسے نمونوں سے سیکھنا اور فیصلے کرنا۔",
+      "section": 1
+    },
+    {
+      "id": "algorithm",
+      "term_en": "Algorithm",
+      "term_ur": "الگورتھم",
+      "definition_en": "A step-by-step procedure or formula for solving a problem or accomplishing a task.",
+      "definition_ur": "مسئلہ حل کرنے یا کام انجام دینے کے لیے قدم درقدم طریقہ کار یا فارمولا۔",
+      "section": 1
+    },
+    {
+      "id": "pattern_matching",
+      "term_en": "Pattern Matching",
+      "term_ur": "نمونہ ملانا",
+      "definition_en": "The ability to identify recurring structures or regularities in data.",
+      "definition_ur": "ڈیٹا میں دوبارہ ہونے والی ساخت یا باقاعدگی کو پہچاننے کی صلاحیت۔",
+      "section": 1
+    },
+    {
+      "id": "machine_learning",
+      "term_en": "Machine Learning",
+      "term_ur": "مشین سیکھنا",
+      "definition_en": "A subset of AI where systems learn and improve from experience without being explicitly programmed.",
+      "definition_ur": "AI کا ایک حصہ جہاں سسٹم تجربے سے سیکھتے اور بہتر ہوتے ہیں بغیر واضح طور پر پروگرام کیے جائے۔",
+      "section": 2
+    },
+    {
+      "id": "neural_network",
+      "term_en": "Neural Network",
+      "term_ur": "اعصابی نیٹ ورک",
+      "definition_en": "A computing system inspired by biological neural networks that constitute animal brains.",
+      "definition_ur": "حیاتیاتی اعصابی نیٹ ورک سے متاثر ایک کمپیوٹنگ سسٹم جو جانوروں کے دماغ کو بناتا ہے۔",
+      "section": 3
+    },
+    {
+      "id": "deep_learning",
+      "term_en": "Deep Learning",
+      "term_ur": "گہری سیکھ",
+      "definition_en": "A subset of machine learning using multiple layers of artificial neural networks.",
+      "definition_ur": "مشین سیکھنے کا ایک حصہ جو مصنوعی اعصابی نیٹ ورک کی متعدد تہوں کا استعمال کرتا ہے۔",
+      "section": 3
+    },
+    {
+      "id": "training_data",
+      "term_en": "Training Data",
+      "term_ur": "تربیتی ڈیٹا",
+      "definition_en": "The dataset used to train a machine learning model to recognize patterns.",
+      "definition_ur": "نمونوں کو پہچاننے کے لیے مشین سیکھنے کے ماڈل کو تربیت دینے کے لیے استعمال کیا جانے والا ڈیٹاسیٹ۔",
+      "section": 2
+    },
+    {
+      "id": "model",
+      "term_en": "Model",
+      "term_ur": "ماڈل",
+      "definition_en": "A mathematical representation of learned patterns from training data.",
+      "definition_ur": "تربیتی ڈیٹا سے سیکھے گئے نمونوں کی ریاضیاتی نمائندگی۔",
+      "section": 2
+    },
+    {
+      "id": "generative_ai",
+      "term_en": "Generative AI",
+      "term_ur": "تخلیقی ذہانت",
+      "definition_en": "AI systems that can create new, original content such as text, images, or code.",
+      "definition_ur": "ذہانت کے نظام جو نیا، اصل مواد بنا سکتے ہیں جیسے متن، تصاویر، یا کوڈ۔",
+      "section": 4
+    },
+    {
+      "id": "llm",
+      "term_en": "Large Language Model (LLM)",
+      "term_ur": "بڑا زبان کا ماڈل",
+      "definition_en": "A neural network model trained on massive amounts of text data to understand and generate human language.",
+      "definition_ur": "ایک اعصابی نیٹ ورک ماڈل جو انسانی زبان کو سمجھنے اور پیدا کرنے کے لیے بھاری مقدار میں متن کے ڈیٹا پر تربیت حاصل کرتا ہے۔",
+      "section": 5
+    },
+    {
+      "id": "transformer",
+      "term_en": "Transformer",
+      "term_ur": "ٹرانسفارمر",
+      "definition_en": "A neural network architecture that uses attention mechanisms to process sequences of data.",
+      "definition_ur": "ڈیٹا کی ترتیبوں کو سنبھالنے کے لیے توجہ کے طریقوں کا استعمال کرتے ہوئے ایک اعصابی نیٹ ورک کا ڈھانچہ۔",
+      "section": 5
+    },
+    {
+      "id": "token",
+      "term_en": "Token",
+      "term_ur": "ٹوکن",
+      "definition_en": "A small unit of text, often a word or part of a word, that an AI model processes.",
+      "definition_ur": "متن کی ایک چھوٹی سی یونٹ، اکثر ایک لفظ یا لفظ کا حصہ، جو ذہانت ماڈل کے ذریعے عمل میں آتا ہے۔",
+      "section": 5
+    },
+    {
+      "id": "prompt",
+      "term_en": "Prompt",
+      "term_ur": "ہدایت",
+      "definition_en": "An input or instruction given to an AI model to generate a desired output.",
+      "definition_ur": "ایک ان پٹ یا ہدایت جو مطلوبہ آؤٹ پٹ پیدا کرنے کے لیے ذہانت ماڈل کو دی جاتی ہے۔",
+      "section": 6
+    },
+    {
+      "id": "rag",
+      "term_en": "Retrieval-Augmented Generation (RAG)",
+      "term_ur": "بحالی اضافی نسل",
+      "definition_en": "A technique that retrieves relevant information from a database and uses it to enhance AI-generated responses.",
+      "definition_ur": "ایک تکنیک جو ڈیٹاबیس سے متعلقہ معلومات حاصل کرتی ہے اور اسے ذہانت سے پیدا شدہ جوابات کو بہتر بنانے کے لیے استعمال کرتی ہے۔",
+      "section": 7
+    },
+    {
+      "id": "hallucination",
+      "term_en": "Hallucination",
+      "term_ur": "غلط تصور",
+      "definition_en": "When an AI model generates incorrect or fabricated information.",
+      "definition_ur": "جب ذہانت ماڈل غلط یا بنایا گیا معلومات تیار کرتا ہے۔",
+      "section": 7
+    },
+    {
+      "id": "embeddings",
+      "term_en": "Embeddings",
+      "term_ur": "بیانات",
+      "definition_en": "Numerical representations of words or concepts that capture their semantic meaning.",
+      "definition_ur": "الفاظ یا تصورات کی عددی نمائندگی جو ان کے لفظی معنیٰ کو پکڑتی ہے۔",
+      "section": 7
+    },
+    {
+      "id": "attention_mechanism",
+      "term_en": "Attention Mechanism",
+      "term_ur": "توجہ کی حکمت عملی",
+      "definition_en": "A technique that allows neural networks to focus on the most relevant parts of input data.",
+      "definition_ur": "ایک تکنیک جو اعصابی نیٹ ورک کو ان پٹ ڈیٹا کے سب سے متعلقہ حصوں پر توجہ دینے کی اجازت دیتی ہے۔",
+      "section": 5
+    },
+    {
+      "id": "parameters",
+      "term_en": "Parameters",
+      "term_ur": "پیمانے",
+      "definition_en": "Learnable variables in a neural network that are adjusted during training.",
+      "definition_ur": "اعصابی نیٹ ورک میں سیکھنے کے قابل متغیرات جو تربیت کے دوران ایڈجسٹ کیے جاتے ہیں۔",
+      "section": 2
+    },
+    {
+      "id": "epochs",
+      "term_en": "Epochs",
+      "term_ur": "دور",
+      "definition_en": "Complete passes through the entire training dataset during model training.",
+      "definition_ur": "ماڈل کی تربیت کے دوران مکمل تربیتی ڈیٹاسیٹ کے ذریعے مکمل گزرنا۔",
+      "section": 2
+    },
+    {
+      "id": "loss_function",
+      "term_en": "Loss Function",
+      "term_ur": "نقصان کا کام",
+      "definition_en": "A mathematical function that measures how far a model's predictions are from the actual data.",
+      "definition_ur": "ایک ریاضیاتی کام جو ماڈل کی پیشن گوئیوں کو اصل ڈیٹا سے کتنی دور ہے اس کی پیمائش کرتا ہے۔",
+      "section": 2
+    }
+  ]
+}

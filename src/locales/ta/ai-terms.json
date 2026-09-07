@@ -1,0 +1,164 @@
+{
+  "terms": [
+    {
+      "id": "ai_basic",
+      "term_en": "Artificial Intelligence",
+      "term_ta": "செயற்கை நுண்ணறிவு",
+      "definition_en": "The capability of computer systems to perform tasks that require human intelligence, such as learning from patterns and making decisions.",
+      "definition_ta": "மனித நுண்ணறிவு தேவைப்படும் பணிகளை நிபுணமாக செய்ய கணினி அமைப்புகளின் திறன், முறை கற்றல் மற்றும் முடிவு எடுத்தல் போன்றவை.",
+      "section": 1
+    },
+    {
+      "id": "algorithm",
+      "term_en": "Algorithm",
+      "term_ta": "வழிமுறை",
+      "definition_en": "A step-by-step procedure or formula for solving a problem or accomplishing a task.",
+      "definition_ta": "சிக்கலை தீர்க்க அல்லது பணியை நிறைவு செய்ய ஒரு படிப்படியான நடைமுறை அல்லது சூத்திரம்.",
+      "section": 1
+    },
+    {
+      "id": "pattern_matching",
+      "term_en": "Pattern Matching",
+      "term_ta": "முறை பொருத்தம்",
+      "definition_en": "The ability to identify recurring structures or regularities in data.",
+      "definition_ta": "தரவுகளில் மீண்டும் நிகழும் கட்டமைப்புகள் அல்லது ஒழுங்கை அடையாளம் காணும் திறன்.",
+      "section": 1
+    },
+    {
+      "id": "machine_learning",
+      "term_en": "Machine Learning",
+      "term_ta": "இயந்திர கற்றல்",
+      "definition_en": "A subset of AI where systems learn and improve from experience without being explicitly programmed.",
+      "definition_ta": "AI இன் ஒரு உபகரணம் எங்கு கணினி அனுபவத்திலிருந்து கற்கிறது மற்றும் வெளிப்படையாக நிரல்படுத்தப்படாமல் மேம்படுகிறது.",
+      "section": 2
+    },
+    {
+      "id": "neural_network",
+      "term_en": "Neural Network",
+      "term_ta": "நரம்பு வலையமைப்பு",
+      "definition_en": "A computing system inspired by biological neural networks that constitute animal brains.",
+      "definition_ta": "உயிரியல் நரம்பு வலையமைப்பால் ஈர்க்கப்பட்ட கணினி அமைப்பு, இது விலங்கு மூளைகளை உருவாக்குகிறது.",
+      "section": 3
+    },
+    {
+      "id": "deep_learning",
+      "term_en": "Deep Learning",
+      "term_ta": "ஆழமான கற்றல்",
+      "definition_en": "A subset of machine learning using multiple layers of artificial neural networks.",
+      "definition_ta": "செயற்கை நரம்பு வலையமைப்பின் பல அடுக்குகளைப் பயன்படுத்தி இயந்திர கற்றலின் ஒரு உபகரணம்.",
+      "section": 3
+    },
+    {
+      "id": "training_data",
+      "term_en": "Training Data",
+      "term_ta": "பயிற்சி தரவு",
+      "definition_en": "The dataset used to train a machine learning model to recognize patterns.",
+      "definition_ta": "முறைகளை அடையாளம் காணக் கற்பிக்க இயந்திர கற்றல் மாதிரியை பயிற்றுவிக்க பயன்படுத்தப்படும் தரவுத்தொகுப்பு.",
+      "section": 2
+    },
+    {
+      "id": "model",
+      "term_en": "Model",
+      "term_ta": "மாதிரி",
+      "definition_en": "A mathematical representation of learned patterns from training data.",
+      "definition_ta": "பயிற்சி தரவுகளிலிருந்து கற்ற முறைகளின் கணிதக் குறிப்பு.",
+      "section": 2
+    },
+    {
+      "id": "generative_ai",
+      "term_en": "Generative AI",
+      "term_ta": "உருவாக்கும் AI",
+      "definition_en": "AI systems that can create new, original content such as text, images, or code.",
+      "definition_ta": "AI கணினிகள் உரை, படங்கள் அல்லது குறியீடு போன்ற புதிய, அசல் உள்ளடக்கம் உருவாக்கக் கூடியவை.",
+      "section": 4
+    },
+    {
+      "id": "llm",
+      "term_en": "Large Language Model (LLM)",
+      "term_ta": "பெரிய மொழி மாதிரி",
+      "definition_en": "A neural network model trained on massive amounts of text data to understand and generate human language.",
+      "definition_ta": "மனித மொழியை புரிந்து கொள்ளவும் உருவாக்கவும் பெரிய அளவிலான உரை தரவுகளில் பயிற்றுவிக்கப்பட்ட நரம்பு வலையமைப்பு மாதிரி.",
+      "section": 5
+    },
+    {
+      "id": "transformer",
+      "term_en": "Transformer",
+      "term_ta": "மாற்றி",
+      "definition_en": "A neural network architecture that uses attention mechanisms to process sequences of data.",
+      "definition_ta": "தரவுத் தொடর்களை செயலாக்க கவனிப்பு பद்ধதிகளைப் பயன்படுத்தும் நரம்பு வலையமைப்பு கட்டமைப்பு.",
+      "section": 5
+    },
+    {
+      "id": "token",
+      "term_en": "Token",
+      "term_ta": "சின்னம்",
+      "definition_en": "A small unit of text, often a word or part of a word, that an AI model processes.",
+      "definition_ta": "உரையின் ஒரு சிறிய அலகு, பெரும்பாலும் ஒரு சொல் அல்லது சொல்லின் ஒரு பகுதி, AI மாதிரி செயலாக்குகிறது.",
+      "section": 5
+    },
+    {
+      "id": "prompt",
+      "term_en": "Prompt",
+      "term_ta": "தூண்டல்",
+      "definition_en": "An input or instruction given to an AI model to generate a desired output.",
+      "definition_ta": "விரும்பிய வெளியீட்டை உருவாக்க AI மாதிரியிலிருந்து கொடுக்கப்பட்ட உள்ளீடு அல்லது கட்டளை.",
+      "section": 6
+    },
+    {
+      "id": "rag",
+      "term_en": "Retrieval-Augmented Generation (RAG)",
+      "term_ta": "மீட்டெடுப்பு-மேம்படுத்தப்பட்ட உருவாக்கம்",
+      "definition_en": "A technique that retrieves relevant information from a database and uses it to enhance AI-generated responses.",
+      "definition_ta": "தரவுத்தளத்திலிருந்து தொடர்புடைய தகவலை மீட்டெடுத்து AI-உருவாக்கிய பதிலை மேம்படுத்த பயன்படுத்தும் நுணுக்கம்.",
+      "section": 7
+    },
+    {
+      "id": "hallucination",
+      "term_en": "Hallucination",
+      "term_ta": "வீழ்ச்சி",
+      "definition_en": "When an AI model generates incorrect or fabricated information.",
+      "definition_ta": "AI மாதிரி தவறான அல்லது கற்பிக்கப்பட்ட தகவலை உருவாக்கும் போது.",
+      "section": 7
+    },
+    {
+      "id": "embeddings",
+      "term_en": "Embeddings",
+      "term_ta": "உட்புகுத்தல்கள்",
+      "definition_en": "Numerical representations of words or concepts that capture their semantic meaning.",
+      "definition_ta": "சொற்கள் அல்லது கருத்துக்களின் எண் குறிப்புகள், அவற்றின் பொருளாய் அர்த்தம் பிடிக்கும்.",
+      "section": 7
+    },
+    {
+      "id": "attention_mechanism",
+      "term_en": "Attention Mechanism",
+      "term_ta": "கவனிப்பு பந்திரம்",
+      "definition_en": "A technique that allows neural networks to focus on the most relevant parts of input data.",
+      "definition_ta": "நரம்பு வலையமைப்பை உள்ளீட்டுத் தரவின் மிகவும் தொடர்புடைய பகுதிகளில் கவனம் செலுத்த அனுமதிக்கும் நுணுக்கம்.",
+      "section": 5
+    },
+    {
+      "id": "parameters",
+      "term_en": "Parameters",
+      "term_ta": "மாபெரும் மாறிகள்",
+      "definition_en": "Learnable variables in a neural network that are adjusted during training.",
+      "definition_ta": "நரம்பு வலையமைப்பில் கற்கூடிய மாறிகள் பயிற்சியின் போது சரிசெய்யப்படுகின்றன.",
+      "section": 2
+    },
+    {
+      "id": "epochs",
+      "term_en": "Epochs",
+      "term_ta": "பருவ கால்",
+      "definition_en": "Complete passes through the entire training dataset during model training.",
+      "definition_ta": "மாதிரி பயிற்சியின் போது முழு பயிற்சி தரவுத்தொகுப்பு முழுவதையும் முடிக்க ஆகிறது.",
+      "section": 2
+    },
+    {
+      "id": "loss_function",
+      "term_en": "Loss Function",
+      "term_ta": "இழப்பு செயல்பாடு",
+      "definition_en": "A mathematical function that measures how far a model's predictions are from the actual data.",
+      "definition_ta": "ஒரு கணிதச் செயல்பாடு ஒரு மாதிரியின் கணிப்புகள் உண்மையான தரவுகளிலிருந்து எவ்வளவு தூரத்தில் உள்ளன என்பதை அளவிடுகிறது.",
+      "section": 2
+    }
+  ]
+}

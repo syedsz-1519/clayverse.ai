@@ -1,0 +1,92 @@
+{
+  "terms": [
+    {
+      "id": "ai_basic",
+      "term_en": "Artificial Intelligence",
+      "term_hi": "कृत्रिम बुद्धिमत्ता",
+      "definition_en": "The capability of computer systems to perform tasks that require human intelligence, such as learning from patterns and making decisions.",
+      "definition_hi": "कंप्यूटर सिस्टम की वह क्षमता जो मानव बुद्धिमत्ता की आवश्यकता वाले कार्यों को पूरा कर सकती है, जैसे पैटर्न से सीखना और निर्णय लेना।",
+      "section": 1
+    },
+    {
+      "id": "algorithm",
+      "term_en": "Algorithm",
+      "term_hi": "एल्गोरिथ्म",
+      "definition_en": "A step-by-step procedure or formula for solving a problem or accomplishing a task.",
+      "definition_hi": "समस्या को हल करने या किसी कार्य को पूरा करने के लिए चरण-दर-चरण प्रक्रिया।",
+      "section": 1
+    },
+    {
+      "id": "pattern_matching",
+      "term_en": "Pattern Matching",
+      "term_hi": "पैटर्न मिलान",
+      "definition_en": "The ability to identify recurring structures or regularities in data.",
+      "definition_hi": "डेटा में आवर्ती संरचनाओं या नियमितताओं की पहचान करने की क्षमता।",
+      "section": 1
+    },
+    {
+      "id": "machine_learning",
+      "term_en": "Machine Learning",
+      "term_hi": "मशीन लर्निंग",
+      "definition_en": "A subset of AI where systems learn and improve from experience without being explicitly programmed.",
+      "definition_hi": "AI का एक उपसेट जहां सिस्टम अनुभव से सीखते हैं और सुधरते हैं बिना स्पष्ट प्रोग्रामिंग के।",
+      "section": 2
+    },
+    {
+      "id": "neural_network",
+      "term_en": "Neural Network",
+      "term_hi": "न्यूरल नेटवर्क",
+      "definition_en": "A computing system inspired by biological neural networks that constitute animal brains.",
+      "definition_hi": "जैविक तंत्रिका नेटवर्क से प्रेरित एक कंप्यूटिंग प्रणाली जो पशु मस्तिष्क का निर्माण करती है।",
+      "section": 3
+    },
+    {
+      "id": "deep_learning",
+      "term_en": "Deep Learning",
+      "term_hi": "डीप लर्निंग",
+      "definition_en": "A subset of machine learning using multiple layers of artificial neural networks.",
+      "definition_hi": "कृत्रिम तंत्रिका नेटवर्क की कई परतों का उपयोग करके मशीन लर्निंग का एक उपसेट।",
+      "section": 3
+    },
+    {
+      "id": "training_data",
+      "term_en": "Training Data",
+      "term_hi": "प्रशिक्षण डेटा",
+      "definition_en": "The dataset used to train a machine learning model to recognize patterns.",
+      "definition_hi": "पैटर्न को पहचानने के लिए मशीन लर्निंग मॉडल को प्रशिक्षित करने के लिए उपयोग किया जाने वाला डेटासेट।",
+      "section": 2
+    },
+    {
+      "id": "generative_ai",
+      "term_en": "Generative AI",
+      "term_hi": "जनरेटिव AI",
+      "definition_en": "AI systems that can create new, original content such as text, images, or code.",
+      "definition_hi": "AI सिस्टम जो नई, मूल सामग्री बना सकते हैं जैसे पाठ, छवियां, या कोड।",
+      "section": 4
+    },
+    {
+      "id": "llm",
+      "term_en": "Large Language Model (LLM)",
+      "term_hi": "बड़ा भाषा मॉडल",
+      "definition_en": "A neural network model trained on massive amounts of text data to understand and generate human language.",
+      "definition_hi": "एक न्यूरल नेटवर्क मॉडल जो मानव भाषा को समझने और उत्पन्न करने के लिए विशाल टेक्स्ट डेटा पर प्रशिक्षित है।",
+      "section": 5
+    },
+    {
+      "id": "prompt",
+      "term_en": "Prompt",
+      "term_hi": "प्रॉम्प्ट",
+      "definition_en": "An input or instruction given to an AI model to generate a desired output.",
+      "definition_hi": "AI मॉडल को दिया गया इनपुट या निर्देश वांछित आउटपुट उत्पन्न करने के लिए।",
+      "section": 6
+    },
+    {
+      "id": "rag",
+      "term_en": "Retrieval-Augmented Generation (RAG)",
+      "term_hi": "पुनर्प्राप्ति-संवर्धित पीढ़ी",
+      "definition_en": "A technique that retrieves relevant information from a database and uses it to enhance AI-generated responses.",
+      "definition_hi": "एक तकनीक जो डेटाबेस से प्रासंगिक जानकारी प्राप्त करती है और इसे AI-उत्पन्न प्रतिक्रियाओं को बढ़ाने के लिए उपयोग करती है।",
+      "section": 7
+    }
+  ]
+}
