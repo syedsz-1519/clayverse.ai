@@ -365,7 +365,7 @@ export async function synthesizeSpeech(
   console.log(`🎤 Clay synthesizing speech (${config.language}):`, text);
 
   // Try Web Speech API first (native, free, works offline)
-  if (config.provider === 'webSpeech' || config.provider === 'webSpeech') {
+  if (config.provider === 'webSpeech') {
     return ttsWebSpeech(text, config);
   }
 

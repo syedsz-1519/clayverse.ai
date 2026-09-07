@@ -37,6 +37,7 @@ import TTSReaderModal from './components/TTSReaderModal';
 import MindMapLearning from './components/MindMapLearning';
 import InteractiveVisualization from './components/InteractiveVisualization';
 import ClaybotIntroduction from './components/ClaybotIntroduction';
+import ClayTalkingPersonality from './components/ClayTalkingPersonality';
 import { LESSON_MODULES } from './components/HomeCurriculumGrid';
 import { useGlobalKeyboardShortcuts } from './hooks/useGlobalKeyboardShortcuts';
 import { useTheme, type Theme } from './hooks/useTheme';
@@ -816,6 +817,13 @@ export default function App() {
           </motion.footer>
         )}
       </AnimatePresence>
+
+      {/* Clay Talking Personality - Interactive AI Instructor */}
+      <ClayTalkingPersonality 
+        position="bottom-right"
+        autoGreet={true}
+        showOnInit={false}
+      />
     </div>
   );
 }

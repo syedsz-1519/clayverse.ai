@@ -415,7 +415,7 @@ export async function askClay(question: ClayQuestion): Promise<ClayAnswer> {
     explanation: knowledgeEntry.explanation,
     examples: knowledgeEntry.examples,
     relatedTopics: knowledgeEntry.relatedTopics,
-    difficulty: knowledgeEntry.difficulty,
+    difficulty: (knowledgeEntry.difficulty as 'beginner' | 'intermediate' | 'advanced'),
     language: question.language,
     audioReady: true
   };
