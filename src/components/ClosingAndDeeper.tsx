@@ -19,7 +19,7 @@ import {
 } from 'lucide-react';
 import { roadmapSections, Section, Term } from '../data/roadmapTerms';
 import ClayLogo from './ClayLogo';
-import { useLanguage } from '../hooks/useLanguage';
+import { useLanguageMultilingual } from '../hooks/useLanguageMultilingual';
 import ReadSectionButton from './ReadSectionButton';
 import CopyCodeButton from './CopyCodeButton';
 import { 
@@ -29,8 +29,20 @@ import {
 } from '../lib/firebase';
 
 export default function ClosingAndDeeper() {
-  const { lang, t } = useLanguage();
+  const { lang, t, aiTerms, getAITerm } = useLanguageMultilingual();
   const [isOpen, setIsOpen] = useState(true); // Open by default to showcase the roadmap immediately
+  
+  // Helper function to get localized term definition
+  const getLocalizedDefinition = (termTitle: string, fallbackDefinition: string) => {
+    // Look for term in ai-terms by matching English term
+    const aiTerm = aiTerms.find((term: any) => term.term_en === termTitle);
+    if (aiTerm) {
+      // Get language-specific definition
+      const langFieldName = lang === 'en' ? 'definition_en' : lang === 'hi' ? 'definition_hi' : lang === 'te' ? 'definition_te' : lang === 'mr' ? 'definition_mr' : lang === 'ta' ? 'definition_ta' : lang === 'ur' ? 'definition_ur' : lang === 'roman_ur' ? 'definition_roman_ur' : lang === 'hinglish' ? 'definition_hinglish' : 'definition_en';
+      return aiTerm[langFieldName] || aiTerm.definition_en || fallbackDefinition;
+    }
+    return fallbackDefinition;
+  };
   const [searchQuery, setSearchQuery] = useState('');
   const [revealedQuizzes, setRevealedQuizzes] = useState<Record<string, boolean>>({});
   const [activeSectionId, setActiveSectionId] = useState<string | null>(null);
@@ -369,7 +381,7 @@ export default function ClosingAndDeeper() {
                               Sec {section.number}
                             </span>
                           </div>
-                          <p className="text-xs text-brand-slate leading-relaxed mt-2">{term.definition}</p>
+                          <p className="text-xs text-brand-slate leading-relaxed mt-2">{getLocalizedDefinition(term.title, term.definition)}</p>
                         </div>
                       </div>
                     );
@@ -541,7 +553,7 @@ export default function ClosingAndDeeper() {
                                       )}
                                     </h4>
                                     <CopyCodeButton
-                                      text={`${term.title}: ${term.definition}`}
+                                      text={`${term.title}: ${getLocalizedDefinition(term.title, term.definition)}`}
                                       label={lang === 'en' ? "Copy" : "Copy"}
                                       variant="compact"
                                       showIconOnly={true}
@@ -569,7 +581,7 @@ export default function ClosingAndDeeper() {
                                       </div>
                                     ) : (
                                       <p className="text-[11px] sm:text-xs text-brand-slate leading-relaxed text-left animate-fade-in">
-                                        {term.definition}
+                                        {getLocalizedDefinition(term.title, term.definition)}
                                       </p>
                                     )}
                                   </div>

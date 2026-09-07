@@ -52,12 +52,12 @@ const dictionaries: Record<Language, Record<string, string>> = {
 const aiTermsDictionaries: Record<Language, any> = {
   en: require('../locales/en/ai-terms.json'),
   hi: require('../locales/hi/ai-terms.json'),
-  te: {},
-  mr: {},
-  ta: {},
-  ur: {},
-  roman_ur: {},
-  hinglish: {}
+  te: require('../locales/te/ai-terms.json'),
+  mr: require('../locales/mr/ai-terms.json'),
+  ta: require('../locales/ta/ai-terms.json'),
+  ur: require('../locales/ur/ai-terms.json'),
+  roman_ur: require('../locales/roman_ur/ai-terms.json'),
+  hinglish: require('../locales/hinglish/ai-terms.json')
 };
 
 function getNestedValue(obj: any, path: string): string | undefined {
@@ -103,7 +103,19 @@ export function LanguageProvider({ children }: { children: React.ReactNode }) {
   const aiTerms = aiTermsDictionaries[lang]?.terms || aiTermsDictionaries['en']?.terms || [];
 
   const getAITerm = (termId: string) => {
-    return aiTerms.find((term: any) => term.id === termId);
+    const baseTerm = aiTermsDictionaries['en']?.terms?.find((term: any) => term.id === termId);
+    if (!baseTerm) return null;
+
+    // Map language to field suffixes
+    const termFieldSuffix = lang === 'en' ? 'en' : lang === 'hi' ? 'hi' : lang === 'te' ? 'te' : lang === 'mr' ? 'mr' : lang === 'ta' ? 'ta' : lang === 'ur' ? 'ur' : lang === 'roman_ur' ? 'roman_ur' : lang === 'hinglish' ? 'hinglish' : 'en';
+    
+    return {
+      ...baseTerm,
+      term: baseTerm[`term_${termFieldSuffix}`] || baseTerm.term_en || baseTerm[`term_${lang}`] || baseTerm.term_en,
+      definition: baseTerm[`definition_${termFieldSuffix}`] || baseTerm.definition_en || baseTerm[`definition_${lang}`] || baseTerm.definition_en,
+      termEn: baseTerm.term_en,
+      definitionEn: baseTerm.definition_en
+    };
   };
 
   useEffect(() => {
