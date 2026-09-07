@@ -369,7 +369,9 @@ Style:
   }
 
   app.listen(PORT, '0.0.0.0', () => {
-    console.log(`Server running on http://0.0.0.0:${PORT}`);
+    console.log(`🚀 Clayverse AI Server running on http://0.0.0.0:${PORT}`);
+    console.log(`📚 Interactive AI Learning Platform`);
+    console.log(`✨ Ready to serve educational content!`);
   });
 }
 

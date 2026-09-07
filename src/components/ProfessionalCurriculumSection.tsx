@@ -176,16 +176,17 @@ export default function ProfessionalCurriculumSection() {
         {/* Curriculum Grid */}
         <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6 mb-12">
           {lessons.map((lesson, idx) => (
-            <CurriculumCard
-              key={lesson.id}
-              num={lesson.num}
-              title={lesson.title}
-              description={lesson.description}
-              icon={lesson.icon}
-              gradient={lesson.gradient}
-              delay={0.1 + idx * 0.1}
-              onClick={() => handleLessonClick(lesson.id)}
-            />
+            <div key={lesson.id}>
+              <CurriculumCard
+                num={lesson.num}
+                title={lesson.title}
+                description={lesson.description}
+                icon={lesson.icon}
+                gradient={lesson.gradient}
+                delay={0.1 + idx * 0.1}
+                onClick={() => handleLessonClick(lesson.id)}
+              />
+            </div>
           ))}
         </div>
 

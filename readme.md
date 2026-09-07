@@ -1,8 +1,8 @@
-# Clayverse AI: An Interactive Multilingual System for Visualizing AI, Machine Learning and Generative AI Architectures
+# Clayverse AI: An Interactive Multilingual Platform for Learning AI, Machine Learning and Generative AI
 
 **Tagline**: *AI Learning That Speaks Your Language*
 
-**Subtitle**: *Bringing AI Education to 12+ Indian Languages Through Interactive Storytelling and an Animated Clay Mascot*
+**Mission**: *Making AI Education Accessible to Everyone Through Beautiful, Interactive Design*
 
 An engaging, beginner-safe, highly interactive multilingual educational platform built with React, TypeScript, and Tailwind CSS. Clayverse AI demystifies complex artificial intelligence, machine learning, and generative systems through zero-jargon analogies, interactive sandboxes, and an animated Clay mascot bot with synchronized text-to-speech narration across Telugu, Hindi, Marathi, Gujarati, Tamil, Kannada, Bengali, Punjabi, Malayalam, Odia, Assamese, Urdu, and English.
 
