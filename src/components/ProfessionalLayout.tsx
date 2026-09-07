@@ -47,7 +47,7 @@ export const ProfessionalLayout: React.FC<ProfessionalLayoutProps> = ({
   }, []);
 
   const totalLessons = LESSON_MODULES.length;
-  const completedLessons = Object.values(lessonProgress).filter(p => p.completed).length;
+  const completedLessons = Object.values(lessonProgress).filter((p: any) => p?.completed).length;
   const overallProgress = Math.round((completedLessons / totalLessons) * 100);
 
   const toggleSection = (section: string) => {
@@ -95,7 +95,7 @@ export const ProfessionalLayout: React.FC<ProfessionalLayoutProps> = ({
       {/* Lessons List */}
       <div className="flex-1 overflow-y-auto">
         <AnimatePresence mode="wait">
-          {Object.entries(lessonsByDifficulty).map(([difficulty, lessons]) => (
+          {Object.entries(lessonsByDifficulty).map(([difficulty, lessons]: [string, any[]]) => (
             <div key={difficulty} className="border-b border-slate-100 last:border-b-0">
               {/* Section Header */}
               <button
@@ -122,10 +122,10 @@ export const ProfessionalLayout: React.FC<ProfessionalLayoutProps> = ({
                     exit={{ opacity: 0, height: 0 }}
                     transition={{ duration: 0.2 }}
                   >
-                    {lessons.map((lesson, idx) => {
+                    {lessons.map((lesson: any, idx: number) => {
                       const progress = lessonProgress[lesson.id];
                       const isActive = currentLessonId === lesson.id;
-                      const isCompleted = progress?.completed || false;
+                      const isCompleted = (progress as any)?.completed || false;
 
                       return (
                         <button

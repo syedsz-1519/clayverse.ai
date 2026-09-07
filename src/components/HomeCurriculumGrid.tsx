@@ -40,14 +40,25 @@ export interface LessonModule {
   stageNameHyd: string;
   titleEn: string;
   titleHyd: string;
+  titleHi?: string;
+  titleTe?: string;
+  titleMr?: string;
+  titleTa?: string;
+  titleUr?: string;
+  titleRomanUr?: string;
+  titleHinglish?: string;
   subtitleEn: string;
   subtitleHyd: string;
+  descriptionEn?: string;
+  descriptionHi?: string;
   readTime: string;
   categoryEn: string;
   categoryHyd: string;
   icon: any;
   color: string;
   tags: string[];
+  difficulty?: 'Beginner' | 'Intermediate' | 'Advanced';
+  estimatedMinutes?: number;
 }
 
 export const LESSON_MODULES: LessonModule[] = [
@@ -59,14 +70,19 @@ export const LESSON_MODULES: LessonModule[] = [
     stageNameHyd: 'Marhala 1: Buniyaadi Soch',
     titleEn: 'Foundations of AI & Mental Models',
     titleHyd: 'AI ki Asli Buniyaad aur Misaalein',
+    titleHi: 'AI और मानसिक मॉडल की बुनियाद',
+    titleTe: 'AI యొక్క ఆధారాలు',
     subtitleEn: 'Understand how pattern recognition differs from traditional coding with the pocket analogizer.',
     subtitleHyd: 'Bina kisi math ke samjhein ke AI normal coding se alag kaise hai.',
+    descriptionEn: 'Learn the fundamental concepts of AI and how machines recognize patterns without traditional programming.',
     readTime: '2 min',
     categoryEn: 'Foundations',
     categoryHyd: 'Buniyaad',
     icon: HelpCircle,
     color: 'from-amber-500/20 to-orange-500/20 border-amber-500/30 text-amber-600',
-    tags: ['Narrow vs General AI', 'Pattern Loops', '3 Horizons']
+    tags: ['Narrow vs General AI', 'Pattern Loops', '3 Horizons'],
+    difficulty: 'Beginner',
+    estimatedMinutes: 12
   },
   {
     id: 'family-tree',
@@ -76,14 +92,18 @@ export const LESSON_MODULES: LessonModule[] = [
     stageNameHyd: 'Marhala 1: Buniyaadi Soch',
     titleEn: 'The AI Family Tree & Neural Nets',
     titleHyd: 'AI ka Shijra-e-Nasab aur Neural Nets',
+    titleHi: 'AI का परिवार वृक्ष और तंत्रिका नेटवर्क',
     subtitleEn: 'Explore Supervised, Unsupervised, Reinforcement Learning, and deep multi-layer neural architectures.',
     subtitleHyd: 'Supervised, Unsupervised, aur Deep Neural networks ko visual circle diagrams se samjhein.',
+    descriptionEn: 'Master the different types of machine learning and how neural networks learn patterns.',
     readTime: '3 min',
     categoryEn: 'Architecture',
     categoryHyd: 'Dhanche',
     icon: Network,
     color: 'from-blue-500/20 to-indigo-500/20 border-blue-500/30 text-blue-600',
-    tags: ['Supervised Learning', 'Clustering', 'Neural Synapses']
+    tags: ['Supervised Learning', 'Clustering', 'Neural Synapses'],
+    difficulty: 'Beginner',
+    estimatedMinutes: 18
   },
   {
     id: 'generative-ai',
@@ -93,14 +113,18 @@ export const LESSON_MODULES: LessonModule[] = [
     stageNameHyd: 'Marhala 1: Buniyaadi Soch',
     titleEn: 'Generative AI & Large Language Models',
     titleHyd: 'Generative AI aur LLMs ka Jadoo',
+    titleHi: 'जेनरेटिव AI और बड़े भाषा मॉडल',
     subtitleEn: 'Master next-token prediction, transformer attention mechanisms, and multi-modal creative synthesis.',
     subtitleHyd: 'Text, image aur code banane wali modern Generative AI kaise sochti hai.',
+    descriptionEn: 'Learn how AI generates text, images, and code using transformer models.',
     readTime: '3 min',
     categoryEn: 'Generative Tech',
     categoryHyd: 'GenAI',
     icon: Bot,
     color: 'from-purple-500/20 to-pink-500/20 border-purple-500/30 text-purple-600',
-    tags: ['Next-Token Math', 'Transformers', 'Hallucinations']
+    tags: ['Next-Token Math', 'Transformers', 'Hallucinations'],
+    difficulty: 'Intermediate',
+    estimatedMinutes: 20
   },
   {
     id: 'prompting-rag',
@@ -110,14 +134,18 @@ export const LESSON_MODULES: LessonModule[] = [
     stageNameHyd: 'Marhala 2: Applied AI aur RAG',
     titleEn: 'Prompting & RAG Architecture',
     titleHyd: 'Prompt Engineering aur RAG System',
+    titleHi: 'प्रॉम्प्ट इंजीनियरिंग और RAG',
     subtitleEn: 'Learn Zero-Shot, Few-Shot, Chain-of-Thought prompting, and Retrieval-Augmented Generation.',
     subtitleHyd: 'AI se behtareen jawab lene ke tareeqay aur private data search ka nizaam.',
+    descriptionEn: 'Master the art of prompting AI and learn how RAG systems work.',
     readTime: '4 min',
     categoryEn: 'Practical Skills',
     categoryHyd: 'Hunar',
     icon: Terminal,
     color: 'from-emerald-500/20 to-teal-500/20 border-emerald-500/30 text-emerald-600',
-    tags: ['Few-Shot Prompts', 'Vector Embeddings', 'Live Sandbox']
+    tags: ['Few-Shot Prompts', 'Vector Embeddings', 'Live Sandbox'],
+    difficulty: 'Intermediate',
+    estimatedMinutes: 25
   },
   {
     id: 'tools',
@@ -127,14 +155,18 @@ export const LESSON_MODULES: LessonModule[] = [
     stageNameHyd: 'Marhala 2: Applied AI aur RAG',
     titleEn: 'Curated AI Tools Directory',
     titleHyd: 'AI Tools aur Softwares ki Directory',
+    titleHi: 'AI उपकरण निर्देशिका',
     subtitleEn: 'Discover verified tools across Text, Image, Audio, Code, and Research workflows.',
     subtitleHyd: 'Rozmarra ke kaamon me madad karne wale behtareen AI apps aur tools.',
+    descriptionEn: 'Explore practical AI tools for your everyday workflows.',
     readTime: '2 min',
     categoryEn: 'Toolbox',
     categoryHyd: 'Tools',
     icon: Cpu,
     color: 'from-rose-500/20 to-orange-500/20 border-rose-500/30 text-rose-600',
-    tags: ['Writing', 'Visuals', 'Coding Assistants']
+    tags: ['Writing', 'Visuals', 'Coding Assistants'],
+    difficulty: 'Beginner',
+    estimatedMinutes: 15
   },
   {
     id: 'deeper',
@@ -144,14 +176,18 @@ export const LESSON_MODULES: LessonModule[] = [
     stageNameHyd: 'Marhala 2: Applied AI aur RAG',
     titleEn: '12 Core Concepts Deep Dive',
     titleHyd: '12 Aham AI Concepts aur Glossary',
+    titleHi: '12 मुख्य अवधारणाएं',
     subtitleEn: 'Comprehensive, plain-English breakdown of 85+ terms from Tokens to Overfitting and Alignment.',
     subtitleHyd: '85 se zyada AI alfaaz ka aasan khulasa aur future outlook.',
+    descriptionEn: 'Deep dive into core AI concepts and terminology.',
     readTime: '5 min',
     categoryEn: 'Deep Dive',
     categoryHyd: 'Tafseel',
     icon: Layers,
     color: 'from-amber-600/20 to-yellow-500/20 border-amber-600/30 text-amber-700',
-    tags: ['Searchable Terms', 'Ethics & Safety', 'Audio Pronunciation']
+    tags: ['Searchable Terms', 'Ethics & Safety', 'Audio Pronunciation'],
+    difficulty: 'Advanced',
+    estimatedMinutes: 30
   },
   {
     id: 'flashcards',
@@ -161,14 +197,18 @@ export const LESSON_MODULES: LessonModule[] = [
     stageNameHyd: 'Marhala 3: Imtehan aur Mastery',
     titleEn: 'Interactive Flashcards Retention Deck',
     titleHyd: 'Interactive Flashcards aur Memory Deck',
+    titleHi: 'इंटरएक्टिव फ्लैशकार्ड्स',
     subtitleEn: 'Reinforce your memory with flip cards, category filters, and retention self-testing.',
     subtitleHyd: 'Seekhe hue sabak ko dimag me pukhta karne ke liye interactive flip cards.',
+    descriptionEn: 'Test and reinforce your knowledge with interactive flashcards.',
     readTime: '3 min',
     categoryEn: 'Memory Deck',
     categoryHyd: 'Revision',
     icon: BookOpen,
     color: 'from-cyan-500/20 to-blue-500/20 border-cyan-500/30 text-cyan-600',
-    tags: ['Spaced Repetition', 'Mastery Tracker', 'Audio Flashcards']
+    tags: ['Spaced Repetition', 'Mastery Tracker', 'Audio Flashcards'],
+    difficulty: 'Intermediate',
+    estimatedMinutes: 20
   },
   {
     id: 'classroom-hub',
@@ -178,14 +218,18 @@ export const LESSON_MODULES: LessonModule[] = [
     stageNameHyd: 'Marhala 3: Imtehan aur Mastery',
     titleEn: 'Google Classroom Hub & Coursework',
     titleHyd: 'Google Classroom Hub aur Asbaaq',
+    titleHi: 'गूगल क्लासरूम हब',
     subtitleEn: 'Connect real classroom streams, export certified milestone badges, and sync coursework.',
     subtitleHyd: 'Apne seekhe hue sabak ko teachers ke sath share karein aur certificates lein.',
+    descriptionEn: 'Integrate with Google Classroom and earn certification badges.',
     readTime: '2 min',
     categoryEn: 'Education',
     categoryHyd: 'Taleem',
     icon: GraduationCap,
     color: 'from-green-500/20 to-emerald-500/20 border-green-500/30 text-green-600',
-    tags: ['OAuth Sync', 'Class Announcements', 'Verified Badges']
+    tags: ['OAuth Sync', 'Class Announcements', 'Verified Badges'],
+    difficulty: 'Intermediate',
+    estimatedMinutes: 15
   },
   {
     id: 'arena',
@@ -195,14 +239,18 @@ export const LESSON_MODULES: LessonModule[] = [
     stageNameHyd: 'Marhala 3: Imtehan aur Mastery',
     titleEn: 'AI Arena Battleground & Quiz Challenge',
     titleHyd: 'AI Arena: Quiz aur Imtehan',
+    titleHi: 'AI अरेना - क्विज चुनौती',
     subtitleEn: 'Put your skills to the test with time-attack quiz battles, streak multipliers, and leaderboard scoring.',
     subtitleHyd: 'Live interactive quiz me hissa lein aur apna highscore banayein.',
+    descriptionEn: 'Challenge yourself with timed AI quizzes and climb the leaderboard.',
     readTime: '4 min',
     categoryEn: 'Battleground',
     categoryHyd: 'Muqabla',
     icon: Trophy,
     color: 'from-orange-500/20 to-red-500/20 border-orange-500/30 text-orange-600',
-    tags: ['Timed Challenges', 'Leaderboard', 'Streak Multipliers']
+    tags: ['Timed Challenges', 'Leaderboard', 'Streak Multipliers'],
+    difficulty: 'Advanced',
+    estimatedMinutes: 25
   }
 ];
 
