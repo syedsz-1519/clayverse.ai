@@ -71,34 +71,26 @@ export default function AIFamilyTree() {
   const nestingLevels = [
     {
       id: 0,
-      title: lang === 'en' ? 'Artificial Intelligence (AI)' : 'Artificial Intelligence (AI)',
-      description: lang === 'en'
-        ? 'The broadest umbrella. Any technology that lets machines simulate human-like reasoning, matching, or puzzle-solving.'
-        : 'Sabse bada umbrella. Koi bhi technology jo computer ko insaan ke jaisa dimaag lagane aur puzzle solve karne mein madad kare.',
+      title: t('familyTree.levels.ai.title', 'Artificial Intelligence (AI)'),
+      description: t('familyTree.levels.ai.description', 'The broadest umbrella. Any technology that lets machines simulate human-like reasoning, matching, or puzzle-solving.'),
       color: 'bg-brand-cream border-brand-charcoal/20 text-brand-charcoal'
     },
     {
       id: 1,
-      title: lang === 'en' ? 'Machine Learning (ML)' : 'Machine Learning (ML)',
-      description: lang === 'en'
-        ? 'A subset of AI where computer systems learn rules directly from historical examples, bypassing hand-written code rules.'
-        : 'AI ka wo hissa jahan computers hazaaro examples dekh ke rules khud ba khud likh lete hain.',
+      title: t('familyTree.levels.ml.title', 'Machine Learning (ML)'),
+      description: t('familyTree.levels.ml.description', 'A subset of AI where computer systems learn rules directly from historical examples, bypassing hand-written code rules.'),
       color: 'bg-white border-brand-slate/20 text-brand-charcoal shadow-sm'
     },
     {
       id: 2,
-      title: lang === 'en' ? 'Deep Learning (DL)' : 'Deep Learning (DL)',
-      description: lang === 'en'
-        ? 'A deeper layer of ML using stacked artificial "neural networks" to automatically master complex structures like human voices or faces.'
-        : 'ML ka bohot gehra hissa jahan multi-layered networks (jaise insaani dimaag ke neurons) bade mushkil kaam jaise awaaz ya chehra pehchanna seekhte hain.',
+      title: t('familyTree.levels.dl.title', 'Deep Learning (DL)'),
+      description: t('familyTree.levels.dl.description', 'A deeper layer of ML using stacked artificial "neural networks" to automatically master complex structures like human voices or faces.'),
       color: 'bg-brand-sand/60 border-brand-amber/15 text-brand-charcoal shadow-sm'
     },
     {
       id: 3,
-      title: lang === 'en' ? 'Generative AI (GenAI)' : 'Generative AI (GenAI)',
-      description: lang === 'en'
-        ? 'The newest inner-core. AI systems trained on massive content maps to create entirely fresh images, writings, or audio tracks.'
-        : 'Aaj kal ka naya inner core. Ye systems naye photos, gaane aur asaan articles khud se likh ke generate kar sakte hain.',
+      title: t('familyTree.levels.genai.title', 'Generative AI (GenAI)'),
+      description: t('familyTree.levels.genai.description', 'The newest inner-core. AI systems trained on massive content maps to create entirely fresh images, writings, or audio tracks.'),
       color: 'bg-brand-amber/10 border-brand-amber/40 text-brand-amber shadow-sm'
     }
   ];
@@ -210,16 +202,13 @@ export default function AIFamilyTree() {
         <div className="text-center max-w-2xl mx-auto mb-10">
           <span className="text-xs font-bold uppercase tracking-wider text-brand-amber font-mono inline-flex items-center gap-1.5">
             <Sparkles className="w-3.5 h-3.5" />
-            {lang === 'en' ? "Layer 02: Core Concepts" : "Layer 02: Khaas Concepts"}
+            {t('familyTree.badge', 'Lesson 02')}
           </span>
           <h2 className="font-display text-3xl sm:text-4xl font-extrabold text-brand-charcoal mt-1 mb-3">
-            {lang === 'en' ? "The AI Family Tree" : "AI ka Khandan (Family Tree)"}
+            {t('familyTree.title', 'The AI Family Tree')}
           </h2>
           <p className="font-sans text-xs sm:text-sm text-brand-muted leading-relaxed mb-4">
-            {lang === 'en'
-              ? "Many terms get thrown around like they mean the same thing. In reality, they are nested inside each other like Russian nesting dolls."
-              : "Bohot saare log samjhte hain sab ka matlab ek hi hai. Par asal mein ye Russian nesting dolls ke jaise ek dusre ke andar nested hain."
-            }
+            {t('familyTree.subtitle', 'Many terms get thrown around like they mean the same thing. In reality, they are nested inside each other like Russian nesting dolls.')}
           </p>
           <div className="flex justify-center">
             <ReadSectionButton sectionId="family-tree" />
