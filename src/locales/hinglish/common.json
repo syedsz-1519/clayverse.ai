@@ -115,5 +115,28 @@
     "error": "Galti",
     "retry": "Dobara Koshish Karo",
     "done": "Ho Gaya"
+  },
+  "generativeAI": {
+    "badge": "Lesson 06",
+    "title": "Generative AI Kyaa Hota Hai?",
+    "intro": "Haal me, AI zyadatar data analyze, sort, ya predict karne ke liye use hota tha. But Generative AI — Artificial Intelligence ki ek nayi branch jo bilkul nayi content, images aur music banati hai — ne creative possibilities khol di hain.",
+    "whatIsGenerativeAI": "Generative AI Kyaa Hota Hai?",
+    "generativeDefinition": "Artificial Intelligence ki nayi branch jo existing data se seekhe hue patterns ke base par nayi content banati hai.",
+    "quickTakeawayGenAI": "Generative AI insaano jaise 'sochti' nahi. Ye ek advanced prediction machine hai."
+  },
+  "prompting": {
+    "title": "Prompting aur RAG Strategy",
+    "badge": "Lesson 04",
+    "subtitle": "AI se kaise baat karo",
+    "types": {
+      "zeroshot": {
+        "title": "Zero-Shot Prompting",
+        "definition": "Examples dikhaye bina model se kuch karne ko kaho."
+      }
+    },
+    "rag": {
+      "title": "Retrieval-Augmented Generation (RAG)",
+      "definition": "Document search ko text generation ke sath combine karke hallucinations ko rokna."
+    }
   }
 }

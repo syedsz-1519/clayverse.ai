@@ -115,5 +115,28 @@
     "error": "Kharabi",
     "retry": "Dobara Koshish Karein",
     "done": "Mukammil"
+  },
+  "generativeAI": {
+    "badge": "Pāth 06",
+    "title": "Generative AI Kyā Hai?",
+    "intro": "Hāl hi mein, AI mukhyatah data tajieh, chāntnā ya pesh-goy ke liye istemal hoti thi. Lekin Generative AI — maunoawi zehānat ki ek jadīd shākh jo bilkul nayā mawwād, tasveerein aur moosīqī bānti hai — ne takhleeki mumkināt kholi hain.",
+    "whatIsGenerativeAI": "Generative AI Kyā Hai?",
+    "generativeDefinition": "Maunoawi zehānat ki jadīd shākh jo mawjood data se sīkhe hue namunoñ ki buniyād par nayā mawwād bānti hai.",
+    "quickTakeawayGenAI": "Generative AI insānoñ ki tarah 'sochti' nahi hai. Ye ek alī pesh-goy ki mashīn hai."
+  },
+  "prompting": {
+    "title": "Matālba aur RAG Hikmat Amal",
+    "badge": "Pāth 04",
+    "subtitle": "AI se kaise bāt karein",
+    "types": {
+      "zeroshot": {
+        "title": "Sifar Shāt Matālba",
+        "definition": "Misālen dikhaiye begher māḍal se kuch karne ko kahen."
+      }
+    },
+    "rag": {
+      "title": "Bāzyāft Shudah Generation (RAG)",
+      "definition": "Dastaweez ki talāsh ko matān ki takhleek ke sāth milā kar khud-fareby ko roknā."
+    }
   }
 }

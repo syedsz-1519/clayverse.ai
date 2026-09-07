@@ -354,5 +354,93 @@
       "genaiTip": "GenAI does not just copy-paste! It learns the deep grammatical or visual 'recipes' of human creation so it can bake entirely fresh outputs from your instructions."
     },
     "quickTakeaway": "AI is not one technology but a nested hierarchy: AI (broadest) contains ML, which contains DL, which powers GenAI. Each layer builds on and specializes the one before it."
+  },
+  "generativeAI": {
+    "badge": "Lesson 06",
+    "title": "What is Generative AI?",
+    "intro": "Until recently, AI was mostly used to analyze, sort, or predict values (like spam or stock prices). But Generative AI — a modern branch of Artificial Intelligence designed to synthesize and output entirely new files, such as custom text, realistic images, and original musical tracks, rather than just analyzing existing ones — has opened up creative frontiers.",
+    "introHindi": "Pehle ke zamane mein AI sirf data analyze, sort, ya predict karne ke liye tha (jaise spam messages ya share market). Lekin Generative AI — Artificial Intelligence ki nayi branch hai jo bina purani files ko copy kiye, bilkul naye mazmoon, photos, aur gaane khud se likh aur bana sakti hai — isne dunya badal di hai.",
+    "inPractice": "In Practice",
+    "inPracticeHindi": "Asli Zindagi Mein",
+    "examples": {
+      "text": {
+        "title": "ChatGPT (Text)",
+        "titleHindi": "ChatGPT (Aasaan Text)",
+        "role": "Writes prose, poems, and clean code.",
+        "roleHindi": "Mazmoon, shayari, aur saaf code likhta hai.",
+        "preview": "Write a warm, simple haiku about a coffee shop on a rainy afternoon...",
+        "previewHindi": "Baarish ki dopahar mein ek garam chai ki dukaan pe shayari likho...",
+        "output": "Soft rain taps the glass,\nWarm steam rises from the cup,\nSilence shares the space.",
+        "outputHindi": "Garam chai ki pyaali ho,\nBaarish ka thanda mausam ho,\nBas thodi si khamoshi ho."
+      },
+      "image": {
+        "title": "Midjourney (Images)",
+        "titleHindi": "Midjourney (Photos)",
+        "role": "Drafts gorgeous digital illustrations.",
+        "roleHindi": "Bohot pyaari photos aur paintings banata hai.",
+        "preview": "A tiny mouse sitting on a dandelion reading a miniature leather book, oil painting style...",
+        "previewHindi": "Ek chota sa chuha patti par baith ke kitabi panna palat raha hai, oil painting style...",
+        "output": "🎨 [Generates a soft, warm oil painting focusing on a spectacled field mouse turning pages under a glowing golden dandelion root]",
+        "outputHindi": "🎨 [Ek pyaari oil painting banti hai jisme chashma lagaya so chuha sunhare patti ke neeche baith ke kitabi panne palat raha hai]"
+      },
+      "music": {
+        "title": "Suno (Music)",
+        "titleHindi": "Suno (Gaane aur Music)",
+        "role": "Creates songs with vocals and melodies.",
+        "roleHindi": "Awaaz aur dhun ke sath naye gaane banata hai.",
+        "preview": "A retro-wave track with acoustic guitars and synthesizers about driving into a golden sunset...",
+        "previewHindi": "Ek mast retro-wave track guitar aur synth ke sath jo shaam ke safar ke baare mein ho...",
+        "output": "🎵 [Synthesizes a warm, rhythmic 120bpm stereo track blending tactile fingerstyle guitar strumming with analog low-pass synthesizers]",
+        "outputHindi": "🎵 [Ek mast 120bpm stereo track banti hai jisme guitar ki dhun ke sath analog synthesizer ka heavy sound ghumta hai]"
+      }
+    },
+    "whatIsGenerativeAI": "What is Generative AI?",
+    "generativeDefinition": "A modern branch of artificial intelligence that generates new content (text, images, music, etc.) based on patterns learned from existing data.",
+    "promptEngineering": "Prompt Engineering",
+    "promptDef": "The art of writing clear, specific instructions for AI models to generate high-quality outputs.",
+    "tokenProbability": "Token Probability",
+    "tokenDef": "How likely the next word or token is, based on all previous tokens. ChatGPT predicts one token at a time.",
+    "transformer": "Transformer Architecture",
+    "transformerDef": "The underlying technology behind modern large language models like ChatGPT and Gemini.",
+    "hallucination": "AI Hallucination",
+    "hallucinationDef": "When AI generates confident-sounding but false or made-up information.",
+    "quickTakeawayGenAI": "Generative AI doesn't 'think' like humans. It's a sophisticated prediction machine that learns statistical patterns from training data and generates new sequences based on probability."
+  },
+  "prompting": {
+    "title": "Prompting & RAG Strategies",
+    "badge": "Lesson 04",
+    "subtitle": "How to talk to AI, and how AI talks to documents",
+    "promptingStrategies": "3 Prompting Strategies",
+    "types": {
+      "zeroshot": {
+        "title": "Zero-Shot Prompting",
+        "definition": "Ask the model to do something without showing any examples first.",
+        "example": "Q: What is photosynthesis? A: [Generates answer from knowledge]"
+      },
+      "fewshot": {
+        "title": "Few-Shot Prompting",
+        "definition": "Show the model 2-3 examples before asking the actual question.",
+        "example": "Q1: What is X? A1: [Example answer] ... Q2: What is Y? A: [Model follows pattern]"
+      },
+      "chainofthought": {
+        "title": "Chain-of-Thought Prompting",
+        "definition": "Ask the model to show its reasoning step-by-step before giving the final answer.",
+        "example": "Think step-by-step: First, ..., Second, ..., Finally, the answer is..."
+      }
+    },
+    "rag": {
+      "title": "Retrieval-Augmented Generation (RAG)",
+      "definition": "Combining document search with text generation to prevent hallucinations.",
+      "howItWorks": "How RAG Works",
+      "step1": "Question",
+      "step1Desc": "User asks a question about specific documents or data",
+      "step2": "Search",
+      "step2Desc": "System searches the document database for relevant chunks",
+      "step3": "Context",
+      "step3Desc": "Retrieved documents are passed as context to the AI model",
+      "step4": "Answer",
+      "step4Desc": "AI generates answer grounded in actual document content",
+      "benefit": "RAG ensures AI stays grounded in real data, preventing confident-sounding false answers."
+    }
   }
 }
