@@ -2,9 +2,12 @@
   "version": 2,
   "buildCommand": "npm run build",
   "outputDirectory": "dist",
-  "env": {
-    "DISABLE_HMR": "true"
-  },
-  "regions": ["iad1"],
-  "public": true
+  "framework": "vite",
+  "public": true,
+  "rewrites": [
+    {
+      "source": "/(.*)",
+      "destination": "/index.html"
+    }
+  ]
 }
