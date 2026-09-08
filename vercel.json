@@ -1,8 +1,4 @@
 {
   "buildCommand": "npm run build",
-  "outputDirectory": "dist",
-  "env": {
-    "NODE_ENV": "production",
-    "DISABLE_HMR": "true"
-  }
+  "outputDirectory": "dist"
 }
