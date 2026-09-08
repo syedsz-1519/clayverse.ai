@@ -14,39 +14,27 @@ export default function GenerativeAI() {
   const genExamples = [
     {
       id: 'text',
-      title: lang === 'en' ? 'ChatGPT (Text)' : 'ChatGPT (Aasaan Text)',
-      role: lang === 'en' ? 'Writes prose, poems, and clean code.' : 'Mazmoon, shayari, aur saaf code likhta hai.',
+      title: t('generativeAI.examples.text.title'),
+      role: t('generativeAI.examples.text.role'),
       icon: Pencil,
-      preview: lang === 'en' 
-        ? 'Write a warm, simple haiku about a coffee shop on a rainy afternoon...'
-        : 'Baarish ki dopahar mein ek garam chai ki dukaan pe shayari likho...',
-      output: lang === 'en'
-        ? 'Soft rain taps the glass,\nWarm steam rises from the cup,\nSilence shares the space.'
-        : 'Garam chai ki pyaali ho,\nBaarish ka thanda mausam ho,\nBas thodi si khamoshi ho.'
+      preview: t('generativeAI.examples.text.preview'),
+      output: t('generativeAI.examples.text.output')
     },
     {
       id: 'image',
-      title: lang === 'en' ? 'Midjourney (Images)' : 'Midjourney (Photos)',
-      role: lang === 'en' ? 'Drafts gorgeous digital illustrations.' : 'Bohot pyaari photos aur paintings banata hai.',
+      title: t('generativeAI.examples.image.title'),
+      role: t('generativeAI.examples.image.role'),
       icon: ImageIcon,
-      preview: lang === 'en'
-        ? 'A tiny mouse sitting on a dandelion reading a miniature leather book, oil painting style...'
-        : 'Ek chota sa chuha patti par baith ke kitabi panna palat raha hai, oil painting style...',
-      output: lang === 'en'
-        ? '🎨 [Generates a soft, warm oil painting focusing on a spectacled field mouse turning pages under a glowing golden dandelion root]'
-        : '🎨 [Ek pyaari oil painting banti hai jisme chashma lagaya so chuha sunhare patti ke neeche baith ke kitabi panne palat raha hai]'
+      preview: t('generativeAI.examples.image.preview'),
+      output: t('generativeAI.examples.image.output')
     },
     {
       id: 'music',
-      title: lang === 'en' ? 'Suno (Music)' : 'Suno (Gaane aur Music)',
-      role: lang === 'en' ? 'Creates songs with vocals and melodies.' : 'Awaaz aur dhun ke sath naye gaane banata hai.',
+      title: t('generativeAI.examples.music.title'),
+      role: t('generativeAI.examples.music.role'),
       icon: Music,
-      preview: lang === 'en'
-        ? 'A retro-wave track with acoustic guitars and synthesizers about driving into a golden sunset...'
-        : 'Ek mast retro-wave track guitar aur synth ke sath jo shaam ke safar ke baare mein ho...',
-      output: lang === 'en'
-        ? '🎵 [Synthesizes a warm, rhythmic 120bpm stereo track blending tactile fingerstyle guitar strumming with analog low-pass synthesizers]'
-        : '🎵 [Ek mast 120bpm stereo track banti hai jisme guitar ki dhun ke sath analog synthesizer ka heavy sound ghumta hai]'
+      preview: t('generativeAI.examples.music.preview'),
+      output: t('generativeAI.examples.music.output')
     }
   ];
 
@@ -77,10 +65,10 @@ export default function GenerativeAI() {
               </div>
 
               <span className="text-xs font-bold uppercase tracking-wider text-brand-amber font-mono block mb-2">
-                {lang === 'en' ? "Lesson 06" : "Sabak 06"}
+                {t('generativeAI.section1.lesson')}
               </span>
               <h2 className="font-display text-3xl font-extrabold text-brand-charcoal mb-4">
-                {lang === 'en' ? "What is Generative AI?" : "Generative AI Kya Hai?"}
+                {t('generativeAI.section1.heading')}
               </h2>
               <p className="font-sans text-brand-charcoal leading-relaxed text-[14px] mb-6">
                 {lang === 'en' ? (
@@ -97,14 +85,10 @@ export default function GenerativeAI() {
 
             <div className="glass-panel p-5 rounded-2xl border-l-4 border-brand-amber relative bg-brand-sand/20">
               <span className="font-mono text-[10px] font-bold text-brand-amber uppercase block mb-1">
-                {lang === 'en' ? "In Practice" : "Asli Zindagi Mein"}
+                {t('generativeAI.section1.inPractice.label')}
               </span>
               <p className="text-brand-charcoal text-xs leading-relaxed italic">
-                {lang === 'en' ? (
-                  `Instead of just recognizing a picture of a cat, Generative AI has learned the "math map" of cats, allowing it to paint a brand-new illustration of a "cat floating in a zero-gravity space helmet" from scratch when asked.`
-                ) : (
-                  `Billi ki photo pehchanna toh bacho ka khel hai yaaron. Generative AI billiyon ka poora "math map" dimaag mein bitha leta hai. Jab tum bolo "space helmet pehne so billi hawa mein udri", toh wo waisi billi ki bilkul nayi photo banake de deta hai.`
-                )}
+                {t('generativeAI.section1.inPractice.text')}
               </p>
             </div>
           </motion.div>
@@ -120,7 +104,7 @@ export default function GenerativeAI() {
 
                 <div className="flex flex-col items-end">
                   <span className="text-[10px] font-mono font-bold text-brand-muted uppercase">
-                    {lang === 'en' ? "Creation Simulator" : "Creation Simulator"}
+                    {t('generativeAI.section2.creationSimulator')}
                   </span>
                   <div className="flex gap-1.5 mt-2">
                     {genExamples.map((item) => {
@@ -144,11 +128,11 @@ export default function GenerativeAI() {
               <div className="bg-white border border-brand-slate/10 p-4 rounded-xl mb-4 relative shadow-sm text-left">
                 <div className="flex items-center justify-between mb-1.5">
                   <span className="bg-brand-sand/70 px-2 py-0.5 border border-brand-slate/10 rounded text-[9px] font-mono font-bold text-brand-slate uppercase">
-                    {lang === 'en' ? "Prompt Input" : "Aapka Prompt"}
+                    {t('generativeAI.section2.promptInput')}
                   </span>
                   <CopyCodeButton
                     text={genExamples.find(e => e.id === activeOutput)?.preview || ''}
-                    label={lang === 'en' ? "Copy Prompt" : "Prompt Copy"}
+                    label={t('generativeAI.section2.copyPrompt')}
                     variant="compact"
                   />
                 </div>
@@ -172,7 +156,7 @@ export default function GenerativeAI() {
                   </span>
                   <CopyCodeButton
                     text={genExamples.find(e => e.id === activeOutput)?.output || ''}
-                    label={lang === 'en' ? "Copy Output" : "Output Copy"}
+                    label={t('generativeAI.section2.copyOutput')}
                     variant="dark"
                   />
                 </div>
@@ -180,10 +164,7 @@ export default function GenerativeAI() {
                   {genExamples.find(e => e.id === activeOutput)?.output}
                 </p>
                 <span className="text-[9px] text-brand-amber/80 font-bold uppercase tracking-wider block mt-4 z-10">
-                  {lang === 'en'
-                    ? `✨ Successfully synthesized output`
-                    : `✨ Model ne dhang se generate kar diya!`
-                  }
+                  {t('generativeAI.section2.successMessage')}
                 </span>
               </motion.div>
             </div>
@@ -212,12 +193,12 @@ export default function GenerativeAI() {
 
               <div className="flex items-center gap-2 mb-3">
                 <span className="text-xs font-bold uppercase tracking-wider text-brand-amber font-mono">
-                  {lang === 'en' ? "Lesson 07" : "Sabak 07"}
+                  {t('generativeAI.section3.lesson')}
                 </span>
               </div>
 
               <h3 className="font-display text-2xl font-extrabold text-brand-charcoal mb-4">
-                {lang === 'en' ? "What is an LLM (Large Language Model)?" : "LLM (Large Language Model) Kya Hai?"}
+                {t('generativeAI.section3.heading')}
               </h3>
               <p className="font-sans text-brand-charcoal leading-relaxed text-[14px] md:text-[15px] mb-4">
                 {lang === 'en' ? (
@@ -248,7 +229,7 @@ export default function GenerativeAI() {
               <div className="w-36 h-36 rounded-full bg-brand-sand/50 border border-brand-slate/10 flex flex-col items-center justify-center skeuo-raised relative shadow-inner">
                 <MessageSquare className="w-10 h-10 text-brand-amber mb-1.5" />
                 <span className="font-mono text-[9px] font-bold text-brand-muted uppercase">
-                  {lang === 'en' ? "Word Predictor" : "Word Predictor"}
+                  {t('generativeAI.section3.wordPredictor')}
                 </span>
                 {/* Micro-nodes around circle */}
                 <div className="absolute top-2 left-6 w-2 h-2 rounded-full bg-brand-amber" />
@@ -274,15 +255,15 @@ export default function GenerativeAI() {
               </div>
               <div>
                 <span className="text-[10px] font-mono font-bold uppercase tracking-wider text-brand-amber block">
-                  {lang === 'en' ? "Developer Code Snippets" : "Developer Code Snippets"}
+                  {t('generativeAI.section4.label')}
                 </span>
                 <h3 className="font-display text-lg font-black text-brand-charcoal">
-                  {lang === 'en' ? "Calling LLMs & Multimodal Models" : "LLM Models ko Code se Call Karna"}
+                  {t('generativeAI.section4.title')}
                 </h3>
               </div>
             </div>
             <span className="text-xs font-mono text-brand-muted bg-brand-sand px-3 py-1 rounded-full border border-brand-slate/10 self-start sm:self-auto">
-              {lang === 'en' ? "TypeScript & Python SDKs" : "TypeScript & Python SDKs"}
+              {t('generativeAI.section4.subtitle')}
             </span>
           </div>
 
@@ -290,13 +271,10 @@ export default function GenerativeAI() {
             {/* Snippet 1: TypeScript SDK */}
             <div>
               <span className="text-xs font-bold text-brand-charcoal block mb-1">
-                {lang === 'en' ? "TypeScript / JavaScript (@google/genai)" : "TypeScript / JavaScript (@google/genai)"}
+                {t('generativeAI.section4.typescript.label')}
               </span>
               <p className="text-[11px] text-brand-muted mb-2">
-                {lang === 'en'
-                  ? "Standard streaming / non-streaming text synthesis in web backends."
-                  : "Web backends mein Gemini model se content generate karne ka clean snippet."
-                }
+                {t('generativeAI.section4.typescript.description')}
               </p>
               <CodeSnippetBlock
                 language="typescript"
@@ -318,20 +296,17 @@ async function generateExplanation(topic: string) {
 
   console.log(response.text);
 }`}
-                copyLabel={lang === 'en' ? "Copy TypeScript" : "TypeScript Copy"}
+                copyLabel={t('generativeAI.section4.typescript.copy')}
               />
             </div>
 
             {/* Snippet 2: cURL / REST API Payload */}
             <div>
               <span className="text-xs font-bold text-brand-charcoal block mb-1">
-                {lang === 'en' ? "cURL / REST API Endpoint" : "cURL / REST API Endpoint"}
+                {t('generativeAI.section4.curl.label')}
               </span>
               <p className="text-[11px] text-brand-muted mb-2">
-                {lang === 'en'
-                  ? "Direct HTTP JSON request payload for terminal testing or Postman."
-                  : "Direct terminal ya command line se test karne ke liye cURL command."
-                }
+                {t('generativeAI.section4.curl.description')}
               </p>
               <CodeSnippetBlock
                 language="bash"
@@ -345,7 +320,7 @@ async function generateExplanation(topic: string) {
       "parts": [{"text": "Explain the difference between Supervised and Unsupervised Learning"}]
     }]
   }'`}
-                copyLabel={lang === 'en' ? "Copy cURL Command" : "cURL Copy"}
+                copyLabel={t('generativeAI.section4.curl.copy')}
               />
             </div>
           </div>

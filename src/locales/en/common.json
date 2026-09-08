@@ -353,45 +353,126 @@
       "genaiExamples": "Gemini, ChatGPT, Midjourney, DALL-E, GitHub Copilot.",
       "genaiTip": "GenAI does not just copy-paste! It learns the deep grammatical or visual 'recipes' of human creation so it can bake entirely fresh outputs from your instructions."
     },
+    "badge": {
+      "broadUmbrella": "Broad Umbrella",
+      "generativeCore": "Generative Core"
+    },
+    "neuralLayers": {
+      "input": {
+        "name": "Input Layer",
+        "desc": "Raw pixels & features"
+      },
+      "hidden1": {
+        "name": "Hidden Layer 1",
+        "desc": "Edges & gradients"
+      },
+      "hidden2": {
+        "name": "Hidden Layer 2",
+        "desc": "Textures & shapes"
+      },
+      "output": {
+        "name": "Output Layer",
+        "desc": "Classification result"
+      }
+    },
+    "interact": {
+      "clickToFlip": "Click Card to Flip!",
+      "switchSubfields": "Tap on circles or doll list to switch subfields",
+      "flipBack": "Click to flip back",
+      "tapToFlip": "Tap card for deep details",
+      "dobaakeWapas": "Dabaake wapas badlo"
+    },
+    "whatsML": {
+      "title": "What is Machine Learning (ML)?",
+      "label": "Lesson 04",
+      "howItFeels": "How it feels",
+      "technicalEngine": "Technical Engine:",
+      "realWorldExamples": "Real-World Examples:",
+      "mlCard": "ML Card",
+      "deepEngine": "Deep Engine",
+      "howItWorks": "How it works:",
+      "realUse": "Real Use:",
+      "copy": "Copy",
+      "copyNotes": "Copy Notes"
+    },
+    "deepLearning": {
+      "title": "What is Deep Learning (DL)?",
+      "label": "Lesson 05",
+      "deepsExplained": "Deeps Explained",
+      "interactiveNeuralNetwork": "Interactive Neural Network Layers",
+      "scrollParallaxEnabled": "Scroll parallax enabled",
+      "synapsesPropagate": "⚡ Synapses propagate activations forward"
+    },
+    "developer": {
+      "label": "Developer Code Snippets",
+      "title": "Machine Learning vs Neural Networks in Python",
+      "tech": "scikit-learn & PyTorch",
+      "ml": "1. Classical ML Classifier (scikit-learn)",
+      "mlDesc": "Fit a tabular dataset with a Random Forest or Logistic Regression classifier.",
+      "copyMLCode": "Copy ML Code",
+      "pytorch": "2. Deep Neural Network Layer (PyTorch)",
+      "pytorchDesc": "Feedforward neural network with Linear layers, ReLU activations, and Dropout.",
+      "copyPyTorchCode": "Copy PyTorch Code"
+    },
     "quickTakeaway": "AI is not one technology but a nested hierarchy: AI (broadest) contains ML, which contains DL, which powers GenAI. Each layer builds on and specializes the one before it."
   },
   "generativeAI": {
-    "badge": "Lesson 06",
-    "title": "What is Generative AI?",
-    "intro": "Until recently, AI was mostly used to analyze, sort, or predict values (like spam or stock prices). But Generative AI — a modern branch of Artificial Intelligence designed to synthesize and output entirely new files, such as custom text, realistic images, and original musical tracks, rather than just analyzing existing ones — has opened up creative frontiers.",
-    "introHindi": "Pehle ke zamane mein AI sirf data analyze, sort, ya predict karne ke liye tha (jaise spam messages ya share market). Lekin Generative AI — Artificial Intelligence ki nayi branch hai jo bina purani files ko copy kiye, bilkul naye mazmoon, photos, aur gaane khud se likh aur bana sakti hai — isne dunya badal di hai.",
-    "inPractice": "In Practice",
-    "inPracticeHindi": "Asli Zindagi Mein",
+    "section1": {
+      "lesson": "Lesson 06",
+      "heading": "What is Generative AI?",
+      "intro": "Until recently, AI was mostly used to analyze, sort, or predict values (like spam or stock prices). But Generative AI — a modern branch of Artificial Intelligence designed to synthesize and output entirely new files, such as custom text, realistic images, and original musical tracks, rather than just analyzing existing ones — has opened up creative frontiers.",
+      "inPractice": {
+        "label": "In Practice",
+        "text": "Instead of just recognizing a picture of a cat, Generative AI has learned the \"math map\" of cats, allowing it to paint a brand-new illustration of a \"cat floating in a zero-gravity space helmet\" from scratch when asked."
+      }
+    },
+    "section2": {
+      "creationSimulator": "Creation Simulator",
+      "promptInput": "Prompt Input",
+      "copyPrompt": "Copy Prompt",
+      "copyOutput": "Copy Output",
+      "successMessage": "✨ Successfully synthesized output"
+    },
+    "section3": {
+      "lesson": "Lesson 07",
+      "heading": "What is an LLM (Large Language Model)?",
+      "intro": "A Large Language Model — a specific type of Generative AI model trained on massive oceans of written books, articles, and websites to predict the most logical next word in a sentence — powers modern conversational tools.",
+      "explanation": "When you ask Claude, Gemini, or ChatGPT a question, they aren't looking up answers in a neat file drawer. They are running billions of tiny calculations to ask: \"Given all human text I have digested, what is the most likely, helpful sequence of words to write next?\"",
+      "wordPredictor": "Word Predictor"
+    },
+    "section4": {
+      "label": "Developer Code Snippets",
+      "title": "Calling LLMs & Multimodal Models",
+      "subtitle": "TypeScript & Python SDKs",
+      "typescript": {
+        "label": "TypeScript / JavaScript (@google/genai)",
+        "description": "Standard streaming / non-streaming text synthesis in web backends.",
+        "copy": "Copy TypeScript"
+      },
+      "curl": {
+        "label": "cURL / REST API Endpoint",
+        "description": "Direct HTTP JSON request payload for terminal testing or Postman.",
+        "copy": "Copy cURL Command"
+      }
+    },
     "examples": {
       "text": {
         "title": "ChatGPT (Text)",
-        "titleHindi": "ChatGPT (Aasaan Text)",
         "role": "Writes prose, poems, and clean code.",
-        "roleHindi": "Mazmoon, shayari, aur saaf code likhta hai.",
         "preview": "Write a warm, simple haiku about a coffee shop on a rainy afternoon...",
-        "previewHindi": "Baarish ki dopahar mein ek garam chai ki dukaan pe shayari likho...",
-        "output": "Soft rain taps the glass,\nWarm steam rises from the cup,\nSilence shares the space.",
-        "outputHindi": "Garam chai ki pyaali ho,\nBaarish ka thanda mausam ho,\nBas thodi si khamoshi ho."
+        "output": "Soft rain taps the glass,\nWarm steam rises from the cup,\nSilence shares the space."
       },
       "image": {
         "title": "Midjourney (Images)",
-        "titleHindi": "Midjourney (Photos)",
         "role": "Drafts gorgeous digital illustrations.",
-        "roleHindi": "Bohot pyaari photos aur paintings banata hai.",
         "preview": "A tiny mouse sitting on a dandelion reading a miniature leather book, oil painting style...",
-        "previewHindi": "Ek chota sa chuha patti par baith ke kitabi panna palat raha hai, oil painting style...",
-        "output": "🎨 [Generates a soft, warm oil painting focusing on a spectacled field mouse turning pages under a glowing golden dandelion root]",
-        "outputHindi": "🎨 [Ek pyaari oil painting banti hai jisme chashma lagaya so chuha sunhare patti ke neeche baith ke kitabi panne palat raha hai]"
+        "output": "🎨 [Generates a soft, warm oil painting focusing on a spectacled field mouse turning pages under a glowing golden dandelion root]"
       },
       "music": {
         "title": "Suno (Music)",
-        "titleHindi": "Suno (Gaane aur Music)",
         "role": "Creates songs with vocals and melodies.",
-        "roleHindi": "Awaaz aur dhun ke sath naye gaane banata hai.",
         "preview": "A retro-wave track with acoustic guitars and synthesizers about driving into a golden sunset...",
-        "previewHindi": "Ek mast retro-wave track guitar aur synth ke sath jo shaam ke safar ke baare mein ho...",
-        "output": "🎵 [Synthesizes a warm, rhythmic 120bpm stereo track blending tactile fingerstyle guitar strumming with analog low-pass synthesizers]",
-        "outputHindi": "🎵 [Ek mast 120bpm stereo track banti hai jisme guitar ki dhun ke sath analog synthesizer ka heavy sound ghumta hai]"
+        "output": "🎵 [Synthesizes a warm, rhythmic 120bpm stereo track blending tactile fingerstyle guitar strumming with analog low-pass synthesizers]"
       }
     },
     "whatIsGenerativeAI": "What is Generative AI?",
