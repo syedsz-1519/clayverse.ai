@@ -46,45 +46,59 @@ export default function AIFamilyTree() {
 
   const mlTypes: MLType[] = [
     {
-      title: t('familyTree.mlTypes.supervised.title', 'Supervised Learning'),
-      analogy: t('familyTree.mlTypes.supervised.analogy', 'Learning with a guide'),
-      description: t('familyTree.mlTypes.supervised.description', 'You feed the machine labeled pictures (like "dog" or "cat") until it learns which visual clues match which label.')
+      title: lang === 'en' ? 'Supervised Learning' : 'Supervised Learning (Ustad ke Sath)',
+      analogy: lang === 'en' ? 'Learning with a guide' : 'Ustad ki help se seekhna',
+      description: lang === 'en'
+        ? 'You feed the machine labeled pictures (like "dog" or "cat") until it learns which visual clues match which label.'
+        : 'Tum machine ko pehle se naam likhe so photoΓÇÖaa dete (jaise "billi" ya "kutti"), jab tak ke wo sahi visual clues na pakad le.'
     },
     {
-      title: t('familyTree.mlTypes.unsupervised.title', 'Unsupervised Learning'),
-      analogy: t('familyTree.mlTypes.unsupervised.analogy', 'Sorting a wild pile'),
-      description: t('familyTree.mlTypes.unsupervised.description', 'The machine groups unlabeled data by itself, spotting hidden structures or similarities you might have missed.')
+      title: lang === 'en' ? 'Unsupervised Learning' : 'Unsupervised Learning (Apne Aap)',
+      analogy: lang === 'en' ? 'Sorting a wild pile' : 'Bina ustad ke dher jama karna',
+      description: lang === 'en'
+        ? 'The machine groups unlabeled data by itself, spotting hidden structures or similarities you might have missed.'
+        : 'Machine bina naam diye so data ko khud ba khud groups mein daal deti hai patterns pakad ke.'
     },
     {
-      title: t('familyTree.mlTypes.reinforcement.title', 'Reinforcement Learning'),
-      analogy: t('familyTree.mlTypes.reinforcement.analogy', 'Trial, error, and treats'),
-      description: t('familyTree.mlTypes.reinforcement.description', 'The machine operates in a trial-and-error loop, earning points for correct moves (like teaching a dog with treats).')
+      title: lang === 'en' ? 'Reinforcement Learning' : 'Reinforcement Learning (Inaam waala)',
+      analogy: lang === 'en' ? 'Trial, error, and treats' : 'Inaam aur sazaa ka khel',
+      description: lang === 'en'
+        ? 'The machine operates in a trial-and-error loop, earning points for correct moves (like teaching a dog with treats).'
+        : 'Machine galti kar kar ke seekhti hai. Sahi kaam pe points milte (jaise kutte ko treat de ke seekhana).'
     }
   ];
 
   const nestingLevels = [
     {
       id: 0,
-      title: t('familyTree.levels.ai.title', 'Artificial Intelligence (AI)'),
-      description: t('familyTree.levels.ai.description', 'The broadest umbrella. Any technology that lets machines simulate human-like reasoning, matching, or puzzle-solving.'),
+      title: lang === 'en' ? 'Artificial Intelligence (AI)' : 'Artificial Intelligence (AI)',
+      description: lang === 'en'
+        ? 'The broadest umbrella. Any technology that lets machines simulate human-like reasoning, matching, or puzzle-solving.'
+        : 'Sabse bada umbrella. Koi bhi technology jo computer ko insaan ke jaisa dimaag lagane aur puzzle solve karne mein madad kare.',
       color: 'bg-brand-cream border-brand-charcoal/20 text-brand-charcoal'
     },
     {
       id: 1,
-      title: t('familyTree.levels.ml.title', 'Machine Learning (ML)'),
-      description: t('familyTree.levels.ml.description', 'A subset of AI where computer systems learn rules directly from historical examples, bypassing hand-written code rules.'),
+      title: lang === 'en' ? 'Machine Learning (ML)' : 'Machine Learning (ML)',
+      description: lang === 'en'
+        ? 'A subset of AI where computer systems learn rules directly from historical examples, bypassing hand-written code rules.'
+        : 'AI ka wo hissa jahan computers hazaaro examples dekh ke rules khud ba khud likh lete hain.',
       color: 'bg-white border-brand-slate/20 text-brand-charcoal shadow-sm'
     },
     {
       id: 2,
-      title: t('familyTree.levels.dl.title', 'Deep Learning (DL)'),
-      description: t('familyTree.levels.dl.description', 'A deeper layer of ML using stacked artificial "neural networks" to automatically master complex structures like human voices or faces.'),
+      title: lang === 'en' ? 'Deep Learning (DL)' : 'Deep Learning (DL)',
+      description: lang === 'en'
+        ? 'A deeper layer of ML using stacked artificial "neural networks" to automatically master complex structures like human voices or faces.'
+        : 'ML ka bohot gehra hissa jahan multi-layered networks (jaise insaani dimaag ke neurons) bade mushkil kaam jaise awaaz ya chehra pehchanna seekhte hain.',
       color: 'bg-brand-sand/60 border-brand-amber/15 text-brand-charcoal shadow-sm'
     },
     {
       id: 3,
-      title: t('familyTree.levels.genai.title', 'Generative AI (GenAI)'),
-      description: t('familyTree.levels.genai.description', 'The newest inner-core. AI systems trained on massive content maps to create entirely fresh images, writings, or audio tracks.'),
+      title: lang === 'en' ? 'Generative AI (GenAI)' : 'Generative AI (GenAI)',
+      description: lang === 'en'
+        ? 'The newest inner-core. AI systems trained on massive content maps to create entirely fresh images, writings, or audio tracks.'
+        : 'Aaj kal ka naya inner core. Ye systems naye photos, gaane aur asaan articles khud se likh ke generate kar sakte hain.',
       color: 'bg-brand-amber/10 border-brand-amber/40 text-brand-amber shadow-sm'
     }
   ];
@@ -163,10 +177,10 @@ export default function AIFamilyTree() {
 
   // Neural network sample architecture for Deep Learning visualizer
   const neuralLayers = [
-    { name: t('familyTree.neuralLayers.input.name', 'Input Layer'), desc: t('familyTree.neuralLayers.input.desc', 'Raw pixels & features'), count: 4, color: 'bg-brand-slate' },
-    { name: t('familyTree.neuralLayers.hidden1.name', 'Hidden Layer 1'), desc: t('familyTree.neuralLayers.hidden1.desc', 'Edges & gradients'), count: 5, color: 'bg-brand-amber' },
-    { name: t('familyTree.neuralLayers.hidden2.name', 'Hidden Layer 2'), desc: t('familyTree.neuralLayers.hidden2.desc', 'Textures & shapes'), count: 4, color: 'bg-brand-amber' },
-    { name: t('familyTree.neuralLayers.output.name', 'Output Layer'), desc: t('familyTree.neuralLayers.output.desc', 'Classification result'), count: 2, color: 'bg-emerald-600' }
+    { name: lang === 'en' ? 'Input Layer' : 'Input Layer', desc: lang === 'en' ? 'Raw pixels & features' : 'Khaam data aur pixels', count: 4, color: 'bg-brand-slate' },
+    { name: lang === 'en' ? 'Hidden Layer 1' : 'Hidden Layer 1', desc: lang === 'en' ? 'Edges & gradients' : 'Lakeerein aur corners', count: 5, color: 'bg-brand-amber' },
+    { name: lang === 'en' ? 'Hidden Layer 2' : 'Hidden Layer 2', desc: lang === 'en' ? 'Textures & shapes' : 'Textures aur gole', count: 4, color: 'bg-brand-amber' },
+    { name: lang === 'en' ? 'Output Layer' : 'Output Layer', desc: lang === 'en' ? 'Classification result' : 'Final Nateeja', count: 2, color: 'bg-emerald-600' }
   ];
 
   return (
@@ -196,13 +210,16 @@ export default function AIFamilyTree() {
         <div className="text-center max-w-2xl mx-auto mb-10">
           <span className="text-xs font-bold uppercase tracking-wider text-brand-amber font-mono inline-flex items-center gap-1.5">
             <Sparkles className="w-3.5 h-3.5" />
-            {t('familyTree.badge', 'Lesson 02')}
+            {lang === 'en' ? "Layer 02: Core Concepts" : "Layer 02: Khaas Concepts"}
           </span>
           <h2 className="font-display text-3xl sm:text-4xl font-extrabold text-brand-charcoal mt-1 mb-3">
-            {t('familyTree.title', 'The AI Family Tree')}
+            {lang === 'en' ? "The AI Family Tree" : "AI ka Khandan (Family Tree)"}
           </h2>
           <p className="font-sans text-xs sm:text-sm text-brand-muted leading-relaxed mb-4">
-            {t('familyTree.subtitle', 'Many terms get thrown around like they mean the same thing. In reality, they are nested inside each other like Russian nesting dolls.')}
+            {lang === 'en'
+              ? "Many terms get thrown around like they mean the same thing. In reality, they are nested inside each other like Russian nesting dolls."
+              : "Bohot saare log samjhte hain sab ka matlab ek hi hai. Par asal mein ye Russian nesting dolls ke jaise ek dusre ke andar nested hain."
+            }
           </p>
           <div className="flex justify-center">
             <ReadSectionButton sectionId="family-tree" />
@@ -292,13 +309,13 @@ export default function AIFamilyTree() {
                   style={{ y: yBadgeLeft }}
                   className="absolute -top-3 -left-3 text-[9px] font-bold text-brand-muted uppercase font-mono tracking-wider px-2 py-0.5 rounded-md bg-white/80 border border-brand-slate/10 shadow-xs"
                 >
-                  {t('familyTree.badge.broadUmbrella', 'Broad Umbrella')}
+                  {lang === 'en' ? "Broad Umbrella" : "Bada System"}
                 </motion.div>
                 <motion.div 
                   style={{ y: yBadgeRight }}
                   className="absolute -bottom-3 -right-3 text-[9px] font-bold text-brand-amber uppercase font-mono tracking-wider px-2 py-0.5 rounded-md bg-white/80 border border-brand-amber/20 shadow-xs"
                 >
-                  {t('familyTree.badge.generativeCore', 'Generative Core')}
+                  {lang === 'en' ? "Generative Core" : "Main Core"}
                 </motion.div>
               </div>
             </div>
@@ -370,11 +387,11 @@ export default function AIFamilyTree() {
 
                   <div className="flex flex-col gap-2 pt-4 border-t border-brand-slate/5 mt-6">
                     <div className="flex items-center justify-between text-[11px] font-mono font-bold text-brand-amber animate-pulse">
-                      <span>âš¡ {t('familyTree.interact.clickToFlip', 'Click Card to Flip!')}</span>
-                      <span className="text-xs">ðŸ”„</span>
+                      <span>ΓÜí {lang === 'en' ? "Click Card to Flip!" : "Card pe dabao, piche dekho!"}</span>
+                      <span className="text-xs">≡ƒöä</span>
                     </div>
                     <div className="flex gap-4 text-[9.5px] font-mono text-brand-muted mt-1">
-                      <span>{t('familyTree.interact.switchSubfields', 'Tap on circles or doll list to switch subfields')}</span>
+                      <span>{lang === 'en' ? "Tap on circles or doll list to switch subfields" : "Dabbe ya button se change karo"}</span>
                     </div>
                   </div>
                 </div>
@@ -395,36 +412,36 @@ export default function AIFamilyTree() {
                       <div className="flex items-center gap-2">
                         <span className="font-mono text-xs font-bold text-brand-amber bg-brand-amber/10 px-2.5 py-0.5 rounded-full">Doll 0{activeNestingLevel + 1} Back</span>
                         <h4 className="font-display text-sm font-black text-brand-charcoal uppercase tracking-wide">
-                          {t('familyTree.deepLearning.deepsExplained', 'Deeps Explained')}
+                          {lang === 'en' ? "Deeps Explained" : "Gehri Baat"}
                         </h4>
                       </div>
                       <div className="flex items-center gap-1.5">
                         <CopyCodeButton
-                          text={`${nestingLevels[activeNestingLevel].title}: ${t('familyTree.deeperDetails.' + ['ai', 'ml', 'dl', 'genai'][activeNestingLevel] + '.concepts', deeperDetails[activeNestingLevel].conceptsEn)}\nExamples: ${t('familyTree.deeperDetails.' + ['ai', 'ml', 'dl', 'genai'][activeNestingLevel] + '.examples', deeperDetails[activeNestingLevel].examplesEn)}`}
-                          label={t('familyTree.whatsML.copyNotes', 'Copy Notes')}
+                          text={`${nestingLevels[activeNestingLevel].title}: ${lang === 'en' ? deeperDetails[activeNestingLevel].conceptsEn : deeperDetails[activeNestingLevel].conceptsHyd}\nExamples: ${lang === 'en' ? deeperDetails[activeNestingLevel].examplesEn : deeperDetails[activeNestingLevel].examplesHyd}`}
+                          label={lang === 'en' ? "Copy Notes" : "Notes Copy"}
                           variant="compact"
                         />
-                        <span className="text-xs text-brand-amber">ðŸ”„</span>
+                        <span className="text-xs text-brand-amber">≡ƒöä</span>
                       </div>
                     </div>
 
                     {/* Concepts Block */}
                     <div className="mb-4">
                       <span className="text-[10px] font-mono font-bold text-brand-slate uppercase tracking-wider block mb-1">
-                        {t('familyTree.whatsML.technicalEngine', 'Technical Engine:')}
+                        {lang === 'en' ? "Technical Engine:" : "Peeche ka engine:"}
                       </span>
                       <p className="text-xs text-brand-charcoal leading-relaxed font-sans">
-                        {t('familyTree.deeperDetails.' + ['ai', 'ml', 'dl', 'genai'][activeNestingLevel] + '.concepts', deeperDetails[activeNestingLevel].conceptsEn)}
+                        {lang === 'en' ? deeperDetails[activeNestingLevel].conceptsEn : deeperDetails[activeNestingLevel].conceptsHyd}
                       </p>
                     </div>
 
                     {/* Examples Block */}
                     <div className="mb-4">
                       <span className="text-[10px] font-mono font-bold text-brand-slate uppercase tracking-wider block mb-1">
-                        {t('familyTree.whatsML.realWorldExamples', 'Real-World Examples:')}
+                        {lang === 'en' ? "Real-World Examples:" : "Asal Duniya ki Misaal:"}
                       </span>
                       <p className="text-xs font-bold text-brand-charcoal leading-relaxed font-mono">
-                        ðŸ’¡ {t('familyTree.deeperDetails.' + ['ai', 'ml', 'dl', 'genai'][activeNestingLevel] + '.examples', deeperDetails[activeNestingLevel].examplesEn)}
+                        ≡ƒÆí {lang === 'en' ? deeperDetails[activeNestingLevel].examplesEn : deeperDetails[activeNestingLevel].examplesHyd}
                       </p>
                     </div>
 
@@ -433,14 +450,14 @@ export default function AIFamilyTree() {
                       <strong className="font-mono text-[9px] uppercase tracking-wider block not-italic text-brand-amber mb-0.5">
                         Clay's Explainer Tip:
                       </strong>
-                      "{t('familyTree.deeperDetails.' + ['ai', 'ml', 'dl', 'genai'][activeNestingLevel] + '.tip', deeperDetails[activeNestingLevel].tipEn)}"
+                      "{lang === 'en' ? deeperDetails[activeNestingLevel].tipEn : deeperDetails[activeNestingLevel].tipHyd}"
                     </div>
                   </div>
 
                   <div className="pt-3 border-t border-brand-slate/5 mt-4 shrink-0">
                     <div className="flex items-center justify-between text-[10px] font-mono font-bold text-brand-slate">
-                      <span>â†©ï¸ {t('familyTree.interact.flipBack', 'Click to flip back')}</span>
-                      <span>â€¢ {t('familyTree.interact.interactiveLesson', 'Interactive Lesson')}</span>
+                      <span>Γå⌐∩╕Å {lang === 'en' ? "Click to flip back" : "Wapas samne dekhne ke liye dabao"}</span>
+                      <span>ΓÇó {lang === 'en' ? "Interactive Lesson" : "Sabaq"}</span>
                     </div>
                   </div>
                 </div>
@@ -468,25 +485,35 @@ export default function AIFamilyTree() {
               </div>
 
               <span className="text-xs font-bold uppercase tracking-wider text-brand-amber font-mono block mb-2">
-                {t('familyTree.whatsML.label', 'Lesson 04')}
+                {lang === 'en' ? "Lesson 04" : "Sabak 04"}
               </span>
               <h3 className="font-display text-2xl font-extrabold text-brand-charcoal mb-4">
-                {t('familyTree.whatsML.title', 'What is Machine Learning (ML)?')}
+                {lang === 'en' ? "What is Machine Learning (ML)?" : "Machine Learning (ML) Kya hai?"}
               </h3>
               <p className="font-sans text-brand-charcoal leading-relaxed text-[14px] mb-6">
-                <>
-                    <TechTooltip term="Machine Learning">Machine Learning</TechTooltip> — <span className="text-brand-slate italic">a subset of AI where computers analyze thousands of examples to find patterns instead of following rigid programmed rules</span> — allows software to improve on its own. Rather than hand-coding a rule like "if a pixel is green, it's a leaf," we feed the system 100,000 photos of forests and let the algorithm write its own equations.
+                {lang === 'en' ? (
+                  <>
+                    <TechTooltip term="Machine Learning">Machine Learning</TechTooltip> ΓÇö <span className="text-brand-slate italic">a subset of AI where computers analyze thousands of examples to find patterns instead of following rigid programmed rules</span> ΓÇö allows software to improve on its own. Rather than hand-coding a rule like "if a pixel is green, it's a leaf," we feed the system 100,000 photos of forests and let the algorithm write its own equations.
                   </>
+                ) : (
+                  <>
+                    <strong className="text-brand-amber">Machine Learning</strong> ΓÇö <span className="text-brand-slate italic">AI ka wo subset hai jahan computer rules seekhne ke liye bohot saare examples dekhta hai</span> ΓÇö iski wajah se computer software khud behtar hota rehta hai. Pehle ke jaisa hand code nahi karna padta "agar green color hai toh patti bolo". Ab hum machine ko hazaaro jangal ki photos dedete hain aur wo khud apna dimaag lagake patti pehchanna seekh leta hai.
+                  </>
+                )}
               </p>
             </div>
 
             <div className="glass-panel p-5 rounded-2xl border-l-4 border-brand-slate relative bg-brand-sand/20">
               <HelpCircle className="w-4 h-4 text-brand-slate absolute top-4 right-4 opacity-30" />
               <span className="font-mono text-[10px] font-bold text-brand-slate uppercase block mb-1">
-                {t('familyTree.whatsML.howItFeels', 'How it feels')}
+                {lang === 'en' ? "How it feels" : "Ek aur Misaal"}
               </span>
               <p className="text-brand-charcoal text-xs leading-relaxed italic">
-                {t('familyTree.whatsML.cookingAnalogy', '"Instead of cooking a dish by writing down a rigid list of steps, machine learning is like tasting a soup 500 times, adding a pinch of salt each time, until it matches the taste pattern of your memory."')}
+                {lang === 'en' ? (
+                  `"Instead of cooking a dish by writing down a rigid list of steps, machine learning is like tasting a soup 500 times, adding a pinch of salt each time, until it matches the taste pattern of your memory."`
+                ) : (
+                  `"Shorba banane ke step-by-step rules likhne ke bajaye, machine learning 500 baar shorba chakhne ke jaisa hai. Har baar thoda namak dalke check karte, jab tak wo tumhare purane yaad so taste se dhang se match nahi ho jata!"`
+                )}
               </p>
             </div>
           </motion.div>
@@ -534,8 +561,8 @@ export default function AIFamilyTree() {
                           </p>
                         </div>
                         <div className="flex items-center justify-between text-[8.5px] font-mono text-brand-amber mt-1">
-                          <span>âš¡ {t('familyTree.interact.tapToFlip', 'Tap card for deep details')}</span>
-                          <span>ðŸ”„</span>
+                          <span>ΓÜí {lang === 'en' ? "Tap card for deep details" : "Piche dekhne ke liye dabao"}</span>
+                          <span>≡ƒöä</span>
                         </div>
                       </div>
                     </div>
@@ -552,36 +579,36 @@ export default function AIFamilyTree() {
                       <div className="min-w-0 flex-grow overflow-y-auto pr-1 scrollbar-none">
                         <div className="flex items-center justify-between border-b border-brand-slate/5 pb-1 mb-1.5">
                           <span className="font-mono text-[9px] font-bold text-brand-amber uppercase tracking-wider">
-                            0{i + 1} {t('familyTree.whatsML.deepEngine', 'Deep Engine')}
+                            0{i + 1} {lang === 'en' ? "Deep Engine" : "Khaas Engine"}
                           </span>
                           <div className="flex items-center gap-1">
                             <CopyCodeButton
-                              text={`${type.title}: ${t('familyTree.deeperDetails.' + ['supervised', 'unsupervised', 'reinforcement'][i] + '.tech', deeperMLDetails[i].techEn)}\nUse: ${t('familyTree.deeperDetails.' + ['supervised', 'unsupervised', 'reinforcement'][i] + '.examples', deeperMLDetails[i].examplesEn)}`}
-                              label={t('familyTree.whatsML.copy', 'Copy')}
+                              text={`${type.title}: ${lang === 'en' ? deeperMLDetails[i].techEn : deeperMLDetails[i].techHyd}\nUse: ${lang === 'en' ? deeperMLDetails[i].examplesEn : deeperMLDetails[i].examplesHyd}`}
+                              label={lang === 'en' ? "Copy" : "Copy"}
                               variant="compact"
                               showIconOnly={true}
                             />
-                            <span className="text-[10px]">ðŸ”„</span>
+                            <span className="text-[10px]">≡ƒöä</span>
                           </div>
                         </div>
                         
                         <div className="mb-1.5">
                           <p className="text-[10px] text-brand-charcoal leading-normal">
-                            <strong>{t('familyTree.whatsML.howItWorks', 'How it works: ')}</strong>
-                            {t('familyTree.deeperDetails.' + ['supervised', 'unsupervised', 'reinforcement'][i] + '.tech', deeperMLDetails[i].techEn)}
+                            <strong>{lang === 'en' ? "How it works: " : "Kaise chalta hai: "}</strong>
+                            {lang === 'en' ? deeperMLDetails[i].techEn : deeperMLDetails[i].techHyd}
                           </p>
                         </div>
                         <div>
                           <p className="text-[9.5px] text-brand-muted leading-normal">
-                            <strong>{t('familyTree.whatsML.realUse', 'Real Use: ')}</strong>
-                            {t('familyTree.deeperDetails.' + ['supervised', 'unsupervised', 'reinforcement'][i] + '.examples', deeperMLDetails[i].examplesEn)}
+                            <strong>{lang === 'en' ? "Real Use: " : "Kahan use hota hai: "}</strong>
+                            {lang === 'en' ? deeperMLDetails[i].examplesEn : deeperMLDetails[i].examplesHyd}
                           </p>
                         </div>
                       </div>
 
                       <div className="text-[8.5px] font-mono text-brand-slate border-t border-brand-slate/5 pt-1 mt-1 shrink-0 flex justify-between">
-                        <span>â†©ï¸ {t('familyTree.interact.dobaakeWapas', 'Tap to flip back')}</span>
-                        <span className="text-brand-amber font-bold">{t('familyTree.whatsML.mlCard', 'ML Card')}</span>
+                        <span>Γå⌐∩╕Å {lang === 'en' ? "Tap to flip back" : "Dabaake wapas badlo"}</span>
+                        <span className="text-brand-amber font-bold">{lang === 'en' ? "ML Card" : "ML Card"}</span>
                       </div>
                     </div>
                   </motion.div>
@@ -613,28 +640,28 @@ export default function AIFamilyTree() {
 
               <div className="flex items-center gap-2.5 mb-3">
                 <span className="text-xs font-bold uppercase tracking-wider text-brand-amber font-mono">
-                  {t('familyTree.deepLearning.label', 'Lesson 05')}
+                  {lang === 'en' ? "Lesson 05" : "Sabak 05"}
                 </span>
               </div>
               
               <h3 className="font-display text-2xl sm:text-3xl font-extrabold text-brand-charcoal mb-4">
-                {t('familyTree.deepLearning.title', 'What is Deep Learning (DL)?')}
+                {lang === 'en' ? "What is Deep Learning (DL)?" : "Deep Learning (DL) Kya Hai?"}
               </h3>
               <p className="font-sans text-brand-charcoal leading-relaxed text-[14px] md:text-[15px]">
-                {
+                {lang === 'en' ? (
                   <>
-                    <TechTooltip term="Deep Learning">Deep Learning</TechTooltip> â€” <span className="text-brand-slate italic">a specialized kind of Machine Learning that uses layered mathematical structures called <TechTooltip term="Neural Networks">neural networks</TechTooltip> to capture highly complex relationships in images or sounds</span> â€” mimics how human brains process raw sights and noises. 
+                    <TechTooltip term="Deep Learning">Deep Learning</TechTooltip> ΓÇö <span className="text-brand-slate italic">a specialized kind of Machine Learning that uses layered mathematical structures called <TechTooltip term="Neural Networks">neural networks</TechTooltip> to capture highly complex relationships in images or sounds</span> ΓÇö mimics how human brains process raw sights and noises. 
                   </>
-                }{
+                ) : (
                   <>
-                    <strong className="text-brand-amber">Deep Learning</strong> â€” <span className="text-brand-slate italic">Machine Learning ka wo hissa hai jo mathematical layer patterns jise artificial neural networks bolte, usse awaaz aur photoâ€™aa samajhta hai</span> â€” ye bilkul insaan ke dimaag ki tarah dher saari files process kar sakta hai.
+                    <strong className="text-brand-amber">Deep Learning</strong> ΓÇö <span className="text-brand-slate italic">Machine Learning ka wo hissa hai jo mathematical layer patterns jise artificial neural networks bolte, usse awaaz aur photoΓÇÖaa samajhta hai</span> ΓÇö ye bilkul insaan ke dimaag ki tarah dher saari files process kar sakta hai.
                   </>
                 )}
               </p>
               <p className="font-sans text-brand-muted leading-relaxed text-xs sm:text-sm mt-3">
-                {
+                {lang === 'en' ? (
                   "By stacking these virtual neurons on top of each other, the program starts finding tiny patterns (like lines or shades) in the first layers, then combines them into shapes in the middle layers, and finally recognizes complete objects at the end."
-                }{
+                ) : (
                   "Bohot saare virtual neurons ko layers mein set karke, computer pehli layer mein halki shading ya lakeerein pehchanta, phir beech ki layer mein shapes pehchanta, aur aakhir mein poora ka poora chehra pakad leta hai."
                 )}
               </p>
@@ -645,10 +672,10 @@ export default function AIFamilyTree() {
               <div className="flex items-center justify-between mb-4 border-b border-brand-slate/10 pb-2">
                 <span className="font-mono text-[10px] font-bold uppercase tracking-wider text-brand-amber flex items-center gap-1.5">
                   <Zap className="w-3 h-3 text-brand-amber" />
-                  {t('familyTree.deepLearning.interactiveNeuralNetwork', 'Interactive Neural Network Layers')}
+                  {lang === 'en' ? "Interactive Neural Network Layers" : "Layers ka Live Network"}
                 </span>
                 <span className="text-[9px] font-mono text-brand-muted bg-white px-2 py-0.5 rounded border border-brand-slate/10">
-                  {t('familyTree.deepLearning.scrollParallaxEnabled', 'Scroll parallax enabled')}
+                  {lang === 'en' ? "Scroll parallax enabled" : "Parallax scroll active"}
                 </span>
               </div>
 
@@ -758,7 +785,7 @@ export default function AIFamilyTree() {
                 <span>
                   {hoveredNeuronLayer !== null 
                     ? `Active: ${neuralLayers[hoveredNeuronLayer].name} (${neuralLayers[hoveredNeuronLayer].desc})`
-                    : (t('familyTree.deepLearning.synapsesPropagate', '⚡ Synapses propagate activations forward'))
+                    : (lang === 'en' ? "ΓÜí Synapses propagate activations forward" : "ΓÜí Synapses dimaag ke signals aage bhejte hain")
                   }
                 </span>
                 <span className="text-brand-amber font-bold">ANN Depth</span>
@@ -783,15 +810,15 @@ export default function AIFamilyTree() {
               </div>
               <div>
                 <span className="text-[10px] font-mono font-bold uppercase tracking-wider text-brand-amber block">
-                  {t('familyTree.developer.label', 'Developer Code Snippets')}
+                  {lang === 'en' ? "Developer Code Snippets" : "Developer Code Snippets"}
                 </span>
                 <h3 className="font-display text-lg font-black text-brand-charcoal">
-                  {t('familyTree.developer.title', 'Machine Learning vs Neural Networks in Python')}
+                  {lang === 'en' ? "Machine Learning vs Neural Networks in Python" : "ML aur Deep Learning ka Python Code"}
                 </h3>
               </div>
             </div>
             <span className="text-xs font-mono text-brand-muted bg-brand-sand px-3 py-1 rounded-full border border-brand-slate/10 self-start sm:self-auto">
-              {t('familyTree.developer.tech', 'scikit-learn & PyTorch')}
+              {lang === 'en' ? "scikit-learn & PyTorch" : "scikit-learn & PyTorch"}
             </span>
           </div>
 
@@ -799,10 +826,13 @@ export default function AIFamilyTree() {
             {/* Snippet 1: Classical ML (scikit-learn) */}
             <div>
               <span className="text-xs font-bold text-brand-charcoal block mb-1">
-                {t('familyTree.developer.ml', '1. Classical ML Classifier (scikit-learn)')}
+                {lang === 'en' ? "1. Classical ML Classifier (scikit-learn)" : "1. Classical ML Model (scikit-learn)"}
               </span>
               <p className="text-[11px] text-brand-muted mb-2">
-                {t('familyTree.developer.mlDesc', 'Fit a tabular dataset with a Random Forest or Logistic Regression classifier.')}
+                {lang === 'en'
+                  ? "Fit a tabular dataset with a Random Forest or Logistic Regression classifier."
+                  : "Tabular data ko train karke prediction lene ka standard Python code."
+                }
               </p>
               <CodeSnippetBlock
                 language="python"
@@ -823,17 +853,20 @@ clf.fit(X_train, y_train)
 # 3. Predict on unseen example
 prediction = clf.predict([[5.0, 3.2]])
 print("Predicted Class:", prediction[0])`}
-                copyLabel={t('familyTree.developer.copyMLCode', 'Copy ML Code')}
+                copyLabel={lang === 'en' ? "Copy ML Code" : "ML Code Copy"}
               />
             </div>
 
             {/* Snippet 2: Deep Learning Neural Network (PyTorch) */}
             <div>
               <span className="text-xs font-bold text-brand-charcoal block mb-1">
-                {t('familyTree.developer.pytorch', '2. Deep Neural Network Layer (PyTorch)')}
+                {lang === 'en' ? "2. Deep Neural Network Layer (PyTorch)" : "2. Deep Neural Network (PyTorch)"}
               </span>
               <p className="text-[11px] text-brand-muted mb-2">
-                {t('familyTree.developer.pytorchDesc', 'Feedforward neural network with Linear layers, ReLU activations, and Dropout.')}
+                {lang === 'en'
+                  ? "Feedforward neural network with Linear layers, ReLU activations, and Dropout."
+                  : "Input, Hidden aur Output layers ke sath neural network banane ka snippet."
+                }
               </p>
               <CodeSnippetBlock
                 language="python"
@@ -856,7 +889,7 @@ class DeepNeuralNetwork(nn.Module):
         return self.network(x)
 
 model = DeepNeuralNetwork()`}
-                copyLabel={t('familyTree.developer.copyPyTorchCode', 'Copy PyTorch Code')}
+                copyLabel={lang === 'en' ? "Copy PyTorch Code" : "PyTorch Copy"}
               />
             </div>
           </div>
@@ -866,17 +899,3 @@ model = DeepNeuralNetwork()`}
     </div>
   );
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
