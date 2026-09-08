@@ -1,27 +1,38 @@
 # 🎓 Clayverse AI
 
-> **AI Education That Speaks Your Language**  
-> An interactive, multilingual platform making AI accessible to everyone
+> **AI Education That Speaks Your Native Language**  
+> Learn artificial intelligence in English, Hindi, Telugu, Marathi, Tamil, Urdu, Roman Urdu, or Hinglish
 
 [![Status](https://img.shields.io/badge/status-production%20ready-brightgreen)](https://github.com/syedsz-1519/clayverse.ai)
 [![Languages](https://img.shields.io/badge/languages-8%2B-blue)](https://github.com/syedsz-1519/clayverse.ai)
 [![TypeScript](https://img.shields.io/badge/typescript-strict-blue)](https://www.typescriptlang.org/)
-[![License](https://img.shields.io/badge/license-MIT-green)](LICENSE)
+[![Open Source](https://img.shields.io/badge/open%20source-free-brightgreen)](https://github.com/syedsz-1519/clayverse.ai)
 
 ## 🚀 What is Clayverse AI?
 
 Clayverse AI is a **beginner-safe, highly interactive, and multilingual educational platform** that demystifies artificial intelligence, machine learning, and generative AI through:
 
+### Why "AI Education That Speaks Your Native Language"?
+
+Traditional AI learning platforms are **English-only** and assume mathematical background. Clayverse AI is different:
+
+- **Your Language:** Learn in English, Hindi, Telugu, Marathi, Tamil, Urdu, Roman Urdu, or Hinglish
+- **Your Culture:** AI concepts explained through local examples (farming, family, daily life)
+- **Your Level:** Zero math required, zero jargon used
+- **Your Pace:** Learn at your speed with interactive tools
+
+### How It Works
+
 - 🎯 **Zero-jargon analogies** from real-world examples
 - 🧠 **Interactive mind maps** with 100+ curated learning resources
 - 📊 **5 animated visualizations** showing how AI actually works
-- 🌍 **8 languages** (English, Hindi, Telugu, Marathi, Tamil, Urdu, Roman Urdu, Hinglish)
+- 🌍 **8 languages** with native-speaker translations, not machine translation
 - 🎮 **Interactive sandboxes** for hands-on learning
-- 📚 **160 AI terms** translated across all languages with native-speaker accuracy
-- 🤖 **Animated Clay mascot** with interactive explanations
+- 📚 **160 AI terms** explained in your language
+- 🤖 **Animated Clay mascot** with explanations in your local language
 - 🏆 **Gamification** with achievements, streaks, and challenges
 
-Perfect for **students, educators, and non-technical learners** in India and South Asia who want to master AI concepts in their native language.
+Perfect for **students, educators, and non-technical learners** across India and South Asia who want to master AI concepts **without learning English first** and **without learning advanced math**.
 
 ---
 
@@ -474,23 +485,6 @@ npm run build
 
 ---
 
-## 📄 License
-
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
-
----
-
-## 👥 Credits
-
-Built with ❤️ for learners in India and around the world.
-
-**Special thanks to:**
-- 3Blue1Brown for inspiration on visual explanations
-- DeepMind for educational resources
-- The open-source community for amazing tools and libraries
-
----
-
 ## 📞 Support & Feedback
 
 Have questions or feedback? We'd love to hear from you!
@@ -498,6 +492,15 @@ Have questions or feedback? We'd love to hear from you!
 - **GitHub Issues**: [Report a bug or request a feature](https://github.com/syedsz-1519/clayverse.ai/issues)
 - **Discussions**: [Join our community discussions](https://github.com/syedsz-1519/clayverse.ai/discussions)
 - **Email**: (contact info coming soon)
+
+---
+
+## 📜 About This Project
+
+Clayverse AI is a **free, open-source, community-driven project** dedicated to making AI education accessible to learners in their native languages across India and South Asia.
+
+**Not affiliated with any commercial organization.**  
+**Built by students, for students.**
 
 ---
 
