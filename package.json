@@ -10,7 +10,7 @@
     "preview": "vite preview",
     "clean": "node -e \"require('node:fs').rmSync('dist', { recursive: true, force: true })\"",
     "typecheck": "tsc --noEmit",
-    "lint": "eslint .",
+    "lint": "eslint . --max-warnings=0",
     "format": "prettier --write \"src/**/*.{ts,tsx,css}\" \"api/**/*.ts\" \"*.{ts,tsx,js,cjs,json}\"",
     "format:check": "prettier --check \"src/**/*.{ts,tsx,css}\" \"api/**/*.ts\" \"*.{ts,tsx,js,cjs,json}\"",
     "prepare": "husky"

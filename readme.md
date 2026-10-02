@@ -28,6 +28,7 @@ Perfect for **students, educators, and non-technical learners** in India and Sou
 ## ✨ What's New in Phase 2
 
 ### 📖 Interactive Learning System
+
 - **Mind Map Navigation**: Hierarchical visualization of AI concepts with clickable nodes
 - **100+ Curated Resources**: YouTube videos, articles, courses, official documentation
 - **Resource Discovery Modal**: Beautiful interface for exploring learning materials by difficulty
@@ -40,16 +41,19 @@ Perfect for **students, educators, and non-technical learners** in India and Sou
 - **Bookmark & Share**: Save resources and share with peers
 
 ### 🎨 Professional UI/UX
+
 - Pure white (#FFFFFF) minimalist design
 - Reusable component system (Button, Card, etc.)
 - Professional shadow system and 4px-64px spacing scale
 - Consistent design language across all sections
 
 ### 🌐 Complete Multilingual Support
+
 All 8 languages fully supported and tested:
+
 - ✅ English
 - ✅ Hindi
-- ✅ Telugu  
+- ✅ Telugu
 - ✅ Marathi
 - ✅ Tamil
 - ✅ Urdu (RTL support)
@@ -61,6 +65,7 @@ All 8 languages fully supported and tested:
 ## 📂 Core Features
 
 ### 🎮 Interactive Mind Maps & Visualizations
+
 ```
 MindMapLearning Component:
 ├── Hierarchical concept visualization
@@ -81,40 +86,45 @@ InteractiveVisualization Component:
 ### 📚 Progressive Learning Pathway
 
 **Layer 1: The Basics**
+
 - What is AI? Real-world applications
 - Chronological AI timeline
 - Zero-jargon analogies
 
 **Layer 2: Core Concepts**
+
 - Interactive AI Family Tree
 - Machine Learning explained
 - Deep Learning fundamentals
 - Generative AI systems
 
 **Layer 3: Practical Applications**
+
 - Prompting strategies
 - Retrieval-Augmented Generation (RAG)
 - 40+ AI tools directory
 
 **Layer 4: Deep Dive**
+
 - 160 AI/ML terms across 8 languages
 - Interactive quizzes
 - Advanced concepts
 
 ### 🌍 Multilingual Excellence
 
-| Language | Status | RTL | Native Speakers |
-|----------|--------|-----|-----------------|
-| English | ✅ | No | N/A |
-| Hindi | ✅ | No | 345M |
-| Telugu | ✅ | No | 74M |
-| Marathi | ✅ | No | 83M |
-| Tamil | ✅ | No | 74M |
-| Urdu | ✅ | **Yes** | 70M |
-| Roman Urdu | ✅ | No | 70M+ (diaspora) |
-| Hinglish | ✅ | No | 100M+ |
+| Language   | Status | RTL     | Native Speakers |
+| ---------- | ------ | ------- | --------------- |
+| English    | ✅     | No      | N/A             |
+| Hindi      | ✅     | No      | 345M            |
+| Telugu     | ✅     | No      | 74M             |
+| Marathi    | ✅     | No      | 83M             |
+| Tamil      | ✅     | No      | 74M             |
+| Urdu       | ✅     | **Yes** | 70M             |
+| Roman Urdu | ✅     | No      | 70M+ (diaspora) |
+| Hinglish   | ✅     | No      | 100M+           |
 
 **Key Features:**
+
 - Native-speaker translations (not machine-generated)
 - Automatic RTL/LTR detection for Urdu
 - Language-specific analogies and examples
@@ -125,6 +135,7 @@ InteractiveVisualization Component:
 **20 Core AI Terms × 8 Languages = 160 Translations**
 
 Sample terms with full translations:
+
 - Artificial Intelligence / कृत्रिम बुद्धिमत्ता / కృత్రిమ మేధస్సు
 - Machine Learning / यंत्र अधिगम / యంత్ర అభ్యాసం
 - Neural Network / तंत्रिका नेटवर्क / నాడీ నెట్‌వర్క్
@@ -136,12 +147,14 @@ Plus 16 more terms, each with authentic translations.
 ### 🎯 Resource Integration
 
 **100+ Curated Resources:**
+
 - 50+ YouTube videos (3Blue1Brown, OpenAI, DeepMind, etc.)
 - 30+ Articles & technical documentation
 - 15+ Online courses (Andrew Ng, DeepLearning.AI, etc.)
 - 5+ Official documentation links
 
 Resources are:
+
 - Categorized by difficulty (Beginner → Intermediate → Advanced)
 - Linked to specific concepts in the mind map
 - One-click access with direct URLs
@@ -152,32 +165,46 @@ Resources are:
 ## 🚀 Quick Start
 
 ### Installation
+
 ```bash
 # Clone the repository
 git clone https://github.com/syedsz-1519/clayverse.ai.git
 cd clayverse.ai
 
-# Install dependencies
-npm install
+# Install the exact dependencies from the lockfile
+npm ci
 
-# Start development server
+# Start the app and local Gemini API
 npm run dev
 ```
 
 Open [http://localhost:3000](http://localhost:3000) in your browser.
+For Gemini features, set `GEMINI_API_KEY` in a local `.env` file. Keep it server-side; do not prefix it with `VITE_`.
 
 ### Build for Production
+
 ```bash
 npm run build
 ```
 
 Output will be in the `dist/` directory.
 
+### Development Checks
+
+```bash
+npm run typecheck
+npm run lint
+npm run format
+```
+
+GitHub Actions runs the typecheck, lint, and production build on pushes and pull requests.
+
 ---
 
 ## 🎯 Key Features at a Glance
 
 ### 📖 Interactive Learning
+
 - **Mind Maps**: Navigate complex AI concepts through hierarchical visualization
 - **100+ Resources**: Curated YouTube videos, articles, courses, documentation
 - **5 Visualizations**: Neural networks, ML pipelines, pattern matching, transformers
@@ -185,6 +212,7 @@ Output will be in the `dist/` directory.
 - **Glossary**: 160 AI terms across 8 languages
 
 ### 🤖 Smart Features
+
 - **Animated mascot** with voice narration (coming soon)
 - **Sandboxes & Simulators** for hands-on learning
 - **Token Predictor** - See how LLMs think
@@ -192,6 +220,7 @@ Output will be in the `dist/` directory.
 - **40+ AI Tools** directory with direct links
 
 ### 🌍 Multilingual First
+
 - **8 Languages** fully supported and tested
 - **RTL Support** for Urdu (and future languages)
 - **Native Translations** - Not machine-generated
@@ -199,6 +228,7 @@ Output will be in the `dist/` directory.
 - **Per-Language Progress** - Track learning in each language
 
 ### 🎮 Gamification
+
 - **Achievement Badges** (First Lesson, Glossary Master, etc.)
 - **Learning Streaks** (Consecutive days of learning)
 - **Weekly Challenges** in your preferred language
@@ -206,6 +236,7 @@ Output will be in the `dist/` directory.
 - **Bookmarking** for saved resources
 
 ### 📱 Modern Design
+
 - **Responsive** - Works on desktop, tablet, mobile
 - **Professional UI** - White minimalist design
 - **Accessibility** - WCAG compliant, screen reader support
@@ -216,15 +247,15 @@ Output will be in the `dist/` directory.
 
 ## 📊 Tech Stack
 
-| Layer | Technology |
-|-------|------------|
-| **Frontend** | React 18 + TypeScript |
-| **Styling** | Tailwind CSS + Custom Components |
-| **State** | Context API |
-| **Animations** | Framer Motion |
-| **Build** | Vite |
-| **Backend** | Node.js + Express |
-| **Future** | Firebase Auth, Firestore |
+| Layer          | Technology                       |
+| -------------- | -------------------------------- |
+| **Frontend**   | React 18 + TypeScript            |
+| **Styling**    | Tailwind CSS + Custom Components |
+| **State**      | Context API                      |
+| **Animations** | Framer Motion                    |
+| **Build**      | Vite                             |
+| **Backend**    | Node.js + Express                |
+| **Future**     | Firebase Auth, Firestore         |
 
 ---
 
@@ -272,8 +303,6 @@ clayverse.ai/
 ```
 
 ---
-
-
 
 ---
 
@@ -368,6 +397,7 @@ clayverse.ai/
 ## 🎨 Design System
 
 ### Color Palette
+
 - **Primary**: White (#FFFFFF)
 - **Text**: Charcoal (#1F2937)
 - **Accent**: Blue (#3B82F6)
@@ -376,14 +406,17 @@ clayverse.ai/
 - **Error**: Red (#EF4444)
 
 ### Spacing Scale
+
 4px, 8px, 12px, 16px, 24px, 32px, 48px, 64px
 
 ### Typography
+
 - **Headlines**: Inter, 32px–56px, Bold (800)
 - **Body**: Inter, 14px–16px, Regular (400)
 - **Code**: Monaco, 12px–14px, Regular (400)
 
 ### Components
+
 - **Button** - 5 variants (primary, secondary, outline, ghost, danger)
 - **Card** - Professional container with shadows
 - **Badge** - Inline labels and tags
@@ -394,17 +427,20 @@ clayverse.ai/
 ## 🌐 Deployment
 
 ### Development
+
 ```bash
 npm run dev              # Start dev server on port 3000
 ```
 
 ### Production
+
 ```bash
 npm run build            # Build for production
 npm run preview          # Preview production build locally
 ```
 
 The app is optimized for deployment on:
+
 - Vercel
 - Netlify
 - AWS S3 + CloudFront
@@ -416,6 +452,7 @@ The app is optimized for deployment on:
 ## 📊 Features Checklist
 
 ### Phase 1 ✅ Complete
+
 - [x] Professional UI/UX redesign
 - [x] 8-language multilingual system
 - [x] 160 AI term translations
@@ -424,6 +461,7 @@ The app is optimized for deployment on:
 - [x] Comprehensive documentation
 
 ### Phase 2 ✅ Complete
+
 - [x] Interactive mind maps
 - [x] 100+ curated resources
 - [x] 5 interactive visualizations
@@ -432,6 +470,7 @@ The app is optimized for deployment on:
 - [x] All components multilingual
 
 ### Phase 3 🚀 Planned
+
 - [ ] Firebase authentication
 - [ ] User dashboards
 - [ ] Progress tracking
@@ -454,6 +493,7 @@ The app is optimized for deployment on:
 We welcome contributions! Please see our [contribution guidelines](CONTRIBUTING.md) for details.
 
 ### Local Development Setup
+
 ```bash
 # Clone repo
 git clone https://github.com/syedsz-1519/clayverse.ai.git
@@ -485,6 +525,7 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 Built with ❤️ for learners in India and around the world.
 
 **Special thanks to:**
+
 - 3Blue1Brown for inspiration on visual explanations
 - DeepMind for educational resources
 - The open-source community for amazing tools and libraries
