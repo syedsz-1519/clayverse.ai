@@ -22,11 +22,11 @@ import InteractiveFlashcards from './components/InteractiveFlashcards';
 import QuickTakeaway from './components/QuickTakeaway';
 import AuthModal from './components/AuthModal';
 import HomeCurriculumGrid from './components/HomeCurriculumGrid';
+import IndividualLessonView from './components/IndividualLessonView';
 import GuideBreadcrumbNav from './components/GuideBreadcrumbNav';
 import StructuredHubShowcase from './components/StructuredHubShowcase';
 import SocialShareSection from './components/SocialShareSection';
 import TrustSignals from './components/TrustSignals';
-import ValueProps from './components/ValueProps';
 import LanguagesShowcase from './components/LanguagesShowcase';
 import OnboardingModal from './components/OnboardingModal';
 import GuestModeBanner from './components/GuestModeBanner';
@@ -35,9 +35,6 @@ import OfflineStatusBanner from './components/OfflineStatusBanner';
 import OfflineManagerModal from './components/OfflineManagerModal';
 import FocusLockdownManager from './components/FocusLockdownManager';
 import TTSReaderModal from './components/TTSReaderModal';
-import MindMapLearning from './components/MindMapLearning';
-import InteractiveVisualization from './components/InteractiveVisualization';
-import ClaybotIntroduction from './components/ClaybotIntroduction';
 import ClayTalkingPersonality from './components/ClayTalkingPersonality';
 import { LESSON_MODULES } from './components/HomeCurriculumGrid';
 import { useGlobalKeyboardShortcuts } from './hooks/useGlobalKeyboardShortcuts';
@@ -66,8 +63,11 @@ import { useLanguageMultilingual } from './hooks/useLanguageMultilingual';
 
 const AIMockInterviewer = lazy(() => import('./components/AIMockInterviewer'));
 const StudentDashboard = lazy(() => import('./components/StudentDashboard'));
-const IndividualLessonView = lazy(() => import('./components/IndividualLessonView'));
 const LearningHubPage = lazy(() => import('./components/LearningHubPage'));
+const ValueProps = lazy(() => import('./components/ValueProps'));
+const MindMapLearning = lazy(() => import('./components/MindMapLearning'));
+const InteractiveVisualization = lazy(() => import('./components/InteractiveVisualization'));
+const ClaybotIntroduction = lazy(() => import('./components/ClaybotIntroduction'));
 
 export default function App() {
   const { lang, t, dir } = useLanguageMultilingual();
