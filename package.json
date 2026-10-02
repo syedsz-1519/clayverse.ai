@@ -52,8 +52,11 @@
       "eslint --fix",
       "prettier --write"
     ],
-    "*.{css,json,md}": [
+    "*.css": [
       "prettier --write"
     ]
+  },
+  "overrides": {
+    "@grpc/grpc-js": "^1.13.6"
   }
 }
