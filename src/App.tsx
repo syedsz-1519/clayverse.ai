@@ -275,6 +275,10 @@ export default function App() {
       setIsLanguagesModalOpen(true);
     };
 
+    const handleOpenAuth = () => {
+      setIsAuthModalOpen(true);
+    };
+
     const handleOpenOfflineManager = () => {
       setIsOfflineModalOpen(true);
     };
@@ -298,6 +302,7 @@ export default function App() {
     window.addEventListener('clay_navigate_view' as any, handleNavigateView);
     window.addEventListener('clay_open_lesson' as any, handleOpenLesson);
     window.addEventListener('clay_open_languages_showcase' as any, handleOpenLanguages);
+    window.addEventListener('clay_open_auth', handleOpenAuth);
     window.addEventListener('clay_open_offline_manager' as any, handleOpenOfflineManager);
     window.addEventListener('clay_open_tts_reader' as any, handleOpenTTSReaderEvent);
     window.addEventListener('clay_toggle_focus_mode' as any, handleToggleFocusEvent);
@@ -356,6 +361,7 @@ export default function App() {
       window.removeEventListener('clay_navigate_view' as any, handleNavigateView);
       window.removeEventListener('clay_open_lesson' as any, handleOpenLesson);
       window.removeEventListener('clay_open_languages_showcase' as any, handleOpenLanguages);
+      window.removeEventListener('clay_open_auth', handleOpenAuth);
       window.removeEventListener('clay_open_offline_manager' as any, handleOpenOfflineManager);
       window.removeEventListener('clay_open_tts_reader' as any, handleOpenTTSReaderEvent);
       window.removeEventListener('clay_toggle_focus_mode' as any, handleToggleFocusEvent);
