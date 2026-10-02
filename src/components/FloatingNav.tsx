@@ -83,9 +83,11 @@ export default function FloatingNav() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex items-center justify-between h-16">
             {/* Logo */}
-            <div
-              className="flex items-center gap-3 cursor-pointer"
+            <button
+              type="button"
+              className="flex items-center gap-3 cursor-pointer border-0 bg-transparent p-0 text-left"
               onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
+              aria-label="Clayverse AI home"
             >
               <ClayLogo size={36} />
               <div className="flex flex-col">
@@ -96,7 +98,7 @@ export default function FloatingNav() {
                   {lang === 'en' ? 'AI Learning Platform' : 'AI सीखने का मंच'}
                 </span>
               </div>
-            </div>
+            </button>
 
             {/* Desktop Navigation */}
             <div className="hidden md:flex items-center gap-1">
@@ -194,7 +196,9 @@ export default function FloatingNav() {
             className="fixed inset-0 z-40 md:hidden"
           >
             {/* Backdrop */}
-            <div
+            <button
+              type="button"
+              aria-label={lang === 'en' ? 'Close menu' : 'मेनू बंद करें'}
               className="absolute inset-0 bg-slate-900/50 backdrop-blur-sm"
               onClick={() => setIsMenuOpen(false)}
             />
@@ -206,6 +210,9 @@ export default function FloatingNav() {
               exit={{ x: '100%' }}
               transition={{ type: 'spring', damping: 25, stiffness: 200 }}
               id="primary-mobile-menu"
+              role="dialog"
+              aria-modal="true"
+              aria-label={lang === 'en' ? 'Navigation menu' : 'नेविगेशन मेनू'}
               className="absolute right-0 top-0 bottom-0 w-80 bg-white shadow-2xl overflow-y-auto"
             >
               <div className="p-6 space-y-6">
