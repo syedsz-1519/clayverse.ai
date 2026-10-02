@@ -1,32 +1,25 @@
 import { initializeApp, getApps, getApp } from 'firebase/app';
-import { 
-  getAuth, 
-  signInWithEmailAndPassword, 
-  createUserWithEmailAndPassword, 
-  signOut, 
-  signInWithPopup, 
+import {
+  getAuth,
+  signInWithEmailAndPassword,
+  createUserWithEmailAndPassword,
+  signOut,
+  signInWithPopup,
   GoogleAuthProvider,
   updateProfile,
   onAuthStateChanged,
-  User as FirebaseUser
+  User as FirebaseUser,
 } from 'firebase/auth';
-import { 
-  getFirestore, 
-  doc, 
-  setDoc, 
-  getDoc, 
-  updateDoc,
-  serverTimestamp 
-} from 'firebase/firestore';
+import { getFirestore, doc, setDoc, getDoc, updateDoc, serverTimestamp } from 'firebase/firestore';
 
 // Firebase credentials from firebase-applet-config.json
 const firebaseConfig = {
-  apiKey: "AIzaSyC_fi966iPaGIybf2XPue3TtutCmXgoQJg",
-  authDomain: "my-first-project-494611.firebaseapp.com",
-  projectId: "my-first-project-494611",
-  storageBucket: "my-first-project-494611.firebasestorage.app",
-  messagingSenderId: "27782445441",
-  appId: "1:27782445441:web:4fe1df3f69f0b5bcc15080"
+  apiKey: 'AIzaSyC_fi966iPaGIybf2XPue3TtutCmXgoQJg',
+  authDomain: 'my-first-project-494611.firebaseapp.com',
+  projectId: 'my-first-project-494611',
+  storageBucket: 'my-first-project-494611.firebasestorage.app',
+  messagingSenderId: '27782445441',
+  appId: '1:27782445441:web:4fe1df3f69f0b5bcc15080',
 };
 
 // Initialize Firebase app
@@ -64,6 +57,8 @@ export interface LocalUser {
   phoneNumber?: string;
   fullName: string;
   password?: string;
+  passwordHash?: string;
+  passwordSalt?: string;
   avatar: string;
   joinedDate: string;
   streak: number;
@@ -83,46 +78,70 @@ export function saveLocalUsers(users: LocalUser[]) {
   localStorage.setItem('clay_local_users', JSON.stringify(users));
 }
 
+async function hashLocalPassword(password: string, encodedSalt?: string) {
+  const salt = encodedSalt
+    ? Uint8Array.from(atob(encodedSalt), (character) => character.charCodeAt(0))
+    : crypto.getRandomValues(new Uint8Array(16));
+  const key = await crypto.subtle.importKey(
+    'raw',
+    new TextEncoder().encode(password),
+    'PBKDF2',
+    false,
+    ['deriveBits'],
+  );
+  const bits = await crypto.subtle.deriveBits(
+    { name: 'PBKDF2', hash: 'SHA-256', salt, iterations: 310_000 },
+    key,
+    256,
+  );
+
+  return {
+    passwordSalt: btoa(String.fromCharCode(...salt)),
+    passwordHash: btoa(String.fromCharCode(...new Uint8Array(bits))),
+  };
+}
+
 export function getActiveLocalUser(): LocalUser | null {
   const activeId = localStorage.getItem('clay_current_user_id');
   if (!activeId) return null;
   const users = getLocalUsers();
-  return users.find(u => u.uid === activeId) || null;
+  return users.find((u) => u.uid === activeId) || null;
 }
 
-export function registerUserManually(
+export async function registerUserManually(
   email: string,
   phoneNumber: string,
   fullName: string,
-  password?: string
-): UserProfile {
+  password: string,
+): Promise<UserProfile> {
   const users = getLocalUsers();
-  
+
   // Clean checks
   const normEmail = email.toLowerCase().trim();
   const normPhone = phoneNumber.trim();
 
-  if (normEmail && users.some(u => u.email.toLowerCase() === normEmail)) {
+  if (normEmail && users.some((u) => u.email.toLowerCase() === normEmail)) {
     throw new Error('Email is already registered.');
   }
 
-  if (normPhone && users.some(u => u.phoneNumber === normPhone)) {
+  if (normPhone && users.some((u) => u.phoneNumber === normPhone)) {
     throw new Error('Phone number is already registered.');
   }
 
   const joinedDate = new Date().toLocaleDateString('en-US', { month: 'long', year: 'numeric' });
   const avatar = `https://api.dicebear.com/7.x/bottts/svg?seed=${encodeURIComponent(fullName || email)}`;
+  const passwordCredentials = await hashLocalPassword(password);
 
   const newUser: LocalUser = {
     uid: `local_${Date.now()}`,
     email: normEmail,
     phoneNumber: normPhone || undefined,
     fullName: fullName || 'Explorer',
-    password: password || '',
+    ...passwordCredentials,
     avatar,
     joinedDate,
     streak: 1,
-    linkedPlatforms: []
+    linkedPlatforms: [],
   };
 
   users.push(newUser);
@@ -140,24 +159,38 @@ export function registerUserManually(
     joinedDate: newUser.joinedDate,
     streak: newUser.streak,
     linkedPlatforms: newUser.linkedPlatforms,
-    phoneNumber: newUser.phoneNumber
+    phoneNumber: newUser.phoneNumber,
   };
 }
 
-export function loginUserManually(identifier: string, password?: string): UserProfile {
+export async function loginUserManually(
+  identifier: string,
+  password: string,
+): Promise<UserProfile> {
   const users = getLocalUsers();
   const normIdent = identifier.toLowerCase().trim();
 
-  const matched = users.find(u => 
-    u.email.toLowerCase() === normIdent || 
-    (u.phoneNumber && u.phoneNumber.trim() === normIdent)
+  const matched = users.find(
+    (u) =>
+      u.email.toLowerCase() === normIdent || (u.phoneNumber && u.phoneNumber.trim() === normIdent),
   );
 
   if (!matched) {
     throw new Error('Account not found with this email or phone number.');
   }
 
-  if (password !== undefined && matched.password !== password) {
+  if (matched.passwordHash && matched.passwordSalt) {
+    const candidate = await hashLocalPassword(password, matched.passwordSalt);
+    if (candidate.passwordHash !== matched.passwordHash) throw new Error('Incorrect password.');
+  } else if (matched.password !== undefined && matched.password === password) {
+    const passwordCredentials = await hashLocalPassword(password);
+    const migratedUsers = users.map((user) => {
+      if (user.uid !== matched.uid) return user;
+      const { password: _legacyPassword, ...userWithoutPassword } = user;
+      return { ...userWithoutPassword, ...passwordCredentials };
+    });
+    saveLocalUsers(migratedUsers);
+  } else {
     throw new Error('Incorrect password.');
   }
 
@@ -173,7 +206,7 @@ export function loginUserManually(identifier: string, password?: string): UserPr
     joinedDate: matched.joinedDate,
     streak: matched.streak,
     linkedPlatforms: matched.linkedPlatforms,
-    phoneNumber: matched.phoneNumber
+    phoneNumber: matched.phoneNumber,
   };
 }
 
@@ -182,16 +215,19 @@ export function logoutUserManually() {
   window.dispatchEvent(new Event('clay_local_auth_changed'));
 }
 
-export function linkSocialPlatformManually(platform: string, platformUsername?: string): UserProfile {
+export function linkSocialPlatformManually(
+  platform: string,
+  platformUsername?: string,
+): UserProfile {
   const activeUser = getActiveLocalUser();
-  
+
   if (activeUser) {
     // 1. Link platform to active local user
     const users = getLocalUsers();
-    const updatedUsers = users.map(u => {
+    const updatedUsers = users.map((u) => {
       if (u.uid === activeUser.uid) {
         const platforms = u.linkedPlatforms.includes(platform)
-          ? u.linkedPlatforms.filter(p => p !== platform)
+          ? u.linkedPlatforms.filter((p) => p !== platform)
           : [...u.linkedPlatforms, platform];
         return { ...u, linkedPlatforms: platforms };
       }
@@ -201,7 +237,7 @@ export function linkSocialPlatformManually(platform: string, platformUsername?: 
     saveLocalUsers(updatedUsers);
     window.dispatchEvent(new Event('clay_local_auth_changed'));
 
-    const updated = updatedUsers.find(u => u.uid === activeUser.uid)!;
+    const updated = updatedUsers.find((u) => u.uid === activeUser.uid)!;
     return {
       uid: updated.uid,
       email: updated.email,
@@ -210,14 +246,14 @@ export function linkSocialPlatformManually(platform: string, platformUsername?: 
       joinedDate: updated.joinedDate,
       streak: updated.streak,
       linkedPlatforms: updated.linkedPlatforms,
-      phoneNumber: updated.phoneNumber
+      phoneNumber: updated.phoneNumber,
     };
   } else {
     // 2. Sign up/Log in using social account if not already logged in!
     const users = getLocalUsers();
     const username = platformUsername || `${platform} Explorer`;
     const normEmail = `${platform.toLowerCase()}_${Date.now()}@social.com`;
-    
+
     const newUser: LocalUser = {
       uid: `local_${Date.now()}`,
       email: normEmail,
@@ -225,7 +261,7 @@ export function linkSocialPlatformManually(platform: string, platformUsername?: 
       avatar: `https://api.dicebear.com/7.x/bottts/svg?seed=${encodeURIComponent(username)}`,
       joinedDate: new Date().toLocaleDateString('en-US', { month: 'long', year: 'numeric' }),
       streak: 1,
-      linkedPlatforms: [platform]
+      linkedPlatforms: [platform],
     };
 
     users.push(newUser);
@@ -241,7 +277,7 @@ export function linkSocialPlatformManually(platform: string, platformUsername?: 
       avatar: newUser.avatar,
       joinedDate: newUser.joinedDate,
       streak: newUser.streak,
-      linkedPlatforms: newUser.linkedPlatforms
+      linkedPlatforms: newUser.linkedPlatforms,
     };
   }
 }
@@ -249,11 +285,11 @@ export function linkSocialPlatformManually(platform: string, platformUsername?: 
 // 1. Listen to Auth state changes and sync (HYBRID: supports local manual + firebase fallback)
 export function setupAuthListener(
   onUserChanged: (profile: UserProfile | null) => void,
-  onProgressChanged?: (progress: UserProgress | null) => void
+  onProgressChanged?: (progress: UserProgress | null) => void,
 ) {
   const syncLocalOrFirebaseState = async (firebaseUser: FirebaseUser | null) => {
     const localUser = getActiveLocalUser();
-    
+
     if (localUser) {
       // 1. Convert to UserProfile
       const profile: UserProfile = {
@@ -264,21 +300,21 @@ export function setupAuthListener(
         joinedDate: localUser.joinedDate,
         streak: localUser.streak,
         linkedPlatforms: localUser.linkedPlatforms,
-        phoneNumber: localUser.phoneNumber
+        phoneNumber: localUser.phoneNumber,
       };
-      
+
       localStorage.setItem('clay_user_profile', JSON.stringify(profile));
       onUserChanged(profile);
 
       // 2. Load user's progress
       const savedCompleted = localStorage.getItem(`clay_completed_terms_${localUser.uid}`);
       const savedBookmarks = localStorage.getItem(`clay_bookmarks_${localUser.uid}`);
-      
+
       const progress: UserProgress = {
         completedTerms: savedCompleted ? JSON.parse(savedCompleted) : {},
-        bookmarks: savedBookmarks ? JSON.parse(savedBookmarks) : {}
+        bookmarks: savedBookmarks ? JSON.parse(savedBookmarks) : {},
       };
-      
+
       localStorage.setItem('clay_completed_terms', JSON.stringify(progress.completedTerms));
       localStorage.setItem('clay_bookmarks', JSON.stringify(progress.bookmarks));
       if (onProgressChanged) onProgressChanged(progress);
@@ -313,17 +349,23 @@ export function setupAuthListener(
       try {
         const userRef = doc(db, 'users', firebaseUser.uid);
         const userSnap = await getDoc(userRef);
-        
+
         let profile: UserProfile;
 
         if (userSnap.exists()) {
           profile = { uid: firebaseUser.uid, ...userSnap.data() } as UserProfile;
         } else {
           // Create new profile
-          const joinedDate = new Date().toLocaleDateString('en-US', { month: 'long', year: 'numeric' });
+          const joinedDate = new Date().toLocaleDateString('en-US', {
+            month: 'long',
+            year: 'numeric',
+          });
           const avatar = `https://api.dicebear.com/7.x/bottts/svg?seed=${encodeURIComponent(firebaseUser.email || firebaseUser.uid)}`;
-          const fullName = firebaseUser.displayName || firebaseUser.email?.split('@')[0].toUpperCase() || 'Explorer';
-          
+          const fullName =
+            firebaseUser.displayName ||
+            firebaseUser.email?.split('@')[0].toUpperCase() ||
+            'Explorer';
+
           profile = {
             uid: firebaseUser.uid,
             email: firebaseUser.email || '',
@@ -331,16 +373,18 @@ export function setupAuthListener(
             avatar,
             joinedDate,
             streak: 1,
-            linkedPlatforms: firebaseUser.providerData.map(p => p.providerId === 'google.com' ? 'Google' : '').filter(Boolean)
+            linkedPlatforms: firebaseUser.providerData
+              .map((p) => (p.providerId === 'google.com' ? 'Google' : ''))
+              .filter(Boolean),
           };
-          
+
           await setDoc(userRef, {
             email: profile.email,
             fullName: profile.fullName,
             avatar: profile.avatar,
             joinedDate: profile.joinedDate,
             streak: profile.streak,
-            linkedPlatforms: profile.linkedPlatforms
+            linkedPlatforms: profile.linkedPlatforms,
           });
         }
 
@@ -351,30 +395,30 @@ export function setupAuthListener(
         // Fetch Progress (bookmarks and completed terms)
         const progressRef = doc(db, 'progress', firebaseUser.uid);
         const progressSnap = await getDoc(progressRef);
-        
+
         let progress: UserProgress = { completedTerms: {}, bookmarks: {} };
 
         if (progressSnap.exists()) {
           const data = progressSnap.data();
           progress = {
             completedTerms: data.completedTerms || {},
-            bookmarks: data.bookmarks || {}
+            bookmarks: data.bookmarks || {},
           };
         } else {
           // Try importing from local storage if available to avoid data loss
           const localCompleted = localStorage.getItem('clay_completed_terms');
           const localBookmarks = localStorage.getItem('clay_bookmarks');
-          
+
           progress = {
             completedTerms: localCompleted ? JSON.parse(localCompleted) : {},
-            bookmarks: localBookmarks ? JSON.parse(localBookmarks) : {}
+            bookmarks: localBookmarks ? JSON.parse(localBookmarks) : {},
           };
 
           await setDoc(progressRef, {
             userId: firebaseUser.uid,
             completedTerms: progress.completedTerms,
             bookmarks: progress.bookmarks,
-            updatedAt: serverTimestamp()
+            updatedAt: serverTimestamp(),
           });
         }
 
@@ -428,7 +472,7 @@ export function setupAuthListener(
               sessionHistory: quizHistory,
               streakCount,
               lastQuizDate,
-              updatedAt: serverTimestamp()
+              updatedAt: serverTimestamp(),
             });
           }
 
@@ -439,12 +483,12 @@ export function setupAuthListener(
           localStorage.setItem('clay_quiz_streak_count', streakCount.toString());
           localStorage.setItem('clay_quiz_last_date', lastQuizDate);
         } catch (e) {
-          console.error("Error loading quiz progress:", e);
+          console.error('Error loading quiz progress:', e);
         }
 
         window.dispatchEvent(new Event('clay_auth_state_changed'));
       } catch (err) {
-        console.error("Firebase Auth Sync error:", err);
+        console.error('Firebase Auth Sync error:', err);
       }
     } else {
       // Logged out
@@ -477,7 +521,10 @@ export function setupAuthListener(
 }
 
 // 2. Sync Progress updates (works for both local and firebase user)
-export async function syncProgressToCloud(completedTerms: Record<string, boolean>, bookmarks: Record<string, boolean>) {
+export async function syncProgressToCloud(
+  completedTerms: Record<string, boolean>,
+  bookmarks: Record<string, boolean>,
+) {
   const localUser = getActiveLocalUser();
   if (localUser) {
     localStorage.setItem(`clay_completed_terms_${localUser.uid}`, JSON.stringify(completedTerms));
@@ -494,14 +541,18 @@ export async function syncProgressToCloud(completedTerms: Record<string, boolean
 
   try {
     const progressRef = doc(db, 'progress', currentUser.uid);
-    await setDoc(progressRef, {
-      userId: currentUser.uid,
-      completedTerms,
-      bookmarks,
-      updatedAt: serverTimestamp()
-    }, { merge: true });
+    await setDoc(
+      progressRef,
+      {
+        userId: currentUser.uid,
+        completedTerms,
+        bookmarks,
+        updatedAt: serverTimestamp(),
+      },
+      { merge: true },
+    );
   } catch (error) {
-    console.error("Failed to sync progress to Firebase Firestore:", error);
+    console.error('Failed to sync progress to Firebase Firestore:', error);
   }
 }
 
@@ -535,12 +586,12 @@ export async function toggleSectionBookmarked(sectionId: string, isBookmarked: b
 
 // 5. Sync Quiz progress
 export async function syncQuizProgressToCloud(
-  score: number, 
-  completedSections: Record<string, boolean>, 
+  score: number,
+  completedSections: Record<string, boolean>,
   highScores: Record<string, number>,
   sessionHistory?: any[],
   streakCount?: number,
-  lastQuizDate?: string
+  lastQuizDate?: string,
 ) {
   // Always save locally first
   localStorage.setItem('clay_quiz_score', score.toString());
@@ -555,7 +606,7 @@ export async function syncQuizProgressToCloud(
   if (lastQuizDate !== undefined) {
     localStorage.setItem('clay_quiz_last_date', lastQuizDate);
   }
-  
+
   const localUser = getActiveLocalUser();
   if (localUser) {
     const quizData = {
@@ -564,7 +615,7 @@ export async function syncQuizProgressToCloud(
       highScores,
       sessionHistory,
       streakCount,
-      lastQuizDate
+      lastQuizDate,
     };
     localStorage.setItem(`clay_quiz_${localUser.uid}`, JSON.stringify(quizData));
     window.dispatchEvent(new Event('clay_auth_state_changed'));
@@ -581,7 +632,7 @@ export async function syncQuizProgressToCloud(
       score,
       completedSections,
       highScores,
-      updatedAt: serverTimestamp()
+      updatedAt: serverTimestamp(),
     };
     if (sessionHistory) {
       updateData.sessionHistory = sessionHistory;
@@ -594,7 +645,7 @@ export async function syncQuizProgressToCloud(
     }
     await setDoc(quizRef, updateData, { merge: true });
   } catch (error) {
-    console.error("Failed to sync quiz progress to Firebase Firestore:", error);
+    console.error('Failed to sync quiz progress to Firebase Firestore:', error);
   }
 }
 
@@ -627,7 +678,9 @@ export function useAuth() {
             uid: firebaseUser.uid,
             email: firebaseUser.email || '',
             fullName: firebaseUser.displayName || 'Learner',
-            avatar: firebaseUser.photoURL || `https://api.dicebear.com/7.x/bottts/svg?seed=${firebaseUser.uid}`,
+            avatar:
+              firebaseUser.photoURL ||
+              `https://api.dicebear.com/7.x/bottts/svg?seed=${firebaseUser.uid}`,
             joinedDate: new Date().toLocaleDateString('en-US', { month: 'short', year: 'numeric' }),
             streak: 1,
             linkedPlatforms: ['google'],
@@ -694,7 +747,8 @@ export const INITIAL_DEFAULT_STUDY_GROUPS: StudyGroup[] = [
     topicTitle: 'Transformer Architecture & Self-Attention',
     category: 'GenAI',
     level: 'Advanced',
-    description: 'Weekly deep dive into multi-head attention math, positional embeddings, and KV cache optimizations.',
+    description:
+      'Weekly deep dive into multi-head attention math, positional embeddings, and KV cache optimizations.',
     createdBy: 'scholar_priya',
     createdByName: 'Priya N. (Tutor)',
     createdAt: '2026-08-15',
@@ -702,10 +756,28 @@ export const INITIAL_DEFAULT_STUDY_GROUPS: StudyGroup[] = [
     maxMembers: 15,
     tags: ['Self-Attention', 'Transformers', 'Math Deep Dive'],
     members: [
-      { uid: 'scholar_priya', name: 'Priya N.', avatar: 'https://api.dicebear.com/7.x/bottts/svg?seed=Priya', role: 'leader', joinedAt: '2026-08-15' },
-      { uid: 'scholar_arjun', name: 'Arjun K.', avatar: 'https://api.dicebear.com/7.x/bottts/svg?seed=Arjun', role: 'member', joinedAt: '2026-08-16' },
-      { uid: 'scholar_zainab', name: 'Zainab R.', avatar: 'https://api.dicebear.com/7.x/bottts/svg?seed=Zainab', role: 'member', joinedAt: '2026-08-18' }
-    ]
+      {
+        uid: 'scholar_priya',
+        name: 'Priya N.',
+        avatar: 'https://api.dicebear.com/7.x/bottts/svg?seed=Priya',
+        role: 'leader',
+        joinedAt: '2026-08-15',
+      },
+      {
+        uid: 'scholar_arjun',
+        name: 'Arjun K.',
+        avatar: 'https://api.dicebear.com/7.x/bottts/svg?seed=Arjun',
+        role: 'member',
+        joinedAt: '2026-08-16',
+      },
+      {
+        uid: 'scholar_zainab',
+        name: 'Zainab R.',
+        avatar: 'https://api.dicebear.com/7.x/bottts/svg?seed=Zainab',
+        role: 'member',
+        joinedAt: '2026-08-18',
+      },
+    ],
   },
   {
     id: 'group_rag_architects',
@@ -714,7 +786,8 @@ export const INITIAL_DEFAULT_STUDY_GROUPS: StudyGroup[] = [
     topicTitle: 'RAG (Retrieval-Augmented Generation) & Vectors',
     category: 'GenAI',
     level: 'Advanced',
-    description: 'Hands-on practice implementing chunking strategies, hybrid BM25 + dense retrieval, and reranking.',
+    description:
+      'Hands-on practice implementing chunking strategies, hybrid BM25 + dense retrieval, and reranking.',
     createdBy: 'scholar_farhan',
     createdByName: 'Farhan M.',
     createdAt: '2026-08-18',
@@ -722,9 +795,21 @@ export const INITIAL_DEFAULT_STUDY_GROUPS: StudyGroup[] = [
     maxMembers: 12,
     tags: ['RAG', 'Vector DB', 'Embeddings', 'LangChain'],
     members: [
-      { uid: 'scholar_farhan', name: 'Farhan M.', avatar: 'https://api.dicebear.com/7.x/bottts/svg?seed=Farhan', role: 'leader', joinedAt: '2026-08-18' },
-      { uid: 'scholar_rahul', name: 'Rahul V.', avatar: 'https://api.dicebear.com/7.x/bottts/svg?seed=Rahul', role: 'member', joinedAt: '2026-08-19' }
-    ]
+      {
+        uid: 'scholar_farhan',
+        name: 'Farhan M.',
+        avatar: 'https://api.dicebear.com/7.x/bottts/svg?seed=Farhan',
+        role: 'leader',
+        joinedAt: '2026-08-18',
+      },
+      {
+        uid: 'scholar_rahul',
+        name: 'Rahul V.',
+        avatar: 'https://api.dicebear.com/7.x/bottts/svg?seed=Rahul',
+        role: 'member',
+        joinedAt: '2026-08-19',
+      },
+    ],
   },
   {
     id: 'group_ai_foundations_hyd',
@@ -733,7 +818,8 @@ export const INITIAL_DEFAULT_STUDY_GROUPS: StudyGroup[] = [
     topicTitle: 'AI vs ML vs Deep Learning Hierarchy',
     category: 'Foundations',
     level: 'Beginner',
-    description: 'Beginner friendly cohort explaining neural networks, weights, and loss functions in plain colloquial language.',
+    description:
+      'Beginner friendly cohort explaining neural networks, weights, and loss functions in plain colloquial language.',
     createdBy: 'scholar_ali',
     createdByName: 'Ali Hyder',
     createdAt: '2026-08-19',
@@ -741,9 +827,21 @@ export const INITIAL_DEFAULT_STUDY_GROUPS: StudyGroup[] = [
     maxMembers: 20,
     tags: ['Beginners', 'Bilingual', 'Foundations', 'Intuition'],
     members: [
-      { uid: 'scholar_ali', name: 'Ali Hyder', avatar: 'https://api.dicebear.com/7.x/bottts/svg?seed=Ali', role: 'leader', joinedAt: '2026-08-19' },
-      { uid: 'scholar_sneha', name: 'Sneha T.', avatar: 'https://api.dicebear.com/7.x/bottts/svg?seed=Sneha', role: 'member', joinedAt: '2026-08-20' }
-    ]
+      {
+        uid: 'scholar_ali',
+        name: 'Ali Hyder',
+        avatar: 'https://api.dicebear.com/7.x/bottts/svg?seed=Ali',
+        role: 'leader',
+        joinedAt: '2026-08-19',
+      },
+      {
+        uid: 'scholar_sneha',
+        name: 'Sneha T.',
+        avatar: 'https://api.dicebear.com/7.x/bottts/svg?seed=Sneha',
+        role: 'member',
+        joinedAt: '2026-08-20',
+      },
+    ],
   },
   {
     id: 'group_prompt_pros',
@@ -752,7 +850,8 @@ export const INITIAL_DEFAULT_STUDY_GROUPS: StudyGroup[] = [
     topicTitle: 'Prompt Engineering & System Personas',
     category: 'Prompting',
     level: 'Beginner',
-    description: 'Techniques for few-shot reasoning, structured JSON schemas, and jailbreak guardrail testing.',
+    description:
+      'Techniques for few-shot reasoning, structured JSON schemas, and jailbreak guardrail testing.',
     createdBy: 'scholar_maya',
     createdByName: 'Maya S.',
     createdAt: '2026-08-20',
@@ -760,9 +859,15 @@ export const INITIAL_DEFAULT_STUDY_GROUPS: StudyGroup[] = [
     maxMembers: 10,
     tags: ['Few-Shot', 'CoT', 'Structured Output', 'Safety'],
     members: [
-      { uid: 'scholar_maya', name: 'Maya S.', avatar: 'https://api.dicebear.com/7.x/bottts/svg?seed=Maya', role: 'leader', joinedAt: '2026-08-20' }
-    ]
-  }
+      {
+        uid: 'scholar_maya',
+        name: 'Maya S.',
+        avatar: 'https://api.dicebear.com/7.x/bottts/svg?seed=Maya',
+        role: 'leader',
+        joinedAt: '2026-08-20',
+      },
+    ],
+  },
 ];
 
 export function getLocalStudyGroups(): StudyGroup[] {
@@ -795,17 +900,19 @@ export async function fetchStudyGroups(): Promise<StudyGroup[]> {
       }
     }
   } catch (err) {
-    console.warn("Using local cache for study groups:", err);
+    console.warn('Using local cache for study groups:', err);
   }
   return getLocalStudyGroups();
 }
 
-export async function createStudyGroupCloud(newGroup: Omit<StudyGroup, 'id' | 'createdAt'>): Promise<StudyGroup> {
+export async function createStudyGroupCloud(
+  newGroup: Omit<StudyGroup, 'id' | 'createdAt'>,
+): Promise<StudyGroup> {
   const groups = getLocalStudyGroups();
   const fullGroup: StudyGroup = {
     ...newGroup,
     id: `group_${Date.now()}`,
-    createdAt: new Date().toISOString().split('T')[0]
+    createdAt: new Date().toISOString().split('T')[0],
   };
 
   const updated = [fullGroup, ...groups];
@@ -814,13 +921,17 @@ export async function createStudyGroupCloud(newGroup: Omit<StudyGroup, 'id' | 'c
   try {
     const currentUser = auth.currentUser;
     if (currentUser) {
-      await setDoc(doc(db, 'studyGroups', 'all_groups'), {
-        groups: updated,
-        updatedAt: serverTimestamp()
-      }, { merge: true });
+      await setDoc(
+        doc(db, 'studyGroups', 'all_groups'),
+        {
+          groups: updated,
+          updatedAt: serverTimestamp(),
+        },
+        { merge: true },
+      );
     }
   } catch (err) {
-    console.warn("Failed to sync new group to Firestore, saved locally:", err);
+    console.warn('Failed to sync new group to Firestore, saved locally:', err);
   }
 
   return fullGroup;
@@ -828,11 +939,11 @@ export async function createStudyGroupCloud(newGroup: Omit<StudyGroup, 'id' | 'c
 
 export async function joinStudyGroupCloud(groupId: string, user: UserProfile): Promise<boolean> {
   const groups = getLocalStudyGroups();
-  const targetIndex = groups.findIndex(g => g.id === groupId);
+  const targetIndex = groups.findIndex((g) => g.id === groupId);
   if (targetIndex === -1) return false;
 
   const target = groups[targetIndex];
-  const alreadyMember = target.members.some(m => m.uid === user.uid);
+  const alreadyMember = target.members.some((m) => m.uid === user.uid);
   if (alreadyMember) return true;
 
   if (target.members.length >= target.maxMembers) {
@@ -844,7 +955,7 @@ export async function joinStudyGroupCloud(groupId: string, user: UserProfile): P
     name: user.fullName || user.email || 'Scholar',
     avatar: user.avatar || `https://api.dicebear.com/7.x/bottts/svg?seed=${user.uid}`,
     role: 'member',
-    joinedAt: new Date().toISOString().split('T')[0]
+    joinedAt: new Date().toISOString().split('T')[0],
   };
 
   target.members.push(newMember);
@@ -854,13 +965,17 @@ export async function joinStudyGroupCloud(groupId: string, user: UserProfile): P
   try {
     const currentUser = auth.currentUser;
     if (currentUser) {
-      await setDoc(doc(db, 'studyGroups', 'all_groups'), {
-        groups,
-        updatedAt: serverTimestamp()
-      }, { merge: true });
+      await setDoc(
+        doc(db, 'studyGroups', 'all_groups'),
+        {
+          groups,
+          updatedAt: serverTimestamp(),
+        },
+        { merge: true },
+      );
     }
   } catch (err) {
-    console.warn("Synced group join locally:", err);
+    console.warn('Synced group join locally:', err);
   }
 
   return true;
@@ -868,24 +983,28 @@ export async function joinStudyGroupCloud(groupId: string, user: UserProfile): P
 
 export async function leaveStudyGroupCloud(groupId: string, userUid: string): Promise<boolean> {
   const groups = getLocalStudyGroups();
-  const targetIndex = groups.findIndex(g => g.id === groupId);
+  const targetIndex = groups.findIndex((g) => g.id === groupId);
   if (targetIndex === -1) return false;
 
   const target = groups[targetIndex];
-  target.members = target.members.filter(m => m.uid !== userUid);
+  target.members = target.members.filter((m) => m.uid !== userUid);
   groups[targetIndex] = target;
   saveLocalStudyGroups(groups);
 
   try {
     const currentUser = auth.currentUser;
     if (currentUser) {
-      await setDoc(doc(db, 'studyGroups', 'all_groups'), {
-        groups,
-        updatedAt: serverTimestamp()
-      }, { merge: true });
+      await setDoc(
+        doc(db, 'studyGroups', 'all_groups'),
+        {
+          groups,
+          updatedAt: serverTimestamp(),
+        },
+        { merge: true },
+      );
     }
   } catch (err) {
-    console.warn("Synced group leave locally:", err);
+    console.warn('Synced group leave locally:', err);
   }
 
   return true;
@@ -904,12 +1023,16 @@ export function getStudyGroupMessages(groupId: string): StudyGroupMessage[] {
       senderName: 'Cohort Guide',
       senderAvatar: 'https://api.dicebear.com/7.x/bottts/svg?seed=Guide',
       text: 'Welcome everyone! Review this week’s lesson notes and post your questions or project links below.',
-      timestamp: 'Yesterday at 5:30 PM'
-    }
+      timestamp: 'Yesterday at 5:30 PM',
+    },
   ];
 }
 
-export function postStudyGroupMessage(groupId: string, user: UserProfile, text: string): StudyGroupMessage {
+export function postStudyGroupMessage(
+  groupId: string,
+  user: UserProfile,
+  text: string,
+): StudyGroupMessage {
   const messages = getStudyGroupMessages(groupId);
   const newMsg: StudyGroupMessage = {
     id: `msg_${Date.now()}`,
@@ -918,7 +1041,7 @@ export function postStudyGroupMessage(groupId: string, user: UserProfile, text: 
     senderName: user.fullName || 'Scholar',
     senderAvatar: user.avatar || `https://api.dicebear.com/7.x/bottts/svg?seed=${user.uid}`,
     text: text.trim(),
-    timestamp: 'Just now'
+    timestamp: 'Just now',
   };
 
   const updated = [...messages, newMsg];
@@ -926,4 +1049,3 @@ export function postStudyGroupMessage(groupId: string, user: UserProfile, text: 
   window.dispatchEvent(new CustomEvent(`clay_group_chat_${groupId}`));
   return newMsg;
 }
-
