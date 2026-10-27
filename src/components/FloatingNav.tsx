@@ -8,16 +8,18 @@ import {
   Search,
   GraduationCap,
   Layers,
-  Home
+  Home,
+  LogOut
 } from 'lucide-react';
 import ClayLogo from './ClayLogo';
 import { useLanguageMultilingual } from '../hooks/useLanguageMultilingual';
+import { useAuth } from '../contexts/AuthContext';
 import { motion, AnimatePresence } from 'motion/react';
 import Button from './ui/Button';
 
 export default function FloatingNav() {
   const { lang, setLang } = useLanguageMultilingual();
-  const { logout, user } = require('../contexts/AuthContext').useAuth();
+  const { logout, user } = useAuth();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
 
@@ -143,13 +145,17 @@ export default function FloatingNav() {
                 <Search className="w-5 h-5" />
               </button>
 
-              {/* Profile/Login */}
-              <button
-                className="hidden sm:flex items-center justify-center w-10 h-10 rounded-xl border border-slate-300 text-slate-700 hover:bg-slate-100 transition-all"
-                aria-label="Profile"
-              >
-                <User className="w-5 h-5" />
-              </button>
+              {/* Logout Button - Shows only when authenticated */}
+              {user && (
+                <button
+                  onClick={logout}
+                  className="hidden sm:flex items-center justify-center w-10 h-10 rounded-xl bg-red-100 text-red-600 hover:bg-red-200 transition-all"
+                  aria-label="Logout"
+                  title={lang === 'en' ? 'Logout' : 'लॉग आउट'}
+                >
+                  <LogOut className="w-5 h-5" />
+                </button>
+              )}
 
               {/* Get Started Button - Desktop */}
               <div className="hidden lg:block">
