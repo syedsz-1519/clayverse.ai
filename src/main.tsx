@@ -4,6 +4,7 @@ import App from './App.tsx';
 import './index.css';
 import { LanguageProvider } from './hooks/useLanguageMultilingual.tsx';
 import { ThemeProvider } from './hooks/useTheme.tsx';
+import { AuthProvider } from './contexts/AuthContext.tsx';
 import { registerServiceWorker } from './registerSW.ts';
 
 // Register Service Worker for offline curriculum caching
@@ -11,11 +12,13 @@ registerServiceWorker();
 
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
-    <LanguageProvider>
-      <ThemeProvider>
-        <App />
-      </ThemeProvider>
-    </LanguageProvider>
+    <AuthProvider>
+      <LanguageProvider>
+        <ThemeProvider>
+          <App />
+        </ThemeProvider>
+      </LanguageProvider>
+    </AuthProvider>
   </StrictMode>,
 );
 

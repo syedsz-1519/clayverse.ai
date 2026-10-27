@@ -13,6 +13,7 @@ import {
   Volume2,
 } from 'lucide-react';
 import ClayLogo from './ClayLogo';
+import AnimatedClayMascot from './AnimatedClayMascot';
 import Button from './ui/Button';
 
 interface LandingPageProps {
@@ -103,14 +104,14 @@ export default function LandingPage({ onStudentLogin, onAdminLogin }: LandingPag
         </div>
       </nav>
 
-      {/* Hero Section */}
+      {/* Hero Section with Animated Clay Mascot */}
       <section className="pt-32 pb-20 px-6">
         <div className="max-w-6xl mx-auto">
           <motion.div
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8 }}
-            className="text-center space-y-8"
+            className="text-center space-y-12"
           >
             {/* Badge */}
             <motion.div
@@ -127,7 +128,9 @@ export default function LandingPage({ onStudentLogin, onAdminLogin }: LandingPag
 
             {/* Main Title */}
             <motion.h1
-              variants={item}
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.8, delay: 0.1 }}
               className="text-5xl md:text-7xl font-black text-slate-900 leading-tight"
             >
               Learn{' '}
@@ -140,15 +143,29 @@ export default function LandingPage({ onStudentLogin, onAdminLogin }: LandingPag
 
             {/* Subtitle */}
             <motion.p
-              variants={item}
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.8, delay: 0.2 }}
               className="text-xl md:text-2xl text-slate-600 max-w-3xl mx-auto leading-relaxed"
             >
               Master AI, Machine Learning, Neural Networks, and Transformers through warm, tactile, stop-motion learning experiences. No math jargon. No prerequisites. Just intuitive understanding.
             </motion.p>
 
+            {/* Animated Clay Mascot */}
+            <motion.div
+              initial={{ opacity: 0, scale: 0.8 }}
+              animate={{ opacity: 1, scale: 1 }}
+              transition={{ duration: 0.6, delay: 0.3 }}
+              className="py-8"
+            >
+              <AnimatedClayMascot size={200} autoPlay={false} />
+            </motion.div>
+
             {/* CTA Buttons */}
             <motion.div
-              variants={item}
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.8, delay: 0.4 }}
               className="flex flex-col sm:flex-row items-center justify-center gap-4 pt-4"
             >
               <button
@@ -170,7 +187,9 @@ export default function LandingPage({ onStudentLogin, onAdminLogin }: LandingPag
 
             {/* Trust Indicators */}
             <motion.div
-              variants={item}
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.8, delay: 0.5 }}
               className="flex flex-wrap items-center justify-center gap-8 pt-8 text-sm text-slate-600"
             >
               <div className="flex items-center gap-2">
@@ -382,7 +401,7 @@ export default function LandingPage({ onStudentLogin, onAdminLogin }: LandingPag
   );
 }
 
-// Icon component needed
+// TrendingUp Icon component
 function TrendingUp(props: React.SVGProps<SVGSVGElement>) {
   return (
     <svg
