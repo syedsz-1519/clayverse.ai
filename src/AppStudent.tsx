@@ -520,11 +520,11 @@ export default function AppStudent({ onLogout }: StudentAppProps) {
               {/* Curriculum Grid - The Professional 9-Step Overview */}
               <motion.div initial="hidden" whileInView="visible" viewport={{ once: true, margin: "-100px" }} variants={sectionAnimation}>
                 <HomeCurriculumGrid
-                  onSelectModule={(moduleId) => {
-                    setCurrentLessonId(moduleId);
+                  onSelectLesson={(lessonId) => {
+                    setCurrentLessonId(lessonId);
                     window.scrollTo({ top: 0, behavior: 'smooth' });
                   }}
-                  onViewContinuous={() => {
+                  onViewContinuousGuide={() => {
                     setIsContinuousGuide(true);
                     window.scrollTo({ top: 0, behavior: 'smooth' });
                   }}
