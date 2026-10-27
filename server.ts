@@ -368,8 +368,8 @@ Style:
     });
   }
 
-  app.listen(PORT, '0.0.0.0', () => {
-    console.log(`🚀 Clayverse AI Server running on http://0.0.0.0:${PORT}`);
+  app.listen(PORT, 'localhost', () => {
+    console.log(`🚀 Clayverse AI Server running on http://localhost:${PORT}`);
     console.log(`📚 Interactive AI Learning Platform`);
     console.log(`✨ Ready to serve educational content!`);
   });
