@@ -17,6 +17,7 @@ import Button from './ui/Button';
 
 export default function FloatingNav() {
   const { lang, setLang } = useLanguageMultilingual();
+  const { logout, user } = require('../contexts/AuthContext').useAuth();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
 
