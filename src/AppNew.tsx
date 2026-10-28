@@ -3,7 +3,7 @@ import { AnimatePresence } from 'motion/react';
 import { useAuth } from './contexts/AuthContext';
 
 // Import components
-import LandingPage from './components/LandingPage';
+import LandingPageSimple from './components/LandingPageSimple';
 import StudentLoginModal from './components/StudentLoginModal';
 import AdminLoginModal from './components/AdminLoginModal';
 import StudentApp from './AppStudent';
@@ -31,7 +31,7 @@ export default function AppNew() {
     return (
       <>
         <AnimatePresence mode="wait">
-          <LandingPage
+          <LandingPageSimple
             onStudentLogin={() => setIsStudentLoginOpen(true)}
             onAdminLogin={() => setIsAdminLoginOpen(true)}
           />
