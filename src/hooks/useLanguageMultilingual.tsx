@@ -22,7 +22,7 @@ const LANGUAGE_NAMES: Record<Language, string> = {
   ta: 'தமிழ்',
   ur: 'اردو',
   roman_ur: 'Roman Urdu',
-  hinglish: 'Hinglish'
+  hinglish: 'Hinglish',
 };
 
 const LANGUAGE_DIRECTIONS: Record<Language, 'ltr' | 'rtl'> = {
@@ -33,37 +33,57 @@ const LANGUAGE_DIRECTIONS: Record<Language, 'ltr' | 'rtl'> = {
   ta: 'ltr',
   ur: 'rtl',
   roman_ur: 'ltr',
-  hinglish: 'ltr'
+  hinglish: 'ltr',
 };
 
+// ✅ FIX: Use ESM static imports instead of require() (CJS).
+// require() throws a ReferenceError in Vite ESM bundles, crashing the app before React mounts.
+import enCommon from '../locales/en/common.json';
+import hiCommon from '../locales/hi/common.json';
+import teCommon from '../locales/te/common.json';
+import mrCommon from '../locales/mr/common.json';
+import taCommon from '../locales/ta/common.json';
+import urCommon from '../locales/ur/common.json';
+import romanUrCommon from '../locales/roman_ur/common.json';
+import hinglishCommon from '../locales/hinglish/common.json';
+
+import enAiTerms from '../locales/en/ai-terms.json';
+import hiAiTerms from '../locales/hi/ai-terms.json';
+import teAiTerms from '../locales/te/ai-terms.json';
+import mrAiTerms from '../locales/mr/ai-terms.json';
+import taAiTerms from '../locales/ta/ai-terms.json';
+import urAiTerms from '../locales/ur/ai-terms.json';
+import romanUrAiTerms from '../locales/roman_ur/ai-terms.json';
+import hinglishAiTerms from '../locales/hinglish/ai-terms.json';
+
 // Complete dictionaries for all languages
-const dictionaries: Record<Language, Record<string, string>> = {
-  en: require('../locales/en/common.json'),
-  hi: require('../locales/hi/common.json'),
-  te: require('../locales/te/common.json'),
-  mr: require('../locales/mr/common.json'),
-  ta: require('../locales/ta/common.json'),
-  ur: require('../locales/ur/common.json'),
-  roman_ur: require('../locales/roman_ur/common.json'),
-  hinglish: require('../locales/hinglish/common.json')
+const dictionaries: Record<Language, Record<string, any>> = {
+  en: enCommon,
+  hi: hiCommon,
+  te: teCommon,
+  mr: mrCommon,
+  ta: taCommon,
+  ur: urCommon,
+  roman_ur: romanUrCommon,
+  hinglish: hinglishCommon,
 };
 
 // AI Terms dictionaries
 const aiTermsDictionaries: Record<Language, any> = {
-  en: require('../locales/en/ai-terms.json'),
-  hi: require('../locales/hi/ai-terms.json'),
-  te: require('../locales/te/ai-terms.json'),
-  mr: require('../locales/mr/ai-terms.json'),
-  ta: require('../locales/ta/ai-terms.json'),
-  ur: require('../locales/ur/ai-terms.json'),
-  roman_ur: require('../locales/roman_ur/ai-terms.json'),
-  hinglish: require('../locales/hinglish/ai-terms.json')
+  en: enAiTerms,
+  hi: hiAiTerms,
+  te: teAiTerms,
+  mr: mrAiTerms,
+  ta: taAiTerms,
+  ur: urAiTerms,
+  roman_ur: romanUrAiTerms,
+  hinglish: hinglishAiTerms,
 };
 
 function getNestedValue(obj: any, path: string): string | undefined {
   if (!obj || typeof obj !== 'object') return undefined;
   if (obj[path] && typeof obj[path] === 'string') return obj[path];
-  
+
   const keys = path.split('.');
   let current = obj;
   for (const key of keys) {
@@ -106,15 +126,23 @@ export function LanguageProvider({ children }: { children: React.ReactNode }) {
     const baseTerm = aiTermsDictionaries['en']?.terms?.find((term: any) => term.id === termId);
     if (!baseTerm) return null;
 
-    // Map language to field suffixes
-    const termFieldSuffix = lang === 'en' ? 'en' : lang === 'hi' ? 'hi' : lang === 'te' ? 'te' : lang === 'mr' ? 'mr' : lang === 'ta' ? 'ta' : lang === 'ur' ? 'ur' : lang === 'roman_ur' ? 'roman_ur' : lang === 'hinglish' ? 'hinglish' : 'en';
-    
+    const termFieldSuffix =
+      lang === 'en' ? 'en'
+      : lang === 'hi' ? 'hi'
+      : lang === 'te' ? 'te'
+      : lang === 'mr' ? 'mr'
+      : lang === 'ta' ? 'ta'
+      : lang === 'ur' ? 'ur'
+      : lang === 'roman_ur' ? 'roman_ur'
+      : lang === 'hinglish' ? 'hinglish'
+      : 'en';
+
     return {
       ...baseTerm,
       term: baseTerm[`term_${termFieldSuffix}`] || baseTerm.term_en || baseTerm[`term_${lang}`] || baseTerm.term_en,
       definition: baseTerm[`definition_${termFieldSuffix}`] || baseTerm.definition_en || baseTerm[`definition_${lang}`] || baseTerm.definition_en,
       termEn: baseTerm.term_en,
-      definitionEn: baseTerm.definition_en
+      definitionEn: baseTerm.definition_en,
     };
   };
 
@@ -132,7 +160,7 @@ export function LanguageProvider({ children }: { children: React.ReactNode }) {
         aiTerms,
         getAITerm,
         dir: LANGUAGE_DIRECTIONS[lang],
-        langName: LANGUAGE_NAMES[lang]
+        langName: LANGUAGE_NAMES[lang],
       }}
     >
       {children}
