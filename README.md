@@ -6,7 +6,7 @@
 [![Status](https://img.shields.io/badge/status-production%20ready-brightgreen)](https://github.com/syedsz-1519/clayverse.ai)
 [![Languages](https://img.shields.io/badge/languages-8%2B-blue)](https://github.com/syedsz-1519/clayverse.ai)
 [![TypeScript](https://img.shields.io/badge/typescript-strict-blue)](https://www.typescriptlang.org/)
-[![License](https://img.shields.io/badge/license-MIT-green)](LICENSE)
+
 
 ## 🚀 What is Clayverse AI?
 
