@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { motion } from 'motion/react';
-import TalkingClaybot from './TalkingClaybot';
+import AnimatedClayMascot from './AnimatedClayMascot';
+import { audioEngine } from '../lib/audioEngine';
 import { useLanguageMultilingual } from '../hooks/useLanguageMultilingual';
 
 interface ClaybotIntroductionProps {
@@ -35,9 +36,9 @@ const claybotMessages: Record<string, Record<string, string>> = {
     curious: "AI बद्दल कुतूहल आहे का? चला एकत्रितपणे अन्वेषण करूया! न्यूरल नेटवर्कपासून मशीन लर्निंगपर्यंत, माझ्याकडे सर्व उत्तरे आहेत।",
   },
   ta: {
-    welcome: "வணக்கம்! நான் Clay, உங்கள் AI கற்றல் தோழி! செயற்கை நுண்ணறிவை재미있는மற்றும் எளிய வழியில் புரிந்துகொள்ள நான் உங்களுக்கு உதவ இங்கே உள்ளேன். என்னை கிளிக் செய்யுங்கள்!",
+    welcome: "வணக்கம்! நான் Clay, உங்கள் AI கற்றல் தோழி! செயற்கை நுண்ணறிவை재미있는मற்றும் எளிய வழியில் புரிந்துகொள்ள நான் உங்களுக்கு உதவ இங்கே உள்ளேன். என்னை கிளிக் செய்யுங்கள்!",
     whatIsAI: "செயற்கை நுண்ணறிவு என்பது கணினிக்கு மூளை கொடுப்பது போலாகும்! இது இயந்திரங்களுக்கு எடுத்துக்காட்டுகளிலிருந்து கற்க, முடிவுகளை எடுக்க உதவுகிறது.",
-    learning: "நான் சிக்கலான AI கருத்துக்களை எளிய உदாহரணங்கள் மூலம் விளக்குகிறேன். சிக்கலான கணிதம் இல்லை, குழப்பமான சொல்லளவு இல்லை - வெறும் தெளிவான, நட்பு விளக்கங்கள்!",
+    learning: "நான் சிக்கலான AI கருத்துக்களை எளிய உதாரணங்கள் மூலம் விளக்குகிறேன். சிக்கலான கணிதம் இல்லை, குழப்பமான சொல்லளவு இல்லை - வெறும் தெளிவான, நட்பு விளக்கங்கள்!",
     curious: "AI பற்றி ஆவலுடன் இருக்கிறீர்களா? ஒன்றாக ஆய்வு செய்வோம்! நியூரல் நெட்வொர்க்குகள் முதல் இயந்திர கற்றல் வரை, எனக்கு எல்லா பதிலுகளும் உள்ளன.",
   },
   ur: {
@@ -64,10 +65,50 @@ export default function ClaybotIntroduction({
   className = '',
   autoPlay = true,
 }: ClaybotIntroductionProps) {
-  const { lang, t } = useLanguageMultilingual();
+  const { lang } = useLanguageMultilingual();
   const [selectedMessage, setSelectedMessage] = useState<keyof typeof claybotMessages['en']>('welcome');
+  const [isSpeaking, setIsSpeaking] = useState(false);
+  const [mood, setMood] = useState<'happy' | 'thinking' | 'excited'>('happy');
+
   const currentMessage = claybotMessages[lang as keyof typeof claybotMessages]?.[selectedMessage] || 
                         claybotMessages.en[selectedMessage];
+
+  // Sync state with audio engine
+  useEffect(() => {
+    // Listen to audio engine state
+    audioEngine.setSpeakStateListener((speaking) => {
+      setIsSpeaking(speaking);
+    });
+
+    // Check initial state
+    setIsSpeaking(audioEngine.isCurrentlySpeaking());
+  }, []);
+
+  // Update mood based on selected message
+  useEffect(() => {
+    switch (selectedMessage) {
+      case 'curious':
+        setMood('excited');
+        break;
+      case 'whatIsAI':
+        setMood('thinking');
+        break;
+      default:
+        setMood('happy');
+    }
+  }, [selectedMessage]);
+
+  const handlePlayMessage = () => {
+    if (isSpeaking) {
+      audioEngine.stopSpeaking();
+      setIsSpeaking(false);
+    } else {
+      audioEngine.speak(currentMessage, lang, () => {
+        setIsSpeaking(false);
+      });
+      setIsSpeaking(true);
+    }
+  };
 
   return (
     <div className={`w-full py-12 ${className}`}>
@@ -82,14 +123,33 @@ export default function ClaybotIntroduction({
           </p>
         </div>
 
-        {/* Claybot */}
+        {/* Animated Clay Mascot */}
         <div className="flex justify-center mb-8">
-          <TalkingClaybot 
-            size={180}
-            defaultMessage={currentMessage}
-            autoPlay={autoPlay}
-          />
+          <motion.div
+            onClick={handlePlayMessage}
+            whileHover={{ scale: 1.05 }}
+            whileTap={{ scale: 0.95 }}
+            className="cursor-pointer"
+          >
+            <AnimatedClayMascot 
+              isSpeaking={isSpeaking}
+              mood={mood}
+            />
+          </motion.div>
         </div>
+
+        {/* Speech Bubble */}
+        <motion.div
+          key={selectedMessage}
+          initial={{ opacity: 0, y: -10 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.3 }}
+          className="bg-white p-6 rounded-lg border-2 border-orange-200 shadow-md mb-8 text-center min-h-[100px] flex items-center justify-center"
+        >
+          <p className="text-gray-800 font-medium text-lg">
+            {currentMessage}
+          </p>
+        </motion.div>
 
         {/* Message Selection Buttons */}
         <div className="grid grid-cols-2 md:grid-cols-4 gap-3 mb-8">
@@ -121,7 +181,7 @@ export default function ClaybotIntroduction({
         >
           <h3 className="font-semibold text-gray-900 mb-2">💡 Try Me Out!</h3>
           <ul className="text-sm text-gray-700 space-y-1">
-            <li>✓ Click on me to hear explanations</li>
+            <li>✓ Click on Clay to hear explanations</li>
             <li>✓ Change your language to hear translations</li>
             <li>✓ Click different buttons to hear different topics</li>
             <li>✓ Works in all 8 supported languages</li>
@@ -140,4 +200,3 @@ export default function ClaybotIntroduction({
     </div>
   );
 }
-
