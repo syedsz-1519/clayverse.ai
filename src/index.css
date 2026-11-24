@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Sora:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600&display=swap');
+﻿@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Sora:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600&display=swap');
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -453,3 +453,40 @@ body *,
 .font-lato {
   font-family: 'Lato', system-ui, -apple-system, sans-serif;
 }
+
+/* ==========================================
+   TEMPORARY DEBUG FIX - FORCE VISIBILITY
+   Remove this after debugging blank screen
+   ========================================== */
+
+body {
+  background-color: #f0f0f0 !important; /* Light gray background to see if text is white */
+  color: #000000 !important; /* Force black text */
+}
+
+main {
+  padding-top: 100px !important; /* Push content below the fixed nav */
+  min-height: 100vh;
+  background-color: white;
+}
+
+#root {
+  min-height: 100vh;
+  display: block !important;
+  opacity: 1 !important;
+}
+
+div {
+  opacity: 1 !important;
+  visibility: visible !important;
+  display: block !important;
+}
+
+section {
+  opacity: 1 !important;
+  visibility: visible !important;
+  display: block !important;
+  min-height: auto !important;
+}
+
+/* END TEMPORARY DEBUG FIX */
