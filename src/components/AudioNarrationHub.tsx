@@ -24,7 +24,7 @@ import {
   Info
 } from 'lucide-react';
 import { audioEngine } from '../lib/audioEngine';
-import { useLanguage } from '../hooks/useLanguage';
+import { useLanguageMultilingual as useLanguage } from '../hooks/useLanguageMultilingual';
 import { roadmapSections, Section, Term } from '../data/roadmapTerms';
 import { SECTION_NARRATION_ITEMS, SectionNarrationItem } from '../data/sectionNarrationData';
 import ClayLogo from './ClayLogo';
