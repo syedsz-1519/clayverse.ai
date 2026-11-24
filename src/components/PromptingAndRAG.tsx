@@ -14,7 +14,7 @@ import {
 } from 'lucide-react';
 import { PromptingType } from '../types';
 import TechTooltip from './TechTooltip';
-import { useLanguage } from '../hooks/useLanguage';
+import { useLanguageMultilingual as useLanguage } from '../hooks/useLanguageMultilingual';
 import ReadSectionButton from './ReadSectionButton';
 import CopyCodeButton from './CopyCodeButton';
 import CodeSnippetBlock from './CodeSnippetBlock';
@@ -480,3 +480,4 @@ print(response.text)`}
     </div>
   );
 }
+

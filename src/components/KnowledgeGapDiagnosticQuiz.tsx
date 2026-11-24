@@ -415,3 +415,4 @@ export default function KnowledgeGapDiagnosticQuiz({
     </motion.div>
   );
 }
+

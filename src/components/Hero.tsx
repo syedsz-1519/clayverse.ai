@@ -262,3 +262,4 @@ export default function Hero({ onStartFirstLesson, onExploreCurriculum }: HeroPr
     </section>
   );
 }
+

@@ -217,3 +217,4 @@ export default function OfflineManagerModal({ isOpen, onClose }: OfflineManagerM
     </AnimatePresence>
   );
 }
+

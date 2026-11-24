@@ -242,3 +242,4 @@ export default function AboutClayverseModal({ isOpen, onClose }: AboutClayverseM
     </AnimatePresence>
   );
 }
+

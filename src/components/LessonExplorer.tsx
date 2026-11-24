@@ -267,3 +267,4 @@ export const LessonExplorer: React.FC<LessonExplorerProps> = ({
 };
 
 export default LessonExplorer;
+

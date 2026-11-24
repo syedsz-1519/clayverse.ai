@@ -617,3 +617,4 @@ export default function StudyGroupsSection({
     </div>
   );
 }
+

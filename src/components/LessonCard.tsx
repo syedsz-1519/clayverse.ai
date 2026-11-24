@@ -181,3 +181,4 @@ export const LessonCard: React.FC<LessonCardProps> = ({
 };
 
 export default LessonCard;
+

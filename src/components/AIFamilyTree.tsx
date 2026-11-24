@@ -1,4 +1,4 @@
-Ôªøimport { useState, useRef } from 'react';
+import { useState, useRef } from 'react';
 import { motion, AnimatePresence, useScroll, useTransform, useSpring } from 'motion/react';
 import { Network, HelpCircle, Layers, Fingerprint, Cpu, Sparkles, Activity, Zap } from 'lucide-react';
 import { MLType } from '../types';
@@ -50,7 +50,7 @@ export default function AIFamilyTree() {
       analogy: lang === 'en' ? 'Learning with a guide' : 'Ustad ki help se seekhna',
       description: lang === 'en'
         ? 'You feed the machine labeled pictures (like "dog" or "cat") until it learns which visual clues match which label.'
-        : 'Tum machine ko pehle se naam likhe so photoŒì√á√ñaa dete (jaise "billi" ya "kutti"), jab tak ke wo sahi visual clues na pakad le.'
+        : 'Tum machine ko pehle se naam likhe so photoG«÷aa dete (jaise "billi" ya "kutti"), jab tak ke wo sahi visual clues na pakad le.'
     },
     {
       title: lang === 'en' ? 'Unsupervised Learning' : 'Unsupervised Learning (Apne Aap)',
@@ -387,8 +387,8 @@ export default function AIFamilyTree() {
 
                   <div className="flex flex-col gap-2 pt-4 border-t border-brand-slate/5 mt-6">
                     <div className="flex items-center justify-between text-[11px] font-mono font-bold text-brand-amber animate-pulse">
-                      <span>Œì√ú√≠ {lang === 'en' ? "Click Card to Flip!" : "Card pe dabao, piche dekho!"}</span>
-                      <span className="text-xs">‚â°∆í√∂√§</span>
+                      <span>G‹Ì {lang === 'en' ? "Click Card to Flip!" : "Card pe dabao, piche dekho!"}</span>
+                      <span className="text-xs">=Éˆ‰</span>
                     </div>
                     <div className="flex gap-4 text-[9.5px] font-mono text-brand-muted mt-1">
                       <span>{lang === 'en' ? "Tap on circles or doll list to switch subfields" : "Dabbe ya button se change karo"}</span>
@@ -421,7 +421,7 @@ export default function AIFamilyTree() {
                           label={lang === 'en' ? "Copy Notes" : "Notes Copy"}
                           variant="compact"
                         />
-                        <span className="text-xs text-brand-amber">‚â°∆í√∂√§</span>
+                        <span className="text-xs text-brand-amber">=Éˆ‰</span>
                       </div>
                     </div>
 
@@ -441,7 +441,7 @@ export default function AIFamilyTree() {
                         {lang === 'en' ? "Real-World Examples:" : "Asal Duniya ki Misaal:"}
                       </span>
                       <p className="text-xs font-bold text-brand-charcoal leading-relaxed font-mono">
-                        ‚â°∆í√Ü√≠ {lang === 'en' ? deeperDetails[activeNestingLevel].examplesEn : deeperDetails[activeNestingLevel].examplesHyd}
+                        =É∆Ì {lang === 'en' ? deeperDetails[activeNestingLevel].examplesEn : deeperDetails[activeNestingLevel].examplesHyd}
                       </p>
                     </div>
 
@@ -456,8 +456,8 @@ export default function AIFamilyTree() {
 
                   <div className="pt-3 border-t border-brand-slate/5 mt-4 shrink-0">
                     <div className="flex items-center justify-between text-[10px] font-mono font-bold text-brand-slate">
-                      <span>Œì√•‚åê‚à©‚ïï√Ö {lang === 'en' ? "Click to flip back" : "Wapas samne dekhne ke liye dabao"}</span>
-                      <span>Œì√á√≥ {lang === 'en' ? "Interactive Lesson" : "Sabaq"}</span>
+                      <span>GÂ¨n+≈ {lang === 'en' ? "Click to flip back" : "Wapas samne dekhne ke liye dabao"}</span>
+                      <span>G«Û {lang === 'en' ? "Interactive Lesson" : "Sabaq"}</span>
                     </div>
                   </div>
                 </div>
@@ -493,11 +493,11 @@ export default function AIFamilyTree() {
               <p className="font-sans text-brand-charcoal leading-relaxed text-[14px] mb-6">
                 {lang === 'en' ? (
                   <>
-                    <TechTooltip term="Machine Learning">Machine Learning</TechTooltip> Œì√á√∂ <span className="text-brand-slate italic">a subset of AI where computers analyze thousands of examples to find patterns instead of following rigid programmed rules</span> Œì√á√∂ allows software to improve on its own. Rather than hand-coding a rule like "if a pixel is green, it's a leaf," we feed the system 100,000 photos of forests and let the algorithm write its own equations.
+                    <TechTooltip term="Machine Learning">Machine Learning</TechTooltip> G«ˆ <span className="text-brand-slate italic">a subset of AI where computers analyze thousands of examples to find patterns instead of following rigid programmed rules</span> G«ˆ allows software to improve on its own. Rather than hand-coding a rule like "if a pixel is green, it's a leaf," we feed the system 100,000 photos of forests and let the algorithm write its own equations.
                   </>
                 ) : (
                   <>
-                    <strong className="text-brand-amber">Machine Learning</strong> Œì√á√∂ <span className="text-brand-slate italic">AI ka wo subset hai jahan computer rules seekhne ke liye bohot saare examples dekhta hai</span> Œì√á√∂ iski wajah se computer software khud behtar hota rehta hai. Pehle ke jaisa hand code nahi karna padta "agar green color hai toh patti bolo". Ab hum machine ko hazaaro jangal ki photos dedete hain aur wo khud apna dimaag lagake patti pehchanna seekh leta hai.
+                    <strong className="text-brand-amber">Machine Learning</strong> G«ˆ <span className="text-brand-slate italic">AI ka wo subset hai jahan computer rules seekhne ke liye bohot saare examples dekhta hai</span> G«ˆ iski wajah se computer software khud behtar hota rehta hai. Pehle ke jaisa hand code nahi karna padta "agar green color hai toh patti bolo". Ab hum machine ko hazaaro jangal ki photos dedete hain aur wo khud apna dimaag lagake patti pehchanna seekh leta hai.
                   </>
                 )}
               </p>
@@ -561,8 +561,8 @@ export default function AIFamilyTree() {
                           </p>
                         </div>
                         <div className="flex items-center justify-between text-[8.5px] font-mono text-brand-amber mt-1">
-                          <span>Œì√ú√≠ {lang === 'en' ? "Tap card for deep details" : "Piche dekhne ke liye dabao"}</span>
-                          <span>‚â°∆í√∂√§</span>
+                          <span>G‹Ì {lang === 'en' ? "Tap card for deep details" : "Piche dekhne ke liye dabao"}</span>
+                          <span>=Éˆ‰</span>
                         </div>
                       </div>
                     </div>
@@ -588,7 +588,7 @@ export default function AIFamilyTree() {
                               variant="compact"
                               showIconOnly={true}
                             />
-                            <span className="text-[10px]">‚â°∆í√∂√§</span>
+                            <span className="text-[10px]">=Éˆ‰</span>
                           </div>
                         </div>
                         
@@ -607,7 +607,7 @@ export default function AIFamilyTree() {
                       </div>
 
                       <div className="text-[8.5px] font-mono text-brand-slate border-t border-brand-slate/5 pt-1 mt-1 shrink-0 flex justify-between">
-                        <span>Œì√•‚åê‚à©‚ïï√Ö {lang === 'en' ? "Tap to flip back" : "Dabaake wapas badlo"}</span>
+                        <span>GÂ¨n+≈ {lang === 'en' ? "Tap to flip back" : "Dabaake wapas badlo"}</span>
                         <span className="text-brand-amber font-bold">{lang === 'en' ? "ML Card" : "ML Card"}</span>
                       </div>
                     </div>
@@ -650,11 +650,11 @@ export default function AIFamilyTree() {
               <p className="font-sans text-brand-charcoal leading-relaxed text-[14px] md:text-[15px]">
                 {lang === 'en' ? (
                   <>
-                    <TechTooltip term="Deep Learning">Deep Learning</TechTooltip> Œì√á√∂ <span className="text-brand-slate italic">a specialized kind of Machine Learning that uses layered mathematical structures called <TechTooltip term="Neural Networks">neural networks</TechTooltip> to capture highly complex relationships in images or sounds</span> Œì√á√∂ mimics how human brains process raw sights and noises. 
+                    <TechTooltip term="Deep Learning">Deep Learning</TechTooltip> G«ˆ <span className="text-brand-slate italic">a specialized kind of Machine Learning that uses layered mathematical structures called <TechTooltip term="Neural Networks">neural networks</TechTooltip> to capture highly complex relationships in images or sounds</span> G«ˆ mimics how human brains process raw sights and noises. 
                   </>
                 ) : (
                   <>
-                    <strong className="text-brand-amber">Deep Learning</strong> Œì√á√∂ <span className="text-brand-slate italic">Machine Learning ka wo hissa hai jo mathematical layer patterns jise artificial neural networks bolte, usse awaaz aur photoŒì√á√ñaa samajhta hai</span> Œì√á√∂ ye bilkul insaan ke dimaag ki tarah dher saari files process kar sakta hai.
+                    <strong className="text-brand-amber">Deep Learning</strong> G«ˆ <span className="text-brand-slate italic">Machine Learning ka wo hissa hai jo mathematical layer patterns jise artificial neural networks bolte, usse awaaz aur photoG«÷aa samajhta hai</span> G«ˆ ye bilkul insaan ke dimaag ki tarah dher saari files process kar sakta hai.
                   </>
                 )}
               </p>
@@ -785,7 +785,7 @@ export default function AIFamilyTree() {
                 <span>
                   {hoveredNeuronLayer !== null 
                     ? `Active: ${neuralLayers[hoveredNeuronLayer].name} (${neuralLayers[hoveredNeuronLayer].desc})`
-                    : (lang === 'en' ? "Œì√ú√≠ Synapses propagate activations forward" : "Œì√ú√≠ Synapses dimaag ke signals aage bhejte hain")
+                    : (lang === 'en' ? "G‹Ì Synapses propagate activations forward" : "G‹Ì Synapses dimaag ke signals aage bhejte hain")
                   }
                 </span>
                 <span className="text-brand-amber font-bold">ANN Depth</span>
@@ -899,3 +899,4 @@ model = DeepNeuralNetwork()`}
     </div>
   );
 }
+

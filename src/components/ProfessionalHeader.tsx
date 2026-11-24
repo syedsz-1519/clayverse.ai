@@ -236,3 +236,4 @@ export const ProfessionalHeader: React.FC<ProfessionalHeaderProps> = ({
 };
 
 export default ProfessionalHeader;
+

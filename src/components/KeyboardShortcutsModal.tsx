@@ -312,3 +312,4 @@ export default function KeyboardShortcutsModal({ isOpen, onClose }: KeyboardShor
     </AnimatePresence>
   );
 }
+

@@ -445,3 +445,4 @@ export default function LanguagesShowcase({ isOpen, onClose }: LanguagesShowcase
     </AnimatePresence>
   );
 }
+

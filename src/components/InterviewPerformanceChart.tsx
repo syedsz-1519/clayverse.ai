@@ -870,3 +870,4 @@ export default function InterviewPerformanceChart({
     </motion.div>
   );
 }
+

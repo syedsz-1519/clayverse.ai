@@ -193,3 +193,4 @@ export default function ClayMentorSidebar({ onOpenTTS }: ClayMentorSidebarProps)
     </div>
   );
 }
+

@@ -369,3 +369,4 @@ export default function QuickTakeaway({ sectionId, defaultOpen = true }: QuickTa
     </motion.div>
   );
 }
+

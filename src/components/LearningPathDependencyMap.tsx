@@ -1445,3 +1445,4 @@ export default function LearningPathDependencyMap({
     </div>
   );
 }
+

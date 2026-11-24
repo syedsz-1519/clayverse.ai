@@ -11,7 +11,7 @@ import {
   Check
 } from 'lucide-react';
 import { audioEngine } from '../lib/audioEngine';
-import { useLanguage } from '../hooks/useLanguage';
+import { useLanguageMultilingual as useLanguage } from '../hooks/useLanguageMultilingual';
 import { getNarrationForSection, SectionNarrationItem } from '../data/sectionNarrationData';
 
 interface ReadSectionButtonProps {
@@ -231,3 +231,4 @@ export default function ReadSectionButton({
     </div>
   );
 }
+
