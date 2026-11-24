@@ -69,6 +69,7 @@ export default function ClaybotIntroduction({
   const [selectedMessage, setSelectedMessage] = useState<keyof typeof claybotMessages['en']>('welcome');
   const [isSpeaking, setIsSpeaking] = useState(false);
   const [mood, setMood] = useState<'happy' | 'thinking' | 'excited'>('happy');
+  const [gesture, setGesture] = useState<'wave' | 'point' | 'think' | 'none'>('none');
 
   const currentMessage = claybotMessages[lang as keyof typeof claybotMessages]?.[selectedMessage] || 
                         claybotMessages.en[selectedMessage];
@@ -84,17 +85,24 @@ export default function ClaybotIntroduction({
     setIsSpeaking(audioEngine.isCurrentlySpeaking());
   }, []);
 
-  // Update mood based on selected message
+  // Update mood and gesture based on selected message
   useEffect(() => {
     switch (selectedMessage) {
       case 'curious':
         setMood('excited');
+        setGesture('wave');
         break;
       case 'whatIsAI':
         setMood('thinking');
+        setGesture('think');
+        break;
+      case 'learning':
+        setMood('happy');
+        setGesture('point');
         break;
       default:
         setMood('happy');
+        setGesture('none');
     }
   }, [selectedMessage]);
 
@@ -102,9 +110,11 @@ export default function ClaybotIntroduction({
     if (isSpeaking) {
       audioEngine.stopSpeaking();
       setIsSpeaking(false);
+      setGesture('none');
     } else {
       audioEngine.speak(currentMessage, lang, () => {
         setIsSpeaking(false);
+        setGesture('none');
       });
       setIsSpeaking(true);
     }
@@ -134,6 +144,7 @@ export default function ClaybotIntroduction({
             <AnimatedClayMascot 
               isSpeaking={isSpeaking}
               mood={mood}
+              gesture={gesture}
             />
           </motion.div>
         </div>
